@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Laptop, BarChart2, Flask, Heart } from "lucide-react";
+import { Laptop, BarChart2, FlaskConical, Heart } from "lucide-react";
 
 interface Major {
   id: string;
@@ -26,7 +26,7 @@ const majors: Major[] = [
   {
     id: "engineering",
     name: "Инженерия",
-    icon: <Flask className="h-10 w-10 text-tandablue" />,
+    icon: <FlaskConical className="h-10 w-10 text-tandablue" />,
     count: "200+ бағдарлама"
   },
   {
