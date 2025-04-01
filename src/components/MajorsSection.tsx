@@ -1,9 +1,19 @@
 
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Laptop, BarChart2, FlaskConical, Heart, Search } from "lucide-react";
+import { 
+  Laptop, 
+  BarChart2, 
+  FlaskConical, 
+  Heart, 
+  Search,
+  Briefcase,
+  GraduationCap,
+  MonitorSmartphone
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Major {
   id: string;
@@ -42,35 +52,53 @@ const majors: Major[] = [
     description: "Биологиялық процестерді зерттеу және қолдану",
     duration: "4 жыл",
     salary: "250,000 - 500,000 ₸"
+  },
+  {
+    id: "medicine",
+    name: "Медицина",
+    icon: <Heart className="h-10 w-10 text-tandablue" />,
+    badge: "Жоғары сұраныс",
+    description: "Адам денсаулығын сақтау және емдеу",
+    duration: "5-7 жыл",
+    salary: "350,000 - 900,000 ₸"
   }
 ];
 
 const MajorCard: React.FC<{ major: Major }> = ({ major }) => {
   return (
-    <div className="bg-white p-6 rounded-lg border shadow-sm">
-      <div className={`inline-block px-3 py-1 text-xs font-medium rounded-full mb-4
-        ${major.badge === "Жоғары сұраныс" ? "bg-green-100 text-green-700" : 
-        major.badge === "Орташа сұраныс" ? "bg-yellow-100 text-yellow-700" : 
-        "bg-blue-100 text-blue-700"}`}>
-        {major.badge}
-      </div>
-      
-      <h3 className="text-lg font-bold mb-2">{major.name}</h3>
-      <p className="text-sm text-gray-500 mb-4">{major.description}</p>
-      
-      <div className="space-y-2 mb-5">
-        <div className="flex items-center text-sm">
-          <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-          {major.duration}
+    <Card className="overflow-hidden hover:shadow-md transition-all">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-3 bg-blue-50 rounded-full">
+            {major.icon}
+          </div>
+          <div className={`inline-block px-3 py-1 text-xs font-medium rounded-full
+            ${major.badge === "Жоғары сұраныс" ? "bg-green-100 text-green-700" : 
+            major.badge === "Орташа сұраныс" ? "bg-yellow-100 text-yellow-700" : 
+            "bg-blue-100 text-blue-700"}`}>
+            {major.badge}
+          </div>
         </div>
-        <div className="flex items-center text-sm">
-          <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-          {major.salary}
+        
+        <h3 className="text-lg font-bold mb-2">{major.name}</h3>
+        <p className="text-sm text-gray-600 mb-4">{major.description}</p>
+        
+        <div className="space-y-2 mb-5">
+          <div className="flex items-center text-sm">
+            <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
+            <span className="text-gray-600">Оқу мерзімі: </span>
+            <span className="ml-1 font-medium">{major.duration}</span>
+          </div>
+          <div className="flex items-center text-sm">
+            <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
+            <span className="text-gray-600">Орташа жалақы: </span>
+            <span className="ml-1 font-medium">{major.salary}</span>
+          </div>
         </div>
+        
+        <Button className="w-full">Толығырақ</Button>
       </div>
-      
-      <Button className="w-full">Толығырақ</Button>
-    </div>
+    </Card>
   );
 };
 
@@ -90,7 +118,7 @@ const MajorsSection: React.FC = () => {
             <Input 
               type="text" 
               placeholder="Мамандық атауын енгізіңіз" 
-              className="pl-10 py-2 w-full rounded-md border shadow-sm"
+              className="pl-10 py-2 w-full"
             />
             <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
@@ -104,10 +132,18 @@ const MajorsSection: React.FC = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {majors.map(major => (
             <MajorCard key={major.id} major={major} />
           ))}
+        </div>
+        
+        <div className="mt-10 text-center">
+          <Link to="/majors">
+            <Button variant="outline" size="lg">
+              Барлық мамандықтарды қарау
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
