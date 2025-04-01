@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from "@/components/ui/input";
@@ -87,9 +88,11 @@ const UniversityCard: React.FC<{ university: University }> = ({ university }) =>
           </div>
         </div>
         
-        <Button className="w-full flex justify-between items-center">
-          Толығырақ <ArrowRight className="h-4 w-4" />
-        </Button>
+        <Link to={`/universities/${university.id}`}>
+          <Button className="w-full flex justify-between items-center">
+            Толығырақ <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
       </div>
     </div>
   );

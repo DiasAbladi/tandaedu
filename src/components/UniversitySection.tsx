@@ -79,9 +79,11 @@ const UniversitySection: React.FC = () => {
           ))}
         </div>
         <div className="flex justify-center mt-8">
-          <Button variant="outline" className="border-tandablue text-tandablue hover:bg-tandablue hover:text-white">
-            Барлық университеттер
-          </Button>
+          <Link to="/universities">
+            <Button variant="outline" className="border-tandablue text-tandablue hover:bg-tandablue hover:text-white">
+              Барлық университеттер
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
