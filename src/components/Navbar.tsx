@@ -44,8 +44,12 @@ const Navbar: React.FC = () => {
             <Globe className="h-4 w-4" />
             <span className="text-sm font-medium">Қаз</span>
           </div>
-          <Button variant="outline" className="hidden md:flex h-9 rounded-md px-4">Кіру</Button>
-          <Button className="h-9 rounded-md px-4">Тіркелу</Button>
+          <Link to="/login">
+            <Button variant="outline" className="hidden md:flex h-9 rounded-md px-4">Кіру</Button>
+          </Link>
+          <Link to="/register">
+            <Button className="h-9 rounded-md px-4">Тіркелу</Button>
+          </Link>
           <button
             className="md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -82,6 +86,14 @@ const Navbar: React.FC = () => {
               <Link to="/blog" className="text-sm font-medium text-tandatext hover:text-tandablue" onClick={() => setMobileMenuOpen(false)}>
                 Блог
               </Link>
+              <div className="pt-2 border-t border-gray-100 flex flex-col space-y-2">
+                <Link to="/login" className="text-sm font-medium text-tandatext hover:text-tandablue" onClick={() => setMobileMenuOpen(false)}>
+                  Кіру
+                </Link>
+                <Link to="/register" className="text-sm font-medium text-tandatext hover:text-tandablue" onClick={() => setMobileMenuOpen(false)}>
+                  Тіркелу
+                </Link>
+              </div>
             </nav>
           </div>
         </div>
