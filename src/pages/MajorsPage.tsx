@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from "@/components/ui/input";
@@ -148,7 +149,9 @@ const MajorCard: React.FC<{ major: Major }> = ({ major }) => {
           </div>
         </div>
         
-        <Button className="w-full">Толығырақ</Button>
+        <Link to={`/majors/${major.id}`}>
+          <Button className="w-full">Толығырақ</Button>
+        </Link>
       </div>
     </Card>
   );
@@ -157,6 +160,7 @@ const MajorCard: React.FC<{ major: Major }> = ({ major }) => {
 const MajorsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = React.useState("Барлығы");
   const [searchValue, setSearchValue] = React.useState("");
+  const navigate = useNavigate();
 
   const filteredMajors = majors.filter(major => {
     if (selectedCategory !== "Барлығы" && major.category !== selectedCategory) {
@@ -167,6 +171,11 @@ const MajorsPage: React.FC = () => {
     }
     return true;
   });
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Search logic is already implemented with the filter
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -283,7 +292,7 @@ const MajorsPage: React.FC = () => {
           {/* Main content */}
           <div className="lg:col-span-3">
             <div className="mb-8">
-              <div className="flex flex-col md:flex-row gap-4">
+              <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
                   <Input 
                     type="text" 
@@ -306,8 +315,9 @@ const MajorsPage: React.FC = () => {
                       <SelectItem value="name">Атауы бойынша</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button type="submit">Іздеу</Button>
                 </div>
-              </div>
+              </form>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

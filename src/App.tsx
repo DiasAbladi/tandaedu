@@ -8,7 +8,9 @@ import Index from "./pages/Index";
 import UniversitiesPage from "./pages/UniversitiesPage";
 import UniversityDetailPage from "./pages/UniversityDetailPage";
 import MajorsPage from "./pages/MajorsPage";
+import MajorDetailPage from "./pages/MajorDetailPage";
 import NewsPage from "./pages/NewsPage";
+import NewsDetailPage from "./pages/NewsDetailPage";
 import CareerTestPage from "./pages/CareerTestPage";
 import TestQuestionPage from "./pages/TestQuestionPage";
 import ConsultingPage from "./pages/ConsultingPage";
@@ -30,7 +32,9 @@ const App = () => (
           <Route path="/universities" element={<UniversitiesPage />} />
           <Route path="/universities/:id" element={<UniversityDetailPage />} />
           <Route path="/majors" element={<MajorsPage />} />
+          <Route path="/majors/:id" element={<MajorDetailPage />} />
           <Route path="/news" element={<NewsPage />} />
+          <Route path="/news/:id" element={<NewsDetailPage />} />
           <Route path="/test" element={<CareerTestPage />} />
           <Route path="/test/question" element={<TestQuestionPage />} />
           <Route path="/counseling" element={<ConsultingPage />} />

@@ -96,7 +96,9 @@ const MajorCard: React.FC<{ major: Major }> = ({ major }) => {
           </div>
         </div>
         
-        <Button className="w-full">Толығырақ</Button>
+        <Link to={`/majors/${major.id}`}>
+          <Button className="w-full">Толығырақ</Button>
+        </Link>
       </div>
     </Card>
   );

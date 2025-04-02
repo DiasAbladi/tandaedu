@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ const sideNews: NewsArticle[] = [
     id: "ubt-preparation",
     title: "ҰБТға дайындық: маңызды кеңестер",
     category: "ҰБТ",
-    image: "public/lovable-uploads/889499f5-f0a0-427c-aa84-b517bc582674.png",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
     description: "Сарапшылардың ҰБТ-ға дайындық бойынша ұсыныстары",
     views: 856,
     timestamp: "5 сағат бұрын"
@@ -41,7 +42,7 @@ const sideNews: NewsArticle[] = [
     id: "grants-2025",
     title: "2025 жылғы мемлекеттік грант иегерлері анықталды",
     category: "Гранттар",
-    image: "public/lovable-uploads/f8fb1fa5-53bf-4c81-9f71-116f536ed84e.png", 
+    image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80", 
     description: "Биылғы грант иегерлерінің толық тізімі",
     views: 1500,
     timestamp: "1 күн бұрын"
@@ -53,7 +54,7 @@ const recentNews: NewsArticle[] = [
     id: "student-conferences",
     title: "Жаңа оқу жылында өткізілетін әлеуметтер",
     category: "Білім",
-    image: "public/lovable-uploads/18749887-b5ed-45fa-a910-780a05083588.png",
+    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
     description: "2025 жылғы оқу жылында күтілетін жиналыстар мен әлеуметтер",
     views: 423,
     timestamp: "3 күн бұрын",
@@ -64,7 +65,7 @@ const recentNews: NewsArticle[] = [
     id: "new-university",
     title: "Жаңа университет ашылады",
     category: "Университеттер",
-    image: "public/lovable-uploads/2926c506-f309-4c28-a09b-0a48de7b0705.png",
+    image: "https://images.unsplash.com/photo-1498322590555-139c697a8abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80",
     description: "Алматыда жаңартылған дизайнмен жергілікті жаңа университет ашылады",
     views: 755,
     timestamp: "4 күн бұрын",
@@ -75,7 +76,7 @@ const recentNews: NewsArticle[] = [
     id: "top-majors",
     title: "Ең сұранысқа ие мамандықтар - 2025",
     category: "Мамандықтар",
-    image: "public/lovable-uploads/05dca756-56b5-4157-b6cb-da9078ae4dd4.png",
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     description: "Болашақта сұранысқа ие болатын мамандықтар тізімі",
     views: 612,
     timestamp: "5 күн бұрын",
@@ -96,26 +97,28 @@ const NewsPage: React.FC = () => {
           {/* Featured News Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="md:col-span-2 relative overflow-hidden rounded-lg">
-              <img 
-                src={featuredNews.image} 
-                alt={featuredNews.title}
-                className="w-full h-[400px] object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
-                <span className="text-sm bg-blue-600 px-2 py-1 rounded-md inline-block mb-3">{featuredNews.category}</span>
-                <h2 className="text-2xl md:text-3xl font-bold mb-3">{featuredNews.title}</h2>
-                <div className="flex items-center text-sm">
-                  <span className="flex items-center mr-4">
-                    <Clock className="h-4 w-4 mr-1" /> {featuredNews.timestamp}
-                  </span>
-                  <span>{featuredNews.views.toLocaleString()} көрініс</span>
+              <Link to={`/news/${featuredNews.id}`} className="block">
+                <img 
+                  src={featuredNews.image} 
+                  alt={featuredNews.title}
+                  className="w-full h-[400px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
+                  <span className="text-sm bg-blue-600 px-2 py-1 rounded-md inline-block mb-3">{featuredNews.category}</span>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-3">{featuredNews.title}</h2>
+                  <div className="flex items-center text-sm">
+                    <span className="flex items-center mr-4">
+                      <Clock className="h-4 w-4 mr-1" /> {featuredNews.timestamp}
+                    </span>
+                    <span>{featuredNews.views.toLocaleString()} көрініс</span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
             
             <div className="flex flex-col gap-6">
               {sideNews.map(news => (
-                <div key={news.id} className="flex gap-4">
+                <Link to={`/news/${news.id}`} key={news.id} className="flex gap-4 hover:bg-gray-50 rounded-lg p-2 transition-colors">
                   <img 
                     src={news.image} 
                     alt={news.title}
@@ -131,7 +134,7 @@ const NewsPage: React.FC = () => {
                       <span>{news.views} көрініс</span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -141,7 +144,7 @@ const NewsPage: React.FC = () => {
             <h2 className="text-2xl font-bold mb-6">Соңғы жаңалықтар</h2>
             
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-              {["Барлығы", "ҰБТ", "Гранттар", "Университеттер"].map(category => (
+              {["Барлығы", "ҰБТ", "Гранттар", "Университеттер", "Мамандықтар"].map(category => (
                 <Button 
                   key={category}
                   variant={activeCategory === category ? "default" : "outline"}
@@ -156,14 +159,18 @@ const NewsPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recentNews.map(news => (
                 <div key={news.id} className="border rounded-lg overflow-hidden shadow-sm bg-white">
-                  <img 
-                    src={news.image} 
-                    alt={news.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  <Link to={`/news/${news.id}`}>
+                    <img 
+                      src={news.image} 
+                      alt={news.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  </Link>
                   <div className="p-4">
                     <div className="text-xs text-blue-600 font-medium mb-2">{news.category}</div>
-                    <h3 className="font-bold text-lg mb-2">{news.title}</h3>
+                    <Link to={`/news/${news.id}`} className="block">
+                      <h3 className="font-bold text-lg mb-2 hover:text-tandablue transition-colors">{news.title}</h3>
+                    </Link>
                     <p className="text-sm text-gray-600 mb-4 line-clamp-2">{news.description}</p>
                     <div className="flex items-center justify-between text-sm text-gray-500">
                       <div className="flex items-center">

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from "@/components/ui/input";
@@ -214,6 +214,10 @@ const UniversityCard: React.FC<{ university: University }> = ({ university }) =>
 };
 
 const UniversitiesPage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("all");
   const [selectedRating, setSelectedRating] = useState<string>("all");
@@ -221,7 +225,16 @@ const UniversitiesPage: React.FC = () => {
   const [filteredUniversities, setFilteredUniversities] = useState<University[]>(universities);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const universitiesPerPage = 6;
-  const { toast } = useToast();
+  
+  // Check for search query parameters when the component mounts
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchParam = params.get('search');
+    
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+  }, [location]);
 
   // Apply filters
   useEffect(() => {
@@ -279,10 +292,23 @@ const UniversitiesPage: React.FC = () => {
     setSelectedCity("all");
     setSelectedRating("all");
     setSelectedMajor("all");
+    
+    // Update the URL to remove query parameters
+    navigate('/universities');
+    
     toast({
       title: "Сүзгіштер тазартылды",
       description: "Барлық сүзгіштер тазартылды",
     });
+  };
+
+  // Handle search form submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // The existing useEffect will handle filtering based on searchQuery
+    
+    // Update URL with search parameter
+    navigate(`/universities?search=${encodeURIComponent(searchQuery)}`);
   };
   
   return (
@@ -293,7 +319,7 @@ const UniversitiesPage: React.FC = () => {
         <div className="container px-4 md:px-6">
           <h1 className="text-3xl font-bold mb-8">Қазақстан университеттері</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             <div className="relative">
               <Input 
                 type="text" 
@@ -340,7 +366,12 @@ const UniversitiesPage: React.FC = () => {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+            
+            <div className="lg:col-span-4 flex justify-end">
+              <Button type="submit" className="mr-2">Іздеу</Button>
+              <Button type="button" variant="outline" onClick={resetFilters}>Тазарту</Button>
+            </div>
+          </form>
 
           {filteredUniversities.length > 0 ? (
             <>
