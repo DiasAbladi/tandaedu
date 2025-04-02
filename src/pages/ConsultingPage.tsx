@@ -131,7 +131,7 @@ const ConsultantCard: React.FC<{ consultant: Consultant }> = ({ consultant }) =>
 
 const ConsultingPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedSpecialization, setSelectedSpecialization] = useState<string>("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState<string>("all");
   const [filteredConsultants, setFilteredConsultants] = useState<Consultant[]>(consultants);
   const { toast } = useToast();
 
@@ -154,7 +154,7 @@ const ConsultingPage: React.FC = () => {
       );
     }
     
-    if (selectedSpecialization) {
+    if (selectedSpecialization !== "all") {
       filtered = filtered.filter(consultant =>
         consultant.specialization.includes(selectedSpecialization)
       );
@@ -165,7 +165,7 @@ const ConsultingPage: React.FC = () => {
 
   const resetFilters = () => {
     setSearchQuery("");
-    setSelectedSpecialization("");
+    setSelectedSpecialization("all");
     toast({
       title: "Сүзгіштер тазартылды",
       description: "Барлық сүзгіштер тазартылды",
@@ -215,7 +215,7 @@ const ConsultingPage: React.FC = () => {
                       <SelectValue placeholder="Саласы бойынша" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Барлық салалар</SelectItem>
+                      <SelectItem value="all">Барлық салалар</SelectItem>
                       {allSpecializations.map(spec => (
                         <SelectItem key={spec} value={spec}>{spec}</SelectItem>
                       ))}

@@ -295,7 +295,7 @@ const MajorsPage: React.FC = () => {
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 </div>
                 <div className="flex gap-2">
-                  <Select>
+                  <Select defaultValue="popular">
                     <SelectTrigger className="w-full md:w-auto">
                       <SelectValue placeholder="Сұрыптау" />
                     </SelectTrigger>

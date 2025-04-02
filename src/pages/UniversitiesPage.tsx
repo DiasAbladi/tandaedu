@@ -215,9 +215,9 @@ const UniversityCard: React.FC<{ university: University }> = ({ university }) =>
 
 const UniversitiesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedCity, setSelectedCity] = useState<string>("");
-  const [selectedRating, setSelectedRating] = useState<string>("");
-  const [selectedMajor, setSelectedMajor] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("all");
+  const [selectedRating, setSelectedRating] = useState<string>("all");
+  const [selectedMajor, setSelectedMajor] = useState<string>("all");
   const [filteredUniversities, setFilteredUniversities] = useState<University[]>(universities);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const universitiesPerPage = 6;
@@ -236,18 +236,18 @@ const UniversitiesPage: React.FC = () => {
     }
     
     // Filter by city
-    if (selectedCity) {
+    if (selectedCity !== "all") {
       filtered = filtered.filter(uni => uni.city === selectedCity);
     }
     
     // Filter by rating
-    if (selectedRating) {
+    if (selectedRating !== "all") {
       const ratingValue = parseFloat(selectedRating);
       filtered = filtered.filter(uni => uni.rating >= ratingValue);
     }
     
     // Filter by major
-    if (selectedMajor) {
+    if (selectedMajor !== "all") {
       filtered = filtered.filter(uni => 
         uni.majors?.some(major => major.toLowerCase().includes(selectedMajor.toLowerCase()))
       );
@@ -276,9 +276,9 @@ const UniversitiesPage: React.FC = () => {
   // Reset all filters
   const resetFilters = () => {
     setSearchQuery("");
-    setSelectedCity("");
-    setSelectedRating("");
-    setSelectedMajor("");
+    setSelectedCity("all");
+    setSelectedRating("all");
+    setSelectedMajor("all");
     toast({
       title: "Сүзгіштер тазартылды",
       description: "Барлық сүзгіштер тазартылды",
@@ -310,7 +310,7 @@ const UniversitiesPage: React.FC = () => {
                 <SelectValue placeholder="Аймақ бойынша" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Барлық қалалар</SelectItem>
+                <SelectItem value="all">Барлық қалалар</SelectItem>
                 {cities.map(city => (
                   <SelectItem key={city} value={city}>{city}</SelectItem>
                 ))}
@@ -322,7 +322,7 @@ const UniversitiesPage: React.FC = () => {
                 <SelectValue placeholder="Рейтинг бойынша" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Барлық рейтинг</SelectItem>
+                <SelectItem value="all">Барлық рейтинг</SelectItem>
                 <SelectItem value="4.8">4.8+</SelectItem>
                 <SelectItem value="4.5">4.5+</SelectItem>
                 <SelectItem value="4.0">4.0+</SelectItem>
@@ -334,7 +334,7 @@ const UniversitiesPage: React.FC = () => {
                 <SelectValue placeholder="Мамандық бойынша" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Барлық мамандықтар</SelectItem>
+                <SelectItem value="all">Барлық мамандықтар</SelectItem>
                 {uniqueMajors.map(major => (
                   <SelectItem key={major} value={major}>{major}</SelectItem>
                 ))}
