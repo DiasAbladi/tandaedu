@@ -44,7 +44,7 @@ const consultants: Consultant[] = [
   },
   {
     id: "consultant3",
-    name: "Баурж222ан Мэдиұлы",
+    name: "Бауржан Мәдиұлы",
     role: "Білім беру сарапшысы",
     specialization: ["Халықаралық білім", "Инженерия"],
     rating: 4.7,
