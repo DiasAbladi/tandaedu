@@ -18,7 +18,31 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Normally you would authenticate with a backend here
+    
+    // Basic validation
+    if (!email || !password) {
+      toast({
+        title: "Қате!",
+        description: "Электрондық пошта мен құпия сөзді енгізіңіз",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // In a real app, you'd make an API call to authenticate
+    // For demo purposes, we'll use a mock login
+    // Extract name from email for display purposes
+    const userName = email.split('@')[0];
+    
+    // Save user info to localStorage
+    const userData = {
+      email,
+      name: userName.charAt(0).toUpperCase() + userName.slice(1), // Capitalize first letter
+      isLoggedIn: true
+    };
+    
+    localStorage.setItem('user', JSON.stringify(userData));
+    
     toast({
       title: "Сәтті кіру!",
       description: "Жүйеге кіру сәтті болды.",

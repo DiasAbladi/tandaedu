@@ -1,349 +1,262 @@
 
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Star, Calendar, Filter, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { GraduationCap, Building, LineChart } from "lucide-react";
-import { 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Consultant {
   id: string;
   name: string;
-  position: string;
-  photo?: string;
+  role: string;
+  specialization: string[];
+  rating: number;
+  ratingCount: number;
+  experience: string;
+  price: string;
+  duration: string;
+  image: string;
+  description: string;
 }
 
 const consultants: Consultant[] = [
   {
-    id: "aidar",
-    name: "Айдар Қасымов",
-    position: "Мансап кеңесшісі"
+    id: "consultant1",
+    name: "Төлеген Айдарұлы",
+    role: "Карьералық кеңесші",
+    specialization: ["IT", "Бизнес"],
+    rating: 4.8,
+    ratingCount: 124,
+    experience: "8 жыл тәжірибесі бар IT және бизнес саласында кәсіби кеңесші. Назарбаев Университетінің түлегі.",
+    price: "15 000 ₸",
+    duration: "60 минут",
+    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
+    description: "8 жылдық тәжірибесі бар IT және бизнес саласында кәсіби кеңесші. Назарбаев Университетінің түлегі."
   },
   {
-    id: "asel",
-    name: "Әсел Мұратова",
-    position: "Білім беру сарапшысы"
+    id: "consultant2",
+    name: "Әсел Нұржанқызы",
+    role: "Психолог, мамандық кеңесшісі",
+    specialization: ["Психология", "Білім беру"],
+    rating: 4.9,
+    ratingCount: 187,
+    experience: "12 жыл тәжірибе",
+    price: "18 000 ₸",
+    duration: "60 минут",
+    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
+    description: "12 жылдық тәжірибесі бар психолог және мамандық кеңесшісі. 500-ден астам түлекке өз мамандығын таңдауға көмектескен."
   },
   {
-    id: "bakyt",
-    name: "Бақыт Әлімов",
-    position: "Университет кеңесшісі"
+    id: "consultant3",
+    name: "Баурж222ан Мэдиұлы",
+    role: "Білім беру сарапшысы",
+    specialization: ["Халықаралық білім", "Инженерия"],
+    rating: 4.7,
+    ratingCount: 156,
+    experience: "15 жыл тәжірибе",
+    price: "20 000 ₸",
+    duration: "60 минут",
+    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
+    description: "15 жылдық тәжірибесі бар білім беру сарапшысы. Шетелдік оқу және инженерлік мамандықтар бойынша кеңес береді."
   },
   {
-    id: "gulnar",
-    name: "Гүлнар Сарсенова",
-    position: "Мамандық кеңесшісі"
+    id: "consultant4",
+    name: "Гүлнар Серікова",
+    role: "Медицина саласының кеңесшісі",
+    specialization: ["Медицина", "Денсаулық сақтау"],
+    rating: 4.9,
+    ratingCount: 142,
+    experience: "10 жыл тәжірибе",
+    price: "17 000 ₸",
+    duration: "60 минут",
+    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
+    description: "10 жылдық тәжірибесі бар медицина саласының маманы. Медициналық мамандықтар бойынша кәсіби кеңес береді."
   }
 ];
 
 const ConsultantCard: React.FC<{ consultant: Consultant }> = ({ consultant }) => {
   return (
-    <div className="bg-white p-5 rounded-lg border text-center">
-      <div className="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-3"></div>
-      <h4 className="font-bold">{consultant.name}</h4>
-      <p className="text-sm text-gray-600 mb-4">{consultant.position}</p>
-      <Button size="sm">Кеңес алу</Button>
+    <div className="bg-white rounded-lg p-5 border mb-6">
+      <div className="flex gap-4 items-center mb-3">
+        <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+          <img src={consultant.image} alt={consultant.name} className="w-full h-full object-cover" />
+        </div>
+        <div>
+          <h3 className="font-bold">{consultant.name}</h3>
+          <p className="text-gray-600 text-sm">{consultant.role}</p>
+        </div>
+      </div>
+      
+      <div className="flex flex-wrap gap-1 mb-3">
+        {consultant.specialization.map((spec, index) => (
+          <span key={index} className="text-xs bg-gray-100 px-2 py-1 rounded-md">{spec}</span>
+        ))}
+      </div>
+      
+      <div className="flex items-center mb-3">
+        {Array(5).fill(0).map((_, i) => (
+          <Star 
+            key={i} 
+            size={14}
+            className={`${i < Math.floor(consultant.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+          />
+        ))}
+        <span className="ml-1 text-sm font-medium">{consultant.rating}</span>
+        <span className="ml-1 text-xs text-gray-500">({consultant.ratingCount} пікір)</span>
+      </div>
+      
+      <p className="text-sm mb-4">{consultant.description}</p>
+      
+      <div className="flex justify-between items-center mt-3 pt-3 border-t">
+        <div>
+          <p className="text-blue-600 font-bold">{consultant.price}</p>
+          <p className="text-xs text-gray-500">{consultant.duration}</p>
+        </div>
+        <Button size="sm">Жазылу</Button>
+      </div>
     </div>
   );
 };
 
 const ConsultingPage: React.FC = () => {
-  const [consultationType, setConsultationType] = useState("");
-  const [consultant, setConsultant] = useState("");
-  
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState<string>("");
+  const [filteredConsultants, setFilteredConsultants] = useState<Consultant[]>(consultants);
+  const { toast } = useToast();
+
+  // Collect all unique specializations
+  const allSpecializations = Array.from(
+    new Set(consultants.flatMap(consultant => consultant.specialization))
+  );
+
+  // Apply filters when search or specialization changes
+  React.useEffect(() => {
+    let filtered = consultants;
+    
+    if (searchQuery) {
+      filtered = filtered.filter(consultant =>
+        consultant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        consultant.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        consultant.specialization.some(spec => 
+          spec.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+    
+    if (selectedSpecialization) {
+      filtered = filtered.filter(consultant =>
+        consultant.specialization.includes(selectedSpecialization)
+      );
+    }
+    
+    setFilteredConsultants(filtered);
+  }, [searchQuery, selectedSpecialization]);
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedSpecialization("");
+    toast({
+      title: "Сүзгіштер тазартылды",
+      description: "Барлық сүзгіштер тазартылды",
+    });
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Navbar />
-      
-      <main className="flex-1">
-        {/* Header Section */}
-        <section className="bg-blue-50 py-16">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h1 className="text-3xl font-bold mb-4">Сарапшылармен онлайн кеңес алыңыз</h1>
-                <p className="text-gray-600 mb-6">
-                  Білікті мамандардан кеңбір кеңес алып, болашағыңызды жоспарлаңыз
-                </p>
-                <Button size="lg">Кеңес алуға жазылу</Button>
-              </div>
-              <div className="hidden md:block">
-                <img 
-                  src="public/lovable-uploads/16b03a23-f0cc-4e82-952d-d572b19eff04.png"
-                  alt="Кеңес алу" 
-                  className="rounded-lg shadow-md w-full"
-                />
-              </div>
-            </div>
+      <main className="min-h-screen bg-gray-50 py-12">
+        <div className="container px-4 md:px-6">
+          <div className="bg-blue-600 text-white rounded-lg p-6 mb-12">
+            <h2 className="text-2xl font-bold mb-2">Жеке кеңес тағайындау</h2>
+            <p className="max-w-2xl mb-0">
+              Біздің тәжірибелі мамандар сізге университет пен мамандық таңдауда көмек көрсетеді
+            </p>
           </div>
-        </section>
-        
-        {/* Services Section */}
-        <section className="py-16">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-2xl font-bold mb-8 text-center">Кеңес беру бағыттары</h2>
+          
+          <div className="bg-white p-6 rounded-lg mb-8">
+            <h3 className="text-lg font-bold mb-4">Кеңес түрін таңдаңыз</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg border shadow-sm">
-                <GraduationCap className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="font-bold mb-2">Мамандық таңдау</h3>
-                <p className="text-sm text-gray-600">
-                  Қызығушылықтарыңыз бен қабілеттеріңізге сәйкес мамандық таңдауға көмектесеміз
-                </p>
-              </div>
+            <Tabs defaultValue="online">
+              <TabsList className="mb-6">
+                <TabsTrigger value="online">
+                  <Calendar className="h-4 w-4 mr-2" /> Онлайн кеңес
+                </TabsTrigger>
+                <TabsTrigger value="offline">
+                  <Calendar className="h-4 w-4 mr-2" /> Офлайн кеңес
+                </TabsTrigger>
+              </TabsList>
               
-              <div className="bg-white p-6 rounded-lg border shadow-sm">
-                <Building className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="font-bold mb-2">Университетке түсу</h3>
-                <p className="text-sm text-gray-600">
-                  Университет таңдау және түсу процесі туралы толық кеңес беремін
-                </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg border shadow-sm">
-                <LineChart className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="font-bold mb-2">Карьера жоспарлау</h3>
-                <p className="text-sm text-gray-600">
-                  Болашақ мансабыңызды жоспарлау және дамыту стратегиясын құрастырамыз
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Consultants Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-2xl font-bold mb-8 text-center">Біздің сарапшылар</h2>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {consultants.map(consultant => (
-                <ConsultantCard key={consultant.id} consultant={consultant} />
-              ))}
-            </div>
-          </div>
-        </section>
-        
-        {/* Booking Form */}
-        <section className="py-16">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-2xl font-bold mb-8 text-center">Кеңес алуға жазылу</h2>
-            
-            <div className="max-w-xl mx-auto bg-white p-8 rounded-lg border shadow-sm">
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Кеңес түрі</label>
-                  <Select value={consultationType} onValueChange={setConsultationType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Мамандық таңдау" />
+              <TabsContent value="online" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="relative">
+                    <Input 
+                      type="text" 
+                      placeholder="Кеңесші атауын іздеу" 
+                      className="pl-10 py-2 w-full rounded-md border shadow-sm"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                  
+                  <Select value={selectedSpecialization} onValueChange={setSelectedSpecialization}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Саласы бойынша" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="career">Мамандық таңдау</SelectItem>
-                      <SelectItem value="university">Университет таңдау</SelectItem>
-                      <SelectItem value="planning">Карьера жоспарлау</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-2">Сарапшы</label>
-                  <Select value={consultant} onValueChange={setConsultant}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Айдар Қасымов" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {consultants.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      <SelectItem value="">Барлық салалар</SelectItem>
+                      {allSpecializations.map(spec => (
+                        <SelectItem key={spec} value={spec}>{spec}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  
+                  <Button variant="outline" onClick={resetFilters}>
+                    <Filter className="h-4 w-4 mr-2" />
+                    Сүзгіштерді тазарту
+                  </Button>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Күні мен уақыты</label>
-                  <Input type="date" />
+                <div className="mt-8">
+                  <h3 className="text-xl font-bold mb-6">Кеңесшілер ({filteredConsultants.length})</h3>
+                  {filteredConsultants.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {filteredConsultants.map(consultant => (
+                        <ConsultantCard key={consultant.id} consultant={consultant} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center p-10">
+                      <p className="text-gray-500 mb-4">Кеңесшілер табылмады</p>
+                      <Button onClick={resetFilters}>Сүзгіштерді тазарту</Button>
+                    </div>
+                  )}
                 </div>
-                
-                <Button className="w-full">Жазылуды растау</Button>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Pricing */}
-        <section className="py-16 bg-gray-50">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-2xl font-bold mb-8 text-center">Кеңес құны</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-lg border shadow-sm">
-                <div className="text-center mb-6">
-                  <h3 className="font-medium">Жеке кеңес</h3>
-                  <div className="text-3xl font-bold mt-2">15,000 ₸ <span className="text-sm font-normal text-gray-500">/сағат</span></div>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> 60 минут кеңес
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> Жеке кеңес беру
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> Онлайн форматта
-                  </li>
-                </ul>
-                
-                <Button variant="outline" className="w-full">Таңдау</Button>
-              </div>
+              </TabsContent>
               
-              <div className="bg-white p-8 rounded-lg border shadow-lg relative transform scale-105 z-10">
-                <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-br-lg rounded-tl-lg">
-                  Танымал
+              <TabsContent value="offline">
+                <div className="p-6 text-center">
+                  <p className="text-lg mb-4">Офлайн кеңестер тек алдын-ала жазылу арқылы өткізіледі.</p>
+                  <Button>Байланысу</Button>
                 </div>
-                
-                <div className="text-center mb-6">
-                  <h3 className="font-medium">Пакеттік кеңес</h3>
-                  <div className="text-3xl font-bold mt-2">40,000 ₸ <span className="text-sm font-normal text-gray-500">/3 сағат</span></div>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> 3×60 минут кеңес
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> Жеке жоспар құру
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> Материалдар
-                  </li>
-                </ul>
-                
-                <Button className="w-full">Таңдау</Button>
-              </div>
-              
-              <div className="bg-white p-8 rounded-lg border shadow-sm">
-                <div className="text-center mb-6">
-                  <h3 className="font-medium">Премиум кеңес</h3>
-                  <div className="text-3xl font-bold mt-2">70,000 ₸ <span className="text-sm font-normal text-gray-500">/6 сағат</span></div>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> 6×60 минут кеңес
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> Толық талдау
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span> Қосымша материалдар
-                  </li>
-                </ul>
-                
-                <Button variant="outline" className="w-full">Таңдау</Button>
-              </div>
-            </div>
+              </TabsContent>
+            </Tabs>
           </div>
-        </section>
-        
-        {/* FAQ Section */}
-        <section className="py-16">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-2xl font-bold mb-8 text-center">Жиі қойылатын сұрақтар</h2>
-            
-            <div className="max-w-3xl mx-auto">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>Қалай тіркелуге болады?</AccordionTrigger>
-                  <AccordionContent>
-                    Кеңес алу үшін жоғарыдағы формаға толтырып, қолайлы уақытты таңдаңыз. Сізге растау хабарламасы жіберіледі.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                  <AccordionTrigger>Тест тапсыру қалай жұзеге асады?</AccordionTrigger>
-                  <AccordionContent>
-                    Мамандық таңдау тестін онлайн режимде тапсыруға болады. Тест нәтижелерін кеңесшімен талқылауға болады.
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </div>
-        </section>
-        
-        {/* Contact Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-lg border text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600">🤖</span>
-                </div>
-                <h3 className="font-bold mb-2">Чат-бот</h3>
-                <p className="text-sm text-gray-600 mb-4">24/7 автоматты көмекші</p>
-                <Button variant="outline" size="sm">Чатты бастау</Button>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg border text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600">👨‍💼</span>
-                </div>
-                <h3 className="font-bold mb-2">Оператор</h3>
-                <p className="text-sm text-gray-600 mb-4">Тікелей байланыс</p>
-                <Button variant="outline" size="sm">Байланысу</Button>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg border text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600">✉️</span>
-                </div>
-                <h3 className="font-bold mb-2">Email</h3>
-                <p className="text-sm text-gray-600 mb-4">info@tandaedu.kz</p>
-                <Button variant="outline" size="sm">Email жазу</Button>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Social Links Section */}
-        <section className="bg-gray-900 text-white py-12">
-          <div className="container px-4 md:px-6">
-            <div className="text-center mb-6">
-              <h2 className="text-xl font-bold mb-4">Әлеуметтік желілер</h2>
-              <div className="flex justify-center gap-4">
-                {['facebook', 'instagram', 'telegram', 'whatsapp', 'linkedin'].map(social => (
-                  <a key={social} href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700">
-                    <span className="sr-only">{social}</span>
-                    <div className="w-5 h-5"></div>
-                  </a>
-                ))}
-              </div>
-            </div>
-            
-            <div className="flex justify-center">
-              <Button variant="outline" className="bg-green-500 text-white hover:bg-green-600 border-none">
-                WhatsApp-қа өту
-              </Button>
-            </div>
-          </div>
-        </section>
+        </div>
       </main>
-      
       <Footer />
-    </div>
+    </>
   );
 };
 

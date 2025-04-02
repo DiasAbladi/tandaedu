@@ -21,6 +21,16 @@ const RegisterPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Basic validation
+    if (!name || !email || !password || !confirmPassword) {
+      toast({
+        title: "Қате",
+        description: "Барлық өрістерді толтырыңыз",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (password !== confirmPassword) {
       toast({
         title: "Құпия сөздер сәйкес келмейді",
@@ -39,7 +49,18 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    // Normally you would register with a backend here
+    // In a real app, you'd make an API call to register the user
+    // For demo purposes, we'll use a mock registration
+    
+    // Save user info to localStorage
+    const userData = {
+      name,
+      email,
+      isLoggedIn: true
+    };
+    
+    localStorage.setItem('user', JSON.stringify(userData));
+    
     toast({
       title: "Тіркелу сәтті аяқталды!",
       description: "Сіз сәтті тіркелдіңіз.",
