@@ -1,262 +1,447 @@
 
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Star, Calendar, Filter, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  Calendar, 
+  Clock, 
+  Mail, 
+  Phone, 
+  MapPin,
+  User, 
+  GraduationCap,
+  CheckCircle,
+  CalendarDays
+} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Consultant {
-  id: string;
+  id: number;
   name: string;
   role: string;
-  specialization: string[];
-  rating: number;
-  ratingCount: number;
-  experience: string;
-  price: string;
-  duration: string;
   image: string;
-  description: string;
+  experience: string;
+  rating: number;
+  specialization: string[];
+  available: boolean;
+  price: string;
 }
 
 const consultants: Consultant[] = [
   {
-    id: "consultant1",
-    name: "Төлеген Айдарұлы",
+    id: 1,
+    name: "Айгүл Ахметова",
     role: "Карьералық кеңесші",
-    specialization: ["IT", "Бизнес"],
-    rating: 4.8,
-    ratingCount: 124,
-    experience: "8 жыл тәжірибесі бар IT және бизнес саласында кәсіби кеңесші. Назарбаев Университетінің түлегі.",
-    price: "15 000 ₸",
-    duration: "60 минут",
-    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
-    description: "8 жылдық тәжірибесі бар IT және бизнес саласында кәсіби кеңесші. Назарбаев Университетінің түлегі."
-  },
-  {
-    id: "consultant2",
-    name: "Әсел Нұржанқызы",
-    role: "Психолог, мамандық кеңесшісі",
-    specialization: ["Психология", "Білім беру"],
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    experience: "8 жыл",
     rating: 4.9,
-    ratingCount: 187,
-    experience: "12 жыл тәжірибе",
-    price: "18 000 ₸",
-    duration: "60 минут",
-    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
-    description: "12 жылдық тәжірибесі бар психолог және мамандық кеңесшісі. 500-ден астам түлекке өз мамандығын таңдауға көмектескен."
+    specialization: ["Карьералық жоспарлау", "Резюме дайындау", "Мамандық таңдау"],
+    available: true,
+    price: "5,000 ₸/сағат"
   },
   {
-    id: "consultant3",
-    name: "Бауржан Мәдиұлы",
-    role: "Білім беру сарапшысы",
-    specialization: ["Халықаралық білім", "Инженерия"],
+    id: 2,
+    name: "Дәулет Сәрсенов",
+    role: "Оқу бағдарламалары маманы",
+    image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    experience: "5 жыл",
     rating: 4.7,
-    ratingCount: 156,
-    experience: "15 жыл тәжірибе",
-    price: "20 000 ₸",
-    duration: "60 минут",
-    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
-    description: "15 жылдық тәжірибесі бар білім беру сарапшысы. Шетелдік оқу және инженерлік мамандықтар бойынша кеңес береді."
+    specialization: ["Шетелде оқу", "Грант алу кеңестері", "Университет таңдау"],
+    available: true,
+    price: "6,000 ₸/сағат"
   },
   {
-    id: "consultant4",
-    name: "Гүлнар Серікова",
-    role: "Медицина саласының кеңесшісі",
-    specialization: ["Медицина", "Денсаулық сақтау"],
-    rating: 4.9,
-    ratingCount: 142,
-    experience: "10 жыл тәжірибе",
-    price: "17 000 ₸",
-    duration: "60 минут",
-    image: "/lovable-uploads/cc18b066-c716-4c8e-934f-b534d715a74c.png",
-    description: "10 жылдық тәжірибесі бар медицина саласының маманы. Медициналық мамандықтар бойынша кәсіби кеңес береді."
+    id: 3,
+    name: "Гүлнұр Жұмабаева",
+    role: "Психолог-кеңесші",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    experience: "10 жыл",
+    rating: 4.8,
+    specialization: ["Мамандық бейімділік тесті", "Кәсіптік бағдарлау", "Психологиялық қолдау"],
+    available: false,
+    price: "7,000 ₸/сағат"
+  },
+  {
+    id: 4,
+    name: "Бекзат Оспанов",
+    role: "IT саласының маманы",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    experience: "7 жыл",
+    rating: 4.6,
+    specialization: ["IT мамандықтары", "Программалау тілдері", "Техникалық дағдылар"],
+    available: true,
+    price: "7,500 ₸/сағат"
   }
 ];
 
-const ConsultantCard: React.FC<{ consultant: Consultant }> = ({ consultant }) => {
-  return (
-    <div className="bg-white rounded-lg p-5 border mb-6">
-      <div className="flex gap-4 items-center mb-3">
-        <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
-          <img src={consultant.image} alt={consultant.name} className="w-full h-full object-cover" />
-        </div>
-        <div>
-          <h3 className="font-bold">{consultant.name}</h3>
-          <p className="text-gray-600 text-sm">{consultant.role}</p>
-        </div>
-      </div>
-      
-      <div className="flex flex-wrap gap-1 mb-3">
-        {consultant.specialization.map((spec, index) => (
-          <span key={index} className="text-xs bg-gray-100 px-2 py-1 rounded-md">{spec}</span>
-        ))}
-      </div>
-      
-      <div className="flex items-center mb-3">
-        {Array(5).fill(0).map((_, i) => (
-          <Star 
-            key={i} 
-            size={14}
-            className={`${i < Math.floor(consultant.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
-          />
-        ))}
-        <span className="ml-1 text-sm font-medium">{consultant.rating}</span>
-        <span className="ml-1 text-xs text-gray-500">({consultant.ratingCount} пікір)</span>
-      </div>
-      
-      <p className="text-sm mb-4">{consultant.description}</p>
-      
-      <div className="flex justify-between items-center mt-3 pt-3 border-t">
-        <div>
-          <p className="text-blue-600 font-bold">{consultant.price}</p>
-          <p className="text-xs text-gray-500">{consultant.duration}</p>
-        </div>
-        <Button size="sm">Жазылу</Button>
-      </div>
-    </div>
-  );
-};
-
 const ConsultingPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedSpecialization, setSelectedSpecialization] = useState<string>("all");
-  const [filteredConsultants, setFilteredConsultants] = useState<Consultant[]>(consultants);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedConsultant, setSelectedConsultant] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    topic: "not-specified",
+    message: ""
+  });
+  
   const { toast } = useToast();
-
-  // Collect all unique specializations
-  const allSpecializations = Array.from(
-    new Set(consultants.flatMap(consultant => consultant.specialization))
-  );
-
-  // Apply filters when search or specialization changes
-  React.useEffect(() => {
-    let filtered = consultants;
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     
-    if (searchQuery) {
-      filtered = filtered.filter(consultant =>
-        consultant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        consultant.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        consultant.specialization.some(spec => 
-          spec.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
+    // Validate the form
+    if (!formData.name || !formData.email || !formData.phone || !selectedDate || !selectedTime || !selectedConsultant) {
+      toast({
+        title: "Қате",
+        description: "Барлық қажетті өрістерді толтырыңыз",
+        variant: "destructive"
+      });
+      return;
     }
     
-    if (selectedSpecialization !== "all") {
-      filtered = filtered.filter(consultant =>
-        consultant.specialization.includes(selectedSpecialization)
-      );
-    }
-    
-    setFilteredConsultants(filtered);
-  }, [searchQuery, selectedSpecialization]);
-
-  const resetFilters = () => {
-    setSearchQuery("");
-    setSelectedSpecialization("all");
+    // Form is valid, show success message
     toast({
-      title: "Сүзгіштер тазартылды",
-      description: "Барлық сүзгіштер тазартылды",
+      title: "Сәтті",
+      description: "Сіздің өтініміңіз қабылданды. Біз сізбен жақын арада хабарласамыз.",
+      variant: "default"
     });
+    
+    // Reset form
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      topic: "not-specified",
+      message: ""
+    });
+    setSelectedDate("");
+    setSelectedTime("");
+    setSelectedConsultant(null);
   };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+  
+  // Available dates (next 7 days)
+  const availableDates = [...Array(7)].map((_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+    return date.toISOString().split('T')[0];
+  });
+  
+  // Available times
+  const availableTimes = [
+    "10:00", "11:00", "12:00", "14:00", "15:00", "16:00", "17:00"
+  ];
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="min-h-screen bg-gray-50 py-12">
+      
+      <div className="bg-blue-50 py-16">
         <div className="container px-4 md:px-6">
-          <div className="bg-blue-600 text-white rounded-lg p-6 mb-12">
-            <h2 className="text-2xl font-bold mb-2">Жеке кеңес тағайындау</h2>
-            <p className="max-w-2xl mb-0">
-              Біздің тәжірибелі мамандар сізге университет пен мамандық таңдауда көмек көрсетеді
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">Кәсіби кеңес алу</h1>
+            <p className="text-lg text-gray-700 mb-6">
+              Мамандық таңдау, карьера қалыптастыру және жоғары оқу орнын таңдау бойынша сарапшылардан кеңес алыңыз
             </p>
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <div className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                <span>Кәсіби кеңесшілер</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                <span>Онлайн кеңес алу</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                <span>Жеке кеңес</span>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+      
+      <div className="container px-4 md:px-6 py-12">
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-8 text-center">Біздің кеңесшілеріміз</h2>
           
-          <div className="bg-white p-6 rounded-lg mb-8">
-            <h3 className="text-lg font-bold mb-4">Кеңес түрін таңдаңыз</h3>
-            
-            <Tabs defaultValue="online">
-              <TabsList className="mb-6">
-                <TabsTrigger value="online">
-                  <Calendar className="h-4 w-4 mr-2" /> Онлайн кеңес
-                </TabsTrigger>
-                <TabsTrigger value="offline">
-                  <Calendar className="h-4 w-4 mr-2" /> Офлайн кеңес
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="online" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative">
-                    <Input 
-                      type="text" 
-                      placeholder="Кеңесші атауын іздеу" 
-                      className="pl-10 py-2 w-full rounded-md border shadow-sm"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {consultants.map(consultant => (
+              <Card 
+                key={consultant.id} 
+                className={`p-6 hover:shadow-md transition-shadow cursor-pointer ${selectedConsultant === consultant.id ? 'border-2 border-tandablue' : ''}`}
+                onClick={() => setSelectedConsultant(consultant.id)}
+              >
+                <div className="flex flex-col items-center text-center mb-4">
+                  <Avatar className="h-24 w-24 mb-4">
+                    <AvatarImage src={consultant.image} alt={consultant.name} />
+                    <AvatarFallback>{consultant.name.substring(0, 2)}</AvatarFallback>
+                  </Avatar>
+                  <h3 className="font-bold text-lg">{consultant.name}</h3>
+                  <p className="text-gray-600 mb-2">{consultant.role}</p>
+                  <div className="flex items-center mb-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className={`h-4 w-4 ${i < consultant.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                    <span className="text-sm ml-1">{consultant.rating.toFixed(1)}</span>
                   </div>
-                  
-                  <Select value={selectedSpecialization} onValueChange={setSelectedSpecialization}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Саласы бойынша" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Барлық салалар</SelectItem>
-                      {allSpecializations.map(spec => (
-                        <SelectItem key={spec} value={spec}>{spec}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Button variant="outline" onClick={resetFilters}>
-                    <Filter className="h-4 w-4 mr-2" />
-                    Сүзгіштерді тазарту
-                  </Button>
                 </div>
                 
-                <div className="mt-8">
-                  <h3 className="text-xl font-bold mb-6">Кеңесшілер ({filteredConsultants.length})</h3>
-                  {filteredConsultants.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {filteredConsultants.map(consultant => (
-                        <ConsultantCard key={consultant.id} consultant={consultant} />
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center">
+                    <CalendarDays className="h-4 w-4 text-tandablue mr-2" />
+                    <span>Тәжірибе: {consultant.experience}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600 block mb-1">Мамандану:</span>
+                    <div className="flex flex-wrap gap-1">
+                      {consultant.specialization.map((spec, i) => (
+                        <span key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
+                          {spec}
+                        </span>
                       ))}
                     </div>
-                  ) : (
-                    <div className="text-center p-10">
-                      <p className="text-gray-500 mb-4">Кеңесшілер табылмады</p>
-                      <Button onClick={resetFilters}>Сүзгіштерді тазарту</Button>
-                    </div>
-                  )}
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="font-medium text-tandablue">{consultant.price}</span>
+                    <span className={`text-xs px-2 py-1 rounded ${consultant.available ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                      {consultant.available ? 'Қолжетімді' : 'Бос емес'}
+                    </span>
+                  </div>
                 </div>
-              </TabsContent>
-              
-              <TabsContent value="offline">
-                <div className="p-6 text-center">
-                  <p className="text-lg mb-4">Офлайн кеңестер тек алдын-ала жазылу арқылы өткізіледі.</p>
-                  <Button>Байланысу</Button>
-                </div>
-              </TabsContent>
-            </Tabs>
+              </Card>
+            ))}
           </div>
         </div>
-      </main>
+      
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold mb-6">Кеңес алуға жазылу</h2>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Аты-жөніңіз</Label>
+                      <Input 
+                        id="name" 
+                        name="name"
+                        placeholder="Аты-жөніңізді енгізіңіз" 
+                        value={formData.name}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input 
+                        id="email" 
+                        name="email"
+                        type="email" 
+                        placeholder="Email адресіңізді енгізіңіз"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Телефон</Label>
+                      <Input 
+                        id="phone" 
+                        name="phone"
+                        placeholder="Телефон нөміріңізді енгізіңіз"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="topic">Кеңес тақырыбы</Label>
+                      <Select 
+                        value={formData.topic} 
+                        onValueChange={(value) => setFormData({...formData, topic: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Тақырыпты таңдаңыз" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="not-specified">Тақырыпты таңдаңыз</SelectItem>
+                          <SelectItem value="career">Мансап жоспарлау</SelectItem>
+                          <SelectItem value="university">Университет таңдау</SelectItem>
+                          <SelectItem value="major">Мамандық таңдау</SelectItem>
+                          <SelectItem value="grant">Грант алу кеңестері</SelectItem>
+                          <SelectItem value="abroad">Шетелде оқу</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <h3 className="font-medium">Кеңес уақытын таңдаңыз</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="date">Күні</Label>
+                      <Select 
+                        value={selectedDate} 
+                        onValueChange={setSelectedDate}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Күнді таңдаңыз" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Күнді таңдаңыз</SelectItem>
+                          {availableDates.map(date => (
+                            <SelectItem key={date} value={date}>
+                              {new Date(date).toLocaleDateString('kk-KZ', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long'
+                              })}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="time">Уақыты</Label>
+                      <Select 
+                        value={selectedTime} 
+                        onValueChange={setSelectedTime}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Уақытты таңдаңыз" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Уақытты таңдаңыз</SelectItem>
+                          {availableTimes.map(time => (
+                            <SelectItem key={time} value={time}>
+                              {time}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="message">Қосымша ақпарат</Label>
+                  <Textarea 
+                    id="message" 
+                    name="message"
+                    placeholder="Кеңес алу туралы қосымша ақпаратты жазыңыз"
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                
+                <Button type="submit" className="w-full">Кеңеске жазылу</Button>
+              </form>
+            </div>
+          </div>
+          
+          <div>
+            <div className="bg-white rounded-lg shadow p-6 mb-6">
+              <h3 className="text-lg font-bold mb-4">Байланыс ақпараты</h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <Phone className="h-5 w-5 text-tandablue mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Телефон</p>
+                    <p className="text-gray-600">+7 (727) 123-45-67</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <Mail className="h-5 w-5 text-tandablue mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Email</p>
+                    <p className="text-gray-600">info@tandabilim.kz</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <MapPin className="h-5 w-5 text-tandablue mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Мекен-жайы</p>
+                    <p className="text-gray-600">Алматы қ., Достық даңғ. 12, A5 офис</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-bold mb-4">Кеңес алу туралы</h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <Clock className="h-5 w-5 text-tandablue mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Кеңес ұзақтығы</p>
+                    <p className="text-gray-600">45-60 минут</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <User className="h-5 w-5 text-tandablue mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Кеңес форматы</p>
+                    <p className="text-gray-600">Онлайн (Zoom) немесе офисте</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <GraduationCap className="h-5 w-5 text-tandablue mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Кеңес бағыттары</p>
+                    <p className="text-gray-600">Мамандық таңдау, ЖОО таңдау, Шетелде оқу, Карьералық кеңес</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <Footer />
-    </>
+    </div>
   );
 };
 

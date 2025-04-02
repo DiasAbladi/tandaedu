@@ -1,11 +1,9 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
-import { Clock, ArrowLeft, Share2 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Clock, ArrowLeft, Share2, Eye } from "lucide-react";
 
 interface NewsArticle {
   id: string;
@@ -216,7 +214,27 @@ const newsArticles: Record<string, NewsArticle> = {
 
 const NewsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const article = newsArticles[id as keyof typeof newsArticles];
+  const [article, setArticle] = useState<NewsArticle | null>(null);
+  const [relatedNews, setRelatedNews] = useState<NewsArticle[]>([]);
+  
+  useEffect(() => {
+    if (id && newsArticles[id]) {
+      // Get the article
+      const currentArticle = {...newsArticles[id]};
+      
+      // Increment view count
+      currentArticle.views += 1;
+      setArticle(currentArticle);
+      
+      // Set related news
+      if (currentArticle.relatedNewsIds) {
+        const related = currentArticle.relatedNewsIds
+          .map(relatedId => newsArticles[relatedId])
+          .filter(Boolean);
+        setRelatedNews(related);
+      }
+    }
+  }, [id]);
 
   if (!article) {
     return (
@@ -233,9 +251,13 @@ const NewsDetailPage: React.FC = () => {
     );
   }
 
-  const relatedNews = article.relatedNewsIds 
-    ? article.relatedNewsIds.map(id => newsArticles[id]).filter(Boolean)
-    : [];
+  const incrementRelatedNewsViewCount = (relatedId: string) => {
+    setRelatedNews(prev => 
+      prev.map(news => 
+        news.id === relatedId ? { ...news, views: news.views + 1 } : news
+      )
+    );
+  };
 
   return (
     <>
@@ -261,6 +283,9 @@ const NewsDetailPage: React.FC = () => {
                 <span className="text-sm bg-gray-100 text-gray-800 px-3 py-1 rounded-full flex items-center">
                   <Clock className="h-3 w-3 mr-1" /> {article.timestamp}
                 </span>
+                <span className="text-sm bg-gray-100 text-gray-800 px-3 py-1 rounded-full flex items-center">
+                  <Eye className="h-3 w-3 mr-1" /> {article.views}
+                </span>
               </div>
 
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
@@ -278,7 +303,9 @@ const NewsDetailPage: React.FC = () => {
 
               <div className="flex justify-between items-center mt-8 pt-6 border-t">
                 <div className="flex items-center text-sm text-gray-500">
-                  <span>{article.views} көрініс</span>
+                  <span className="flex items-center">
+                    <Eye className="h-4 w-4 mr-1" /> {article.views} көрініс
+                  </span>
                   {article.likes && (
                     <span className="ml-4">{article.likes} ұнайды</span>
                   )}
@@ -299,7 +326,12 @@ const NewsDetailPage: React.FC = () => {
               <h2 className="text-xl font-bold mb-4">Қатысты жаңалықтар</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedNews.map(news => (
-                  <Link key={news.id} to={`/news/${news.id}`} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                  <Link 
+                    key={news.id} 
+                    to={`/news/${news.id}`} 
+                    className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    onClick={() => incrementRelatedNewsViewCount(news.id)}
+                  >
                     <img 
                       src={news.image}
                       alt={news.title}
@@ -309,6 +341,11 @@ const NewsDetailPage: React.FC = () => {
                       <span className="text-xs text-blue-600 font-medium">{news.category}</span>
                       <h3 className="font-semibold mt-1 mb-2 line-clamp-2">{news.title}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2">{news.description}</p>
+                      <div className="flex items-center mt-2 text-xs text-gray-500">
+                        <Eye className="h-3 w-3 mr-1" /> {news.views}
+                        <span className="mx-2">•</span>
+                        <Clock className="h-3 w-3 mr-1" /> {news.timestamp}
+                      </div>
                     </div>
                   </Link>
                 ))}

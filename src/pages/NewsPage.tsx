@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
-import { Clock, ThumbsUp, MessageSquare, Share2 } from "lucide-react";
+import { Clock, ThumbsUp, MessageSquare, Share2, Eye } from "lucide-react";
 
 interface NewsArticle {
   id: string;
@@ -18,75 +18,98 @@ interface NewsArticle {
   comments?: number;
 }
 
-const featuredNews: NewsArticle = {
-  id: "university-rating-2025",
-  title: "2025 жылғы үздік университеттер рейтингі жарияланды",
-  category: "Университеттер",
-  image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-  description: "Қазақстандағы жоғары оқу орындарының жаңа рейтингі жарияланды. Топ үштікте қандай университеттер орын алды?",
-  views: 1700,
-  timestamp: "2 сағат бұрын"
-};
-
-const sideNews: NewsArticle[] = [
-  {
-    id: "ubt-preparation",
-    title: "ҰБТға дайындық: маңызды кеңестер",
-    category: "ҰБТ",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    description: "Сарапшылардың ҰБТ-ға дайындық бойынша ұсыныстары",
-    views: 856,
-    timestamp: "5 сағат бұрын"
-  },
-  {
-    id: "grants-2025",
-    title: "2025 жылғы мемлекеттік грант иегерлері анықталды",
-    category: "Гранттар",
-    image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80", 
-    description: "Биылғы грант иегерлерінің толық тізімі",
-    views: 1500,
-    timestamp: "1 күн бұрын"
-  }
-];
-
-const recentNews: NewsArticle[] = [
-  {
-    id: "student-conferences",
-    title: "Жаңа оқу жылында өткізілетін әлеуметтер",
-    category: "Білім",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    description: "2025 жылғы оқу жылында күтілетін жиналыстар мен әлеуметтер",
-    views: 423,
-    timestamp: "3 күн бұрын",
-    likes: 24,
-    comments: 8
-  },
-  {
-    id: "new-university",
-    title: "Жаңа университет ашылады",
-    category: "Университеттер",
-    image: "https://images.unsplash.com/photo-1498322590555-139c697a8abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80",
-    description: "Алматыда жаңартылған дизайнмен жергілікті жаңа университет ашылады",
-    views: 755,
-    timestamp: "4 күн бұрын",
-    likes: 35,
-    comments: 12
-  },
-  {
-    id: "top-majors",
-    title: "Ең сұранысқа ие мамандықтар - 2025",
-    category: "Мамандықтар",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-    description: "Болашақта сұранысқа ие болатын мамандықтар тізімі",
-    views: 612,
-    timestamp: "5 күн бұрын",
-    likes: 48,
-    comments: 16
-  }
-];
-
 const NewsPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("Барлығы");
+  
+  // Data with proper image paths
+  const [featuredNews, setFeaturedNews] = useState<NewsArticle>({
+    id: "university-rating-2025",
+    title: "2025 жылғы үздік университеттер рейтингі жарияланды",
+    category: "Университеттер",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    description: "Қазақстандағы жоғары оқу орындарының жаңа рейтингі жарияланды. Топ үштікте қандай университеттер орын алды?",
+    views: 1700,
+    timestamp: "2 сағат бұрын"
+  });
+  
+  const [sideNews, setSideNews] = useState<NewsArticle[]>([
+    {
+      id: "ubt-preparation",
+      title: "ҰБТға дайындық: маңызды кеңестер",
+      category: "ҰБТ",
+      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      description: "Сарапшылардың ҰБТ-ға дайындық бойынша ұсыныстары",
+      views: 856,
+      timestamp: "5 сағат бұрын"
+    },
+    {
+      id: "grants-2025",
+      title: "2025 жылғы мемлекеттік грант иегерлері анықталды",
+      category: "Гранттар",
+      image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80", 
+      description: "Биылғы грант иегерлерінің толық тізімі",
+      views: 1500,
+      timestamp: "1 күн бұрын"
+    }
+  ]);
+  
+  const [recentNews, setRecentNews] = useState<NewsArticle[]>([
+    {
+      id: "student-conferences",
+      title: "Жаңа оқу жылында өткізілетін әлеуметтер",
+      category: "Білім",
+      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      description: "2025 жылғы оқу жылында күтілетін жиналыстар мен әлеуметтер",
+      views: 423,
+      timestamp: "3 күн бұрын",
+      likes: 24,
+      comments: 8
+    },
+    {
+      id: "new-university",
+      title: "Жаңа университет ашылады",
+      category: "Университеттер",
+      image: "https://images.unsplash.com/photo-1498322590555-139c697a8abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80",
+      description: "Алматыда жаңартылған дизайнмен жергілікті жаңа университет ашылады",
+      views: 755,
+      timestamp: "4 күн бұрын",
+      likes: 35,
+      comments: 12
+    },
+    {
+      id: "top-majors",
+      title: "Ең сұранысқа ие мамандықтар - 2025",
+      category: "Мамандықтар",
+      image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      description: "Болашақта сұранысқа ие болатын мамандықтар тізімі",
+      views: 612,
+      timestamp: "5 күн бұрын",
+      likes: 48,
+      comments: 16
+    }
+  ]);
+  
+  // Function to update view counts when clicking on news
+  const incrementViewCount = (type: 'featured' | 'side' | 'recent', id: string) => {
+    if (type === 'featured') {
+      setFeaturedNews(prev => ({
+        ...prev,
+        views: prev.views + 1
+      }));
+    } else if (type === 'side') {
+      setSideNews(prev => 
+        prev.map(news => 
+          news.id === id ? { ...news, views: news.views + 1 } : news
+        )
+      );
+    } else if (type === 'recent') {
+      setRecentNews(prev => 
+        prev.map(news => 
+          news.id === id ? { ...news, views: news.views + 1 } : news
+        )
+      );
+    }
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -97,7 +120,11 @@ const NewsPage: React.FC = () => {
           {/* Featured News Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="md:col-span-2 relative overflow-hidden rounded-lg">
-              <Link to={`/news/${featuredNews.id}`} className="block">
+              <Link 
+                to={`/news/${featuredNews.id}`} 
+                className="block"
+                onClick={() => incrementViewCount('featured', featuredNews.id)}
+              >
                 <img 
                   src={featuredNews.image} 
                   alt={featuredNews.title}
@@ -110,7 +137,9 @@ const NewsPage: React.FC = () => {
                     <span className="flex items-center mr-4">
                       <Clock className="h-4 w-4 mr-1" /> {featuredNews.timestamp}
                     </span>
-                    <span>{featuredNews.views.toLocaleString()} көрініс</span>
+                    <span className="flex items-center">
+                      <Eye className="h-4 w-4 mr-1" /> {featuredNews.views.toLocaleString()}
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -118,7 +147,12 @@ const NewsPage: React.FC = () => {
             
             <div className="flex flex-col gap-6">
               {sideNews.map(news => (
-                <Link to={`/news/${news.id}`} key={news.id} className="flex gap-4 hover:bg-gray-50 rounded-lg p-2 transition-colors">
+                <Link 
+                  to={`/news/${news.id}`} 
+                  key={news.id} 
+                  className="flex gap-4 hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                  onClick={() => incrementViewCount('side', news.id)}
+                >
                   <img 
                     src={news.image} 
                     alt={news.title}
@@ -131,7 +165,9 @@ const NewsPage: React.FC = () => {
                       <Clock className="h-3 w-3 mr-1" /> 
                       <span>{news.timestamp}</span>
                       <span className="mx-2">•</span>
-                      <span>{news.views} көрініс</span>
+                      <span className="flex items-center">
+                        <Eye className="h-3 w-3 mr-1" /> {news.views}
+                      </span>
                     </div>
                   </div>
                 </Link>
@@ -159,7 +195,10 @@ const NewsPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recentNews.map(news => (
                 <div key={news.id} className="border rounded-lg overflow-hidden shadow-sm bg-white">
-                  <Link to={`/news/${news.id}`}>
+                  <Link 
+                    to={`/news/${news.id}`}
+                    onClick={() => incrementViewCount('recent', news.id)}
+                  >
                     <img 
                       src={news.image} 
                       alt={news.title}
@@ -168,7 +207,11 @@ const NewsPage: React.FC = () => {
                   </Link>
                   <div className="p-4">
                     <div className="text-xs text-blue-600 font-medium mb-2">{news.category}</div>
-                    <Link to={`/news/${news.id}`} className="block">
+                    <Link 
+                      to={`/news/${news.id}`} 
+                      className="block"
+                      onClick={() => incrementViewCount('recent', news.id)}
+                    >
                       <h3 className="font-bold text-lg mb-2 hover:text-tandablue transition-colors">{news.title}</h3>
                     </Link>
                     <p className="text-sm text-gray-600 mb-4 line-clamp-2">{news.description}</p>
@@ -177,7 +220,9 @@ const NewsPage: React.FC = () => {
                         <Clock className="h-4 w-4 mr-1" /> 
                         <span>{news.timestamp}</span>
                         <span className="mx-2">•</span>
-                        <span>{news.views} көрініс</span>
+                        <span className="flex items-center">
+                          <Eye className="h-4 w-4 mr-1" /> {news.views}
+                        </span>
                       </div>
                       
                       <div className="flex items-center space-x-3">

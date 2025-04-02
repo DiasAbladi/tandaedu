@@ -15,8 +15,8 @@ const Hero: React.FC = () => {
     if (!searchQuery.trim()) return;
     
     // Check if the search query appears to be about universities or majors
-    const uniKeywords = ['университет', 'оқу орны', 'колледж', 'вуз', 'қазұу', 'кбту', 'кимэп', 'хату'];
-    const majorKeywords = ['мамандық', 'профессия', 'білім', 'программист', 'медицина', 'қаржы', 'маркетинг'];
+    const uniKeywords = ['университет', 'оқу орны', 'колледж', 'вуз', 'қазұу', 'кбту', 'кимэп', 'хату', 'казну', 'атындағы', 'нархоз', 'казнпу'];
+    const majorKeywords = ['мамандық', 'профессия', 'білім', 'программист', 'медицина', 'қаржы', 'маркетинг', 'биотехнология', 'психология', 'it'];
     
     let isUniSearch = false;
     let isMajorSearch = false;
