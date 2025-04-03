@@ -1,231 +1,255 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Search, Menu, X, UserCircle, LogOut } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+import LanguageSwitcher from './LanguageSwitcher';
+import { AuthContext } from '@/contexts/AuthContext';
+import { LanguageContext } from '@/contexts/LanguageContext';
 
-interface NavbarProps {
-  // You can add props if needed later
-}
-
-const Navbar: React.FC<NavbarProps> = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("");
-  const navigate = useNavigate();
-
-  // Check if user is logged in when component mounts
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem('user');
-    if (loggedInUser) {
-      const userData = JSON.parse(loggedInUser);
-      setIsLoggedIn(true);
-      setUserName(userData.name);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-    setUserName("");
-    navigate('/');
-  };
+const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { currentLanguage, translations } = useContext(LanguageContext);
 
   return (
-    <header className="w-full bg-white shadow-sm sticky top-0 z-40">
-      <div className="container flex h-16 items-center">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-6">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <GraduationCap className="h-6 w-6 text-tandablue" />
-              <span className="font-bold text-xl">TandaEdu</span>
+    <header className="bg-white border-b">
+      <div className="container px-4 md:px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="flex items-center space-x-2">
+              <span className="text-xl font-bold text-tandablue">TandaBilim</span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-5 text-sm">
-              <Link
-                to="/universities"
-                className="transition-colors hover:text-tandablue py-2"
-              >
-                Университеттер
-              </Link>
-              <Link
-                to="/majors"
-                className="transition-colors hover:text-tandablue py-2"
-              >
-                Мамандықтар
-              </Link>
-              <Link
-                to="/test"
-                className="transition-colors hover:text-tandablue py-2"
-              >
-                Кәсіби бағдар тесті
-              </Link>
-              <Link
-                to="/counseling"
-                className="transition-colors hover:text-tandablue py-2"
-              >
-                Кеңес алу
-              </Link>
-              <Link
-                to="/news"
-                className="transition-colors hover:text-tandablue py-2"
-              >
-                Жаңалықтар
-              </Link>
-              <Link
-                to="/blog"
-                className="transition-colors hover:text-tandablue py-2"
-              >
-                Блог
-              </Link>
-            </nav>
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center space-x-2">
+              <NavigationMenu className="mx-auto justify-center">
+                <NavigationMenuList className="gap-2">
+                  <NavigationMenuItem>
+                    <Link to="/">
+                      <NavigationMenuLink className={cn(
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:bg-accent hover:bg-accent hover:text-accent-foreground",
+                      )}>
+                        {translations.navHome[currentLanguage]}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>
+                      {translations.navUniversities[currentLanguage]}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
+                        <li className="row-span-3">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              className="flex flex-col justify-end bg-gradient-to-b from-tandablue/20 to-tandablue/50 rounded-md p-6 no-underline outline-none focus:shadow-md h-full"
+                              to="/universities"
+                            >
+                              <div className="mb-2 mt-4 text-lg font-medium">
+                                {currentLanguage === 'kk' ? 'Барлық университеттер' : 'Все университеты'}
+                              </div>
+                              <p className="text-sm leading-tight text-muted-foreground">
+                                {currentLanguage === 'kk' 
+                                  ? 'Қазақстандағы барлық жоғары оқу орындары' 
+                                  : 'Все высшие учебные заведения Казахстана'}
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <Link
+                            to="/universities?type=national"
+                            className="block select-none rounded-md p-3 hover:bg-accent hover:text-accent-foreground outline-none focus:bg-accent focus:text-accent-foreground"
+                          >
+                            {currentLanguage === 'kk' ? 'Ұлттық университеттер' : 'Национальные университеты'}
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/universities?type=private"
+                            className="block select-none rounded-md p-3 hover:bg-accent hover:text-accent-foreground outline-none focus:bg-accent focus:text-accent-foreground"
+                          >
+                            {currentLanguage === 'kk' ? 'Жеке меншік университеттер' : 'Частные университеты'}
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/universities?type=medical"
+                            className="block select-none rounded-md p-3 hover:bg-accent hover:text-accent-foreground outline-none focus:bg-accent focus:text-accent-foreground"
+                          >
+                            {currentLanguage === 'kk' ? 'Медициналық университеттер' : 'Медицинские университеты'}
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/universities?type=technical"
+                            className="block select-none rounded-md p-3 hover:bg-accent hover:text-accent-foreground outline-none focus:bg-accent focus:text-accent-foreground"
+                          >
+                            {currentLanguage === 'kk' ? 'Техникалық университеттер' : 'Технические университеты'}
+                          </Link>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link to="/majors">
+                      <NavigationMenuLink className={cn(
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:bg-accent hover:bg-accent hover:text-accent-foreground",
+                      )}>
+                        {translations.navMajors[currentLanguage]}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link to="/news">
+                      <NavigationMenuLink className={cn(
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:bg-accent hover:bg-accent hover:text-accent-foreground",
+                      )}>
+                        {translations.navNews[currentLanguage]}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link to="/test">
+                      <NavigationMenuLink className={cn(
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:bg-accent hover:bg-accent hover:text-accent-foreground",
+                      )}>
+                        {translations.navTest[currentLanguage]}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link to="/counseling">
+                      <NavigationMenuLink className={cn(
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:bg-accent hover:bg-accent hover:text-accent-foreground",
+                      )}>
+                        {translations.navCounseling[currentLanguage]}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link to="/blog">
+                      <NavigationMenuLink className={cn(
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:bg-accent hover:bg-accent hover:text-accent-foreground",
+                      )}>
+                        {translations.navBlog[currentLanguage]}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
           </div>
 
-          {/* Right side - Search and Auth/Profile */}
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden md:flex"
-            >
-              <Search className="h-5 w-5" />
-              <span className="sr-only">Search</span>
-            </Button>
+          <div className="flex items-center space-x-2">
+            <LanguageSwitcher />
             
-            {isLoggedIn ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
-                    <UserCircle className="h-5 w-5" />
-                    <span>{userName}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>Менің аккаунтым</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <UserCircle className="mr-2 h-4 w-4" />
-                    <span>Профиль</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Шығу</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            {isAuthenticated ? (
+              <Button variant="outline" onClick={logout}>
+                {currentLanguage === 'kk' ? 'Шығу' : 'Выход'}
+              </Button>
             ) : (
-              <div className="hidden md:flex items-center gap-2">
+              <>
                 <Link to="/login">
-                  <Button variant="outline" size="sm">
-                    Кіру
+                  <Button variant="ghost">
+                    {translations.navLogin[currentLanguage]}
                   </Button>
                 </Link>
-                <Link to="/register">
-                  <Button size="sm">Тіркелу</Button>
+                <Link to="/register" className="hidden md:inline-block">
+                  <Button variant="default">
+                    {translations.navRegister[currentLanguage]}
+                  </Button>
                 </Link>
-              </div>
+              </>
             )}
 
             {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-              <span className="sr-only">Toggle menu</span>
-            </Button>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="outline" size="icon">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Open navigation menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <nav className="flex flex-col gap-4 mt-8">
+                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navHome[currentLanguage]}
+                    </Button>
+                  </Link>
+                  <Link to="/universities" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navUniversities[currentLanguage]}
+                    </Button>
+                  </Link>
+                  <Link to="/majors" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navMajors[currentLanguage]}
+                    </Button>
+                  </Link>
+                  <Link to="/news" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navNews[currentLanguage]}
+                    </Button>
+                  </Link>
+                  <Link to="/test" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navTest[currentLanguage]}
+                    </Button>
+                  </Link>
+                  <Link to="/counseling" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navCounseling[currentLanguage]}
+                    </Button>
+                  </Link>
+                  <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {translations.navBlog[currentLanguage]}
+                    </Button>
+                  </Link>
+                  {isAuthenticated ? (
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start"
+                      onClick={() => {
+                        logout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      {currentLanguage === 'kk' ? 'Шығу' : 'Выход'}
+                    </Button>
+                  ) : (
+                    <>
+                      <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start">
+                          {translations.navLogin[currentLanguage]}
+                        </Button>
+                      </Link>
+                      <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button className="w-full justify-start">
+                          {translations.navRegister[currentLanguage]}
+                        </Button>
+                      </Link>
+                    </>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t">
-          <nav className="container py-4 flex flex-col">
-            <Link
-              to="/universities"
-              className="py-3 hover:text-tandablue"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Университеттер
-            </Link>
-            <Link
-              to="/majors"
-              className="py-3 hover:text-tandablue"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Мамандықтар
-            </Link>
-            <Link
-              to="/test"
-              className="py-3 hover:text-tandablue"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Кәсіби бағдар тесті
-            </Link>
-            <Link
-              to="/counseling"
-              className="py-3 hover:text-tandablue"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Кеңес алу
-            </Link>
-            <Link
-              to="/news"
-              className="py-3 hover:text-tandablue"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Жаңалықтар
-            </Link>
-            <Link
-              to="/blog"
-              className="py-3 hover:text-tandablue"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Блог
-            </Link>
-            
-            {!isLoggedIn && (
-              <div className="flex flex-col space-y-2 mt-4 pt-4 border-t">
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full">
-                    Кіру
-                  </Button>
-                </Link>
-                <Link to="/register" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full">Тіркелу</Button>
-                </Link>
-              </div>
-            )}
-            
-            {isLoggedIn && (
-              <div className="flex flex-col space-y-2 mt-4 pt-4 border-t">
-                <p className="font-medium mb-2">Сәлем, {userName}!</p>
-                <Button variant="outline" className="w-full" onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Шығу
-                </Button>
-              </div>
-            )}
-          </nav>
-        </div>
-      )}
     </header>
   );
 };

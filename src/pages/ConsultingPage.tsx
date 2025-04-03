@@ -114,10 +114,14 @@ const ConsultingPage: React.FC = () => {
       return;
     }
     
+    // Redirect to Kaspi Bank for payment
+    const kaspiPaymentUrl = "https://kaspi.kz/pay/";
+    window.open(kaspiPaymentUrl, "_blank");
+    
     // Form is valid, show success message
     toast({
       title: "Сәтті",
-      description: "Сіздің өтініміңіз қабылданды. Біз сізбен жақын арада хабарласамыз.",
+      description: "Сіздің өтініміңіз қабылданды. Төлем жасағаннан кейін біз сізбен жақын арада хабарласамыз.",
       variant: "default"
     });
     
@@ -323,7 +327,6 @@ const ConsultingPage: React.FC = () => {
                           <SelectValue placeholder="Күнді таңдаңыз" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Күнді таңдаңыз</SelectItem>
                           {availableDates.map(date => (
                             <SelectItem key={date} value={date}>
                               {new Date(date).toLocaleDateString('kk-KZ', {
@@ -347,7 +350,6 @@ const ConsultingPage: React.FC = () => {
                           <SelectValue placeholder="Уақытты таңдаңыз" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Уақытты таңдаңыз</SelectItem>
                           {availableTimes.map(time => (
                             <SelectItem key={time} value={time}>
                               {time}
@@ -371,7 +373,7 @@ const ConsultingPage: React.FC = () => {
                   />
                 </div>
                 
-                <Button type="submit" className="w-full">Кеңеске жазылу</Button>
+                <Button type="submit" className="w-full">Kaspi арқылы төлем жасау</Button>
               </form>
             </div>
           </div>

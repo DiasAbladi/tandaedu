@@ -1,0 +1,169 @@
+
+import { createContext, useState, useEffect, ReactNode } from 'react';
+import { useToast } from "@/components/ui/use-toast";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface AuthContextType {
+  isAuthenticated: boolean;
+  user: User | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  testAttemptsRemaining: number;
+  decrementTestAttempts: () => void;
+}
+
+export const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: false,
+  user: null,
+  login: async () => false,
+  register: async () => false,
+  logout: () => {},
+  testAttemptsRemaining: 5,
+  decrementTestAttempts: () => {}
+});
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const { toast } = useToast();
+  
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
+  
+  const [testAttemptsRemaining, setTestAttemptsRemaining] = useState<number>(() => {
+    const attempts = localStorage.getItem('testAttemptsRemaining');
+    return attempts ? parseInt(attempts, 10) : 5;
+  });
+  
+  useEffect(() => {
+    localStorage.setItem('isAuthenticated', isAuthenticated.toString());
+    localStorage.setItem('user', user ? JSON.stringify(user) : '');
+    localStorage.setItem('testAttemptsRemaining', testAttemptsRemaining.toString());
+  }, [isAuthenticated, user, testAttemptsRemaining]);
+  
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      // Simulate API call
+      // In a real app, this would be an API call to validate credentials
+      if (email && password) {
+        // Simulate successful login
+        const mockUser = {
+          id: 'user-' + Date.now(),
+          name: email.split('@')[0],
+          email
+        };
+        
+        setUser(mockUser);
+        setIsAuthenticated(true);
+        
+        toast({
+          title: "Сәтті кіру",
+          description: "Сіз жүйеге сәтті кірдіңіз",
+        });
+        
+        return true;
+      }
+      
+      toast({
+        title: "Қате",
+        description: "Электрондық пошта немесе құпия сөз қате",
+        variant: "destructive"
+      });
+      
+      return false;
+    } catch (error) {
+      toast({
+        title: "Қате",
+        description: "Кіру кезінде қате орын алды",
+        variant: "destructive"
+      });
+      
+      return false;
+    }
+  };
+  
+  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+    try {
+      // Simulate API call
+      // In a real app, this would be an API call to register a new user
+      if (name && email && password) {
+        // Simulate successful registration
+        const newUser = {
+          id: 'user-' + Date.now(),
+          name,
+          email
+        };
+        
+        setUser(newUser);
+        setIsAuthenticated(true);
+        
+        toast({
+          title: "Сәтті тіркелу",
+          description: "Сіз жүйеге сәтті тіркелдіңіз",
+        });
+        
+        return true;
+      }
+      
+      toast({
+        title: "Қате",
+        description: "Барлық қажетті өрістерді толтырыңыз",
+        variant: "destructive"
+      });
+      
+      return false;
+    } catch (error) {
+      toast({
+        title: "Қате",
+        description: "Тіркелу кезінде қате орын алды",
+        variant: "destructive"
+      });
+      
+      return false;
+    }
+  };
+  
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+    
+    toast({
+      title: "Жүйеден шығу",
+      description: "Сіз жүйеден сәтті шықтыңыз",
+    });
+  };
+  
+  const decrementTestAttempts = () => {
+    if (testAttemptsRemaining > 0) {
+      setTestAttemptsRemaining(prev => prev - 1);
+    }
+  };
+  
+  return (
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      user, 
+      login, 
+      register, 
+      logout,
+      testAttemptsRemaining,
+      decrementTestAttempts
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

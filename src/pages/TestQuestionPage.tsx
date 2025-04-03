@@ -1,622 +1,341 @@
 
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, SkipForward, HelpCircle } from "lucide-react";
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Clock, AlertTriangle } from "lucide-react";
+import { AuthContext } from '@/contexts/AuthContext';
+import { useToast } from "@/components/ui/use-toast";
+import { LanguageContext } from '@/contexts/LanguageContext';
 
-// Define the question types
-type QuestionType = 'personality' | 'skills' | 'interests' | 'values';
-
-// Question interface
 interface Question {
   id: number;
-  text: string;
-  type: QuestionType;
-  options: string[];
+  text: {
+    kk: string;
+    ru: string;
+  };
+  options: {
+    id: string;
+    text: {
+      kk: string;
+      ru: string;
+    };
+  }[];
 }
 
-// Test data with categories of questions
-const testQuestions: Question[] = [
-  // Personality questions
+const questions: Question[] = [
   {
     id: 1,
-    text: "Сіз жаңа адамдармен тез тіл табыса аласыз ба?",
-    type: "personality",
+    text: {
+      kk: 'Сізге қай саладағы жұмыс қызықтырады?',
+      ru: 'Какая сфера работы вас интересует?'
+    },
     options: [
-      "Мүлдем келіспеймін",
-      "Келіспеймін",
-      "Бейтарап",
-      "Келісемін",
-      "Толықтай келісемін"
+      { id: 'a', text: { kk: 'Технология', ru: 'Технология' } },
+      { id: 'b', text: { kk: 'Медицина', ru: 'Медицина' } },
+      { id: 'c', text: { kk: 'Бизнес', ru: 'Бизнес' } },
+      { id: 'd', text: { kk: 'Өнер', ru: 'Искусство' } }
     ]
   },
   {
     id: 2,
-    text: "Сіз көпшілік алдында сөйлеуді ұнатасыз ба?",
-    type: "personality",
+    text: {
+      kk: 'Сіз қандай жұмыс ортасын қалайсыз?',
+      ru: 'Какую рабочую среду вы предпочитаете?'
+    },
     options: [
-      "Мүлдем келіспеймін",
-      "Келіспеймін",
-      "Бейтарап",
-      "Келісемін",
-      "Толықтай келісемін"
+      { id: 'a', text: { kk: 'Офис', ru: 'Офис' } },
+      { id: 'b', text: { kk: 'Дала жұмысы', ru: 'Полевая работа' } },
+      { id: 'c', text: { kk: 'Үйден жұмыс', ru: 'Работа из дома' } },
+      { id: 'd', text: { kk: 'Аралас', ru: 'Смешанная' } }
     ]
   },
   {
     id: 3,
-    text: "Сіз жаңа идеяларды ойлап табуды ұнатасыз ба?",
-    type: "personality",
+    text: {
+      kk: 'Сіздің күшті жақтарыңыз қандай?',
+      ru: 'Каковы ваши сильные стороны?'
+    },
     options: [
-      "Мүлдем келіспеймін",
-      "Келіспеймін",
-      "Бейтарап",
-      "Келісемін",
-      "Толықтай келісемін"
+      { id: 'a', text: { kk: 'Аналитикалық ойлау', ru: 'Аналитическое мышление' } },
+      { id: 'b', text: { kk: 'Креативтілік', ru: 'Креативность' } },
+      { id: 'c', text: { kk: 'Коммуникация', ru: 'Коммуникация' } },
+      { id: 'd', text: { kk: 'Ұйымдастыру қабілеті', ru: 'Организационные способности' } }
     ]
   },
   {
     id: 4,
-    text: "Сіз мәселелерді шешу кезінде логикалық ойлауды қолданасыз ба?",
-    type: "personality",
+    text: {
+      kk: 'Қандай жұмыс кестесі сізге қолайлы?',
+      ru: 'Какой рабочий график вам удобен?'
+    },
     options: [
-      "Мүлдем келіспеймін",
-      "Келіспеймін",
-      "Бейтарап",
-      "Келісемін",
-      "Толықтай келісемін"
+      { id: 'a', text: { kk: 'Стандартты 9-18', ru: 'Стандартный 9-18' } },
+      { id: 'b', text: { kk: 'Икемді график', ru: 'Гибкий график' } },
+      { id: 'c', text: { kk: 'Ауысымды жұмыс', ru: 'Сменная работа' } },
+      { id: 'd', text: { kk: 'Жобалық жұмыс', ru: 'Проектная работа' } }
     ]
   },
-  // Skills questions
   {
     id: 5,
-    text: "Сіз математикалық есептерді шешуге қаншалықты жақсысыз?",
-    type: "skills",
+    text: {
+      kk: 'Сізге қандай жұмыс міндеттері ұнайды?',
+      ru: 'Какие рабочие задачи вам нравятся?'
+    },
     options: [
-      "Өте нашар",
-      "Нашар",
-      "Орташа",
-      "Жақсы",
-      "Өте жақсы"
+      { id: 'a', text: { kk: 'Мәселелерді шешу', ru: 'Решение проблем' } },
+      { id: 'b', text: { kk: 'Адамдармен жұмыс', ru: 'Работа с людьми' } },
+      { id: 'c', text: { kk: 'Шығармашылық жобалар', ru: 'Творческие проекты' } },
+      { id: 'd', text: { kk: 'Зерттеу және талдау', ru: 'Исследования и анализ' } }
     ]
   },
-  {
-    id: 6,
-    text: "Сіз шет тілдерін үйренуге қаншалықты бейімсіз?",
-    type: "skills",
-    options: [
-      "Өте нашар",
-      "Нашар",
-      "Орташа",
-      "Жақсы",
-      "Өте жақсы"
-    ]
-  },
-  {
-    id: 7,
-    text: "Сіз өнермен айналысу қаншалықты ұнатасыз?",
-    type: "skills",
-    options: [
-      "Өте нашар",
-      "Нашар",
-      "Орташа",
-      "Жақсы",
-      "Өте жақсы"
-    ]
-  },
-  // Interest questions
-  {
-    id: 8,
-    text: "Техникалық құрылғылармен жұмыс істеу сізге қаншалықты қызықты?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
-  {
-    id: 9,
-    text: "Адамдарға көмектесу қаншалықты маңызды сізге?",
-    type: "interests",
-    options: [
-      "Мүлдем маңызды емес",
-      "Маңызды емес",
-      "Бейтарап",
-      "Маңызды",
-      "Өте маңызды"
-    ]
-  },
-  {
-    id: 10,
-    text: "Ғылыми зерттеулер жүргізу қаншалықты қызықты сізге?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
-  // Values questions
-  {
-    id: 11,
-    text: "Сіз үшін жоғары жалақы алу қаншалықты маңызды?",
-    type: "values",
-    options: [
-      "Мүлдем маңызды емес",
-      "Маңызды емес",
-      "Бейтарап",
-      "Маңызды",
-      "Өте маңызды"
-    ]
-  },
-  {
-    id: 12,
-    text: "Жұмыс кезінде шығармашылықпен айналысу сіз үшін қаншалықты маңызды?",
-    type: "values",
-    options: [
-      "Мүлдем маңызды емес",
-      "Маңызды емес",
-      "Бейтарап",
-      "Маңызды",
-      "Өте маңызды"
-    ]
-  },
-  {
-    id: 13,
-    text: "Жұмыста мансаптық өсу мүмкіндігі сіз үшін қаншалықты маңызды?",
-    type: "values",
-    options: [
-      "Мүлдем маңызды емес",
-      "Маңызды емес",
-      "Бейтарап",
-      "Маңызды",
-      "Өте маңызды"
-    ]
-  },
-  {
-    id: 14,
-    text: "Қоғамға пайда әкелетін жұмыс істеу сіз үшін қаншалықты маңызды?",
-    type: "values",
-    options: [
-      "Мүлдем маңызды емес",
-      "Маңызды емес",
-      "Бейтарап",
-      "Маңызды",
-      "Өте маңызды"
-    ]
-  },
-  {
-    id: 15,
-    text: "Жұмыс пен жеке өмірдің тепе-теңдігі сіз үшін қаншалықты маңызды?",
-    type: "values",
-    options: [
-      "Мүлдем маңызды емес",
-      "Маңызды емес",
-      "Бейтарап",
-      "Маңызды",
-      "Өте маңызды"
-    ]
-  },
-  // More interests questions
-  {
-    id: 16,
-    text: "Өнермен айналысу сізге қаншалықты қызықты?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
-  {
-    id: 17,
-    text: "Бизнес және экономика саласы сізге қаншалықты қызықты?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
-  {
-    id: 18,
-    text: "Медицина саласы сізге қаншалықты қызықты?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
-  {
-    id: 19,
-    text: "IT және компьютерлік технологиялар саласы сізге қаншалықты қызықты?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
-  {
-    id: 20,
-    text: "Педагогика және оқыту саласы сізге қаншалықты қызықты?",
-    type: "interests",
-    options: [
-      "Мүлдем қызық емес",
-      "Қызық емес",
-      "Бейтарап",
-      "Қызықты",
-      "Өте қызықты"
-    ]
-  },
+  // Добавьте больше вопросов по необходимости
 ];
 
-// Majors categories based on test results
-const majorCategories = [
-  {
-    name: "IT және инженерия",
-    description: "Компьютерлік жүйелер, бағдарламалау және инженерия саласындағы мамандықтар",
-    majors: ["Компьютерлік ғылымдар", "Ақпараттық технология", "Бағдарламалық жасақтама инженериясы", "Кибер қауіпсіздік", "Деректерді талдау"]
-  },
-  {
-    name: "Бизнес және экономика",
-    description: "Бизнес, қаржы және экономика саласындағы мамандықтар",
-    majors: ["Бизнес әкімшілігі", "Қаржы", "Маркетинг", "Бухгалтерлік есеп", "Менеджмент"]
-  },
-  {
-    name: "Медицина және денсаулық сақтау",
-    description: "Медицина және денсаулық сақтау саласындағы мамандықтар",
-    majors: ["Жалпы медицина", "Фармацевтика", "Мейірбике ісі", "Дәрігерлік жедел жәрдем", "Стоматология"]
-  },
-  {
-    name: "Әлеуметтік ғылымдар",
-    description: "Психология, әлеуметтану және басқа әлеуметтік ғылымдар",
-    majors: ["Психология", "Әлеуметтану", "Әлеуметтік жұмыс", "Саясаттану", "Халықаралық қатынастар"]
-  },
-  {
-    name: "Гуманитарлық ғылымдар",
-    description: "Тілдер, тарих, философия және басқа гуманитарлық ғылымдар",
-    majors: ["Филология", "Шет тілдері", "Тарих", "Философия", "Мәдениеттану"]
-  },
-  {
-    name: "Өнер және дизайн",
-    description: "Шығармашылық салалар мен өнер",
-    majors: ["Графикалық дизайн", "Сәулет", "Музыка", "Театр өнері", "Бейнелеу өнері"]
-  }
-];
+interface TestAnswer {
+  questionId: number;
+  answerId: string;
+}
+
+interface TestHistory {
+  id: string;
+  date: string;
+  answers: TestAnswer[];
+  result: string;
+}
 
 const TestQuestionPage: React.FC = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState<Array<number | null>>(Array(testQuestions.length).fill(null));
-  const [exitDialogOpen, setExitDialogOpen] = useState(false);
-  const [helpDialogOpen, setHelpDialogOpen] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [topCategories, setTopCategories] = useState<string[]>([]);
-  
+  const { currentLanguage } = useContext(LanguageContext);
+  const { testAttemptsRemaining, decrementTestAttempts } = useContext(AuthContext);
+  const { toast } = useToast();
   const navigate = useNavigate();
-
-  const currentQuestion = testQuestions[currentQuestionIndex];
+  
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<TestAnswer[]>([]);
+  const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
+  const [testHistory, setTestHistory] = useState<TestHistory[]>(() => {
+    const savedHistory = localStorage.getItem('testHistory');
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  });
   
   useEffect(() => {
-    // If showing results, calculate the top categories
-    if (showResults) {
-      calculateResults();
+    // Check if user has attempts remaining
+    if (testAttemptsRemaining <= 0) {
+      toast({
+        title: currentLanguage === 'kk' ? "Мүмкіндік аяқталды" : "Возможности исчерпаны",
+        description: currentLanguage === 'kk' 
+          ? "Сіз барлық тегін тест мүмкіндіктерін пайдаландыңыз" 
+          : "Вы использовали все бесплатные попытки теста",
+        variant: "destructive"
+      });
+      navigate('/test');
+      return;
     }
-  }, [showResults]);
-
-  const handleOptionSelect = (index: number) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[currentQuestionIndex] = index;
-    setSelectedOptions(newSelectedOptions);
+    
+    // Save test history to localStorage when it changes
+    localStorage.setItem('testHistory', JSON.stringify(testHistory));
+  }, [testHistory, testAttemptsRemaining]);
+  
+  // Timer effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Time's up - finish the test
+          endTest();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+  
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
-
-  const goToNextQuestion = () => {
-    if (currentQuestionIndex < testQuestions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+  
+  const nextQuestion = () => {
+    if (!selectedOption) {
+      toast({
+        title: currentLanguage === 'kk' ? "Жауап таңдаңыз" : "Выберите ответ",
+        description: currentLanguage === 'kk' 
+          ? "Жалғастыру үшін жауап нұсқасын таңдаңыз" 
+          : "Выберите вариант ответа, чтобы продолжить",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Save the answer
+    setAnswers([...answers, {
+      questionId: questions[currentQuestion].id,
+      answerId: selectedOption
+    }]);
+    
+    // Move to the next question or finish the test
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+      setSelectedOption(null);
     } else {
-      // Show results when all questions are answered
-      setShowResults(true);
+      endTest();
     }
   };
-
-  const goToPreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+  
+  const endTest = () => {
+    // Save the last answer if there is one
+    if (selectedOption && currentQuestion < questions.length) {
+      setAnswers(prev => [...prev, {
+        questionId: questions[currentQuestion].id,
+        answerId: selectedOption
+      }]);
     }
-  };
-
-  const calculateResults = () => {
-    // Example scoring algorithm: count interests and values
-    const scores: Record<string, number> = {
-      "IT және инженерия": 0,
-      "Бизнес және экономика": 0,
-      "Медицина және денсаулық сақтау": 0,
-      "Әлеуметтік ғылымдар": 0,
-      "Гуманитарлық ғылымдар": 0,
-      "Өнер және дизайн": 0
+    
+    // Create test result based on answers
+    const testResult = determineResult(answers);
+    
+    // Add to history
+    const newTestRecord: TestHistory = {
+      id: `test-${Date.now()}`,
+      date: new Date().toISOString(),
+      answers: answers,
+      result: testResult
     };
     
-    // Very simplified scoring system
-    selectedOptions.forEach((option, questionIndex) => {
-      if (option === null) return;
-      
-      const question = testQuestions[questionIndex];
-      
-      // Apply different weights to different questions
-      if (question.type === "interests") {
-        // IT-related interests
-        if (question.id === 8 || question.id === 19) {
-          scores["IT және инженерия"] += option;
-        }
-        // Business
-        if (question.id === 17) {
-          scores["Бизнес және экономика"] += option;
-        }
-        // Medicine
-        if (question.id === 18) {
-          scores["Медицина және денсаулық сақтау"] += option;
-        }
-        // Art
-        if (question.id === 7 || question.id === 16) {
-          scores["Өнер және дизайн"] += option;
-        }
-        // Teaching
-        if (question.id === 20) {
-          scores["Гуманитарлық ғылымдар"] += option;
-          scores["Әлеуметтік ғылымдар"] += option;
-        }
-        // Helping people
-        if (question.id === 9) {
-          scores["Медицина және денсаулық сақтау"] += option;
-          scores["Әлеуметтік ғылымдар"] += option;
-        }
-        // Science
-        if (question.id === 10) {
-          scores["IT және инженерия"] += option;
-          scores["Медицина және денсаулық сақтау"] += option;
-        }
-      }
-      
-      // Skills-based scores
-      if (question.type === "skills") {
-        // Math skills
-        if (question.id === 5) {
-          scores["IT және инженерия"] += option;
-          scores["Бизнес және экономика"] += option;
-        }
-        // Language skills
-        if (question.id === 6) {
-          scores["Гуманитарлық ғылымдар"] += option;
-        }
-        // Art skills
-        if (question.id === 7) {
-          scores["Өнер және дизайн"] += option;
-        }
-      }
-      
-      // Add more scoring logic as needed
+    setTestHistory(prev => [newTestRecord, ...prev]);
+    
+    // Decrement remaining attempts
+    decrementTestAttempts();
+    
+    // Navigate to the results page or show results
+    toast({
+      title: currentLanguage === 'kk' ? "Тест аяқталды" : "Тест завершен",
+      description: currentLanguage === 'kk' 
+        ? "Сіздің нәтижеңіз: " + testResult 
+        : "Ваш результат: " + testResult,
     });
     
-    // Sort and get top 2 categories
-    const sortedCategories = Object.entries(scores)
-      .sort((a, b) => b[1] - a[1])
-      .map(entry => entry[0]);
-    
-    setTopCategories(sortedCategories.slice(0, 2));
+    navigate('/test');
   };
-
-  const progressPercentage = ((currentQuestionIndex + 1) / testQuestions.length) * 100;
-
+  
+  const determineResult = (testAnswers: TestAnswer[]): string => {
+    // Simple logic to determine a result based on answers
+    // This would be more sophisticated in a real app
+    const answerCounts: Record<string, number> = {
+      'a': 0, 'b': 0, 'c': 0, 'd': 0
+    };
+    
+    testAnswers.forEach(answer => {
+      if (answerCounts[answer.answerId] !== undefined) {
+        answerCounts[answer.answerId]++;
+      }
+    });
+    
+    const maxCount = Math.max(...Object.values(answerCounts));
+    const mostCommonAnswer = Object.keys(answerCounts).find(key => answerCounts[key] === maxCount) || 'a';
+    
+    const results = {
+      'a': currentLanguage === 'kk' ? 'IT маманы' : 'Специалист IT',
+      'b': currentLanguage === 'kk' ? 'Медицина маманы' : 'Медицинский специалист',
+      'c': currentLanguage === 'kk' ? 'Бизнес аналитик' : 'Бизнес-аналитик',
+      'd': currentLanguage === 'kk' ? 'Креативті маман' : 'Креативный специалист'
+    };
+    
+    return results[mostCommonAnswer as keyof typeof results];
+  };
+  
+  // Warning threshold for timer - 2 minutes
+  const isTimeWarning = timeLeft <= 120;
+  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8">
-      {!showResults ? (
-        <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Мансап тесті</h2>
-            <button 
-              className="text-gray-400 hover:text-gray-600"
-              onClick={() => setExitDialogOpen(true)}
-            >
-              <span className="sr-only">Жабу</span>
-              &times;
-            </button>
-          </div>
-          
-          {/* Progress bar */}
-          <div className="mb-8">
-            <div className="flex justify-between text-sm text-gray-500 mb-1">
-              <span>Прогресс</span>
-              <span>{currentQuestionIndex + 1}/{testQuestions.length} сұрақ</span>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      
+      <main className="flex-1 py-12">
+        <div className="container px-4 md:px-6 max-w-3xl">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold">
+                {currentLanguage === 'kk' ? 'Кәсіби бағдар тесті' : 'Профессиональный ориентационный тест'}
+              </h1>
+              <p className="text-muted-foreground">
+                {currentLanguage === 'kk' 
+                  ? `Сұрақ ${currentQuestion + 1} / ${questions.length}` 
+                  : `Вопрос ${currentQuestion + 1} / ${questions.length}`}
+              </p>
             </div>
-            <div className="w-full h-2 bg-gray-200 rounded-full">
-              <div 
-                className="h-full bg-blue-600 rounded-full transition-all duration-300" 
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-          </div>
-          
-          {/* Question */}
-          <div className="mb-8">
-            <h3 className="text-xl mb-6">{currentQuestion.text}</h3>
             
-            <div className="space-y-3">
-              {currentQuestion.options.map((option, index) => (
-                <div 
-                  key={index}
-                  onClick={() => handleOptionSelect(index)}
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors
-                    ${selectedOptions[currentQuestionIndex] === index 
-                      ? 'border-blue-600 bg-blue-50' 
-                      : 'border-gray-200 hover:border-gray-300'}`}
-                >
-                  <div className="flex items-center">
-                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3
-                      ${selectedOptions[currentQuestionIndex] === index 
-                        ? 'border-blue-600' 
-                        : 'border-gray-300'}`}
-                    >
-                      {selectedOptions[currentQuestionIndex] === index && (
-                        <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-                      )}
-                    </div>
-                    <span>{option}</span>
-                  </div>
+            <div className={`flex items-center ${isTimeWarning ? 'text-red-500' : 'text-gray-600'}`}>
+              <Clock className={`mr-2 h-5 w-5 ${isTimeWarning ? 'animate-pulse' : ''}`} />
+              <span className="font-bold">{formatTime(timeLeft)}</span>
+            </div>
+          </div>
+          
+          <Progress value={(currentQuestion / questions.length) * 100} className="mb-8" />
+          
+          <div className="bg-white shadow rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-bold mb-6">
+              {questions[currentQuestion]?.text[currentLanguage]}
+            </h2>
+            
+            <RadioGroup value={selectedOption || ''} onValueChange={setSelectedOption} className="space-y-4">
+              {questions[currentQuestion]?.options.map(option => (
+                <div key={option.id} className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-gray-50">
+                  <RadioGroupItem value={option.id} id={`option-${option.id}`} />
+                  <Label htmlFor={`option-${option.id}`} className="flex-1 cursor-pointer">
+                    {option.text[currentLanguage]}
+                  </Label>
                 </div>
               ))}
-            </div>
+            </RadioGroup>
           </div>
           
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button 
-                variant="outline"
-                onClick={() => setExitDialogOpen(true)}
-                className="flex items-center text-sm text-gray-500"
-              >
-                <SkipForward className="h-4 w-4 mr-1" /> Сақтау және шығу
-              </Button>
-              
-              {currentQuestionIndex > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={goToPreviousQuestion}
-                  className="flex items-center"
-                >
-                  <ArrowLeft className="mr-1 h-4 w-4" /> Алдыңғы
-                </Button>
-              )}
+          {isTimeWarning && (
+            <div className="bg-red-50 border border-red-200 rounded p-4 flex items-center mb-8">
+              <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
+              <span className="text-red-700">
+                {currentLanguage === 'kk' 
+                  ? 'Уақыт аз қалды! Жауаптарыңызды аяқтаңыз.' 
+                  : 'Осталось мало времени! Завершите свои ответы.'}
+              </span>
             </div>
+          )}
+          
+          <div className="flex justify-between">
+            <Button 
+              variant="outline"
+              onClick={() => navigate('/test')}
+            >
+              {currentLanguage === 'kk' ? 'Бас тарту' : 'Отмена'}
+            </Button>
             
-            <Button 
-              className="flex items-center" 
-              onClick={goToNextQuestion}
-              disabled={selectedOptions[currentQuestionIndex] === null}
-            >
-              {currentQuestionIndex < testQuestions.length - 1 ? (
-                <>Келесі <ArrowRight className="ml-1 h-4 w-4" /></>
-              ) : (
-                <>Нәтижелер <ArrowRight className="ml-1 h-4 w-4" /></>
-              )}
+            <Button onClick={nextQuestion}>
+              {currentQuestion < questions.length - 1 
+                ? (currentLanguage === 'kk' ? 'Келесі' : 'Далее') 
+                : (currentLanguage === 'kk' ? 'Аяқтау' : 'Завершить')}
             </Button>
           </div>
           
-          <div className="mt-10 text-center">
-            <button 
-              onClick={() => setHelpDialogOpen(true)}
-              className="flex items-center text-sm text-gray-500 mx-auto"
-            >
-              <HelpCircle className="h-4 w-4 mr-1" /> Көмек керек пе?
-            </button>
+          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-500">
+              {currentLanguage === 'kk' 
+                ? `Қалған тегін талпыныстар: ${testAttemptsRemaining}` 
+                : `Оставшиеся бесплатные попытки: ${testAttemptsRemaining}`}
+            </p>
           </div>
         </div>
-      ) : (
-        // Test Results
-        <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-2">Тест нәтижелері</h2>
-            <p className="text-gray-600">Сізге сәйкес келетін мамандық бағыттары:</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {topCategories.map((category, index) => {
-              const categoryData = majorCategories.find(c => c.name === category);
-              if (!categoryData) return null;
-              
-              return (
-                <Card key={index} className={index === 0 ? "border-blue-500 border-2" : ""}>
-                  <CardContent className="pt-6">
-                    <h3 className="text-xl font-bold mb-2">{categoryData.name}</h3>
-                    <p className="text-gray-600 mb-4">{categoryData.description}</p>
-                    
-                    <h4 className="font-semibold mb-2">Мамандықтар:</h4>
-                    <ul className="list-disc pl-5">
-                      {categoryData.majors.map((major, idx) => (
-                        <li key={idx} className="mb-1">{major}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-          
-          <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <Button 
-              onClick={() => navigate('/universities')}
-              className="flex items-center"
-            >
-              Университеттерді қарау
-            </Button>
-            <Button 
-              onClick={() => navigate('/majors')}
-              variant="outline"
-              className="flex items-center"
-            >
-              Мамандықтар туралы
-            </Button>
-            <Button 
-              onClick={() => navigate('/counseling')}
-              variant="outline"
-              className="flex items-center"
-            >
-              Кеңес алу
-            </Button>
-          </div>
-        </div>
-      )}
+      </main>
       
-      {/* Exit Dialog */}
-      <Dialog open={exitDialogOpen} onOpenChange={setExitDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Тесттен шығу</DialogTitle>
-          </DialogHeader>
-          <p>Сіз шынымен тесттен шыққыңыз келе ме? Сіздің жауаптарыңыз сақталмауы мүмкін.</p>
-          <DialogFooter className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setExitDialogOpen(false)}>
-              Жоқ, жалғастыру
-            </Button>
-            <Button onClick={() => navigate('/test')}>
-              Иә, шығу
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Help Dialog */}
-      <Dialog open={helpDialogOpen} onOpenChange={setHelpDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Тест туралы көмек</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p>Бұл тест сіздің мінезіңіз, қызығушылықтарыңыз және қабілеттеріңіз негізінде сізге ең қолайлы мамандықтарды анықтауға көмектеседі.</p>
-            <p>Әрбір сұраққа адал жауап беріңіз. Дұрыс немесе бұрыс жауаптар жоқ.</p>
-            <p>Тестті аяқтағаннан кейін, сізге сәйкес келетін мамандықтар көрсетіледі.</p>
-          </div>
-          <DialogFooter>
-            <Button onClick={() => setHelpDialogOpen(false)}>
-              Түсінікті
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Footer />
     </div>
   );
 };
