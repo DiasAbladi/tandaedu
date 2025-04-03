@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, ThumbsUp, MessageSquare, Share2, Eye } from "lucide-react";
 import { AuthContext } from '@/contexts/AuthContext';
 import { LanguageContext } from '@/contexts/LanguageContext';
+import { useToast } from "@/hooks/use-toast";
 
 interface NewsArticle {
   id: string;
@@ -21,8 +22,9 @@ interface NewsArticle {
 }
 
 const NewsPage: React.FC = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
   const { currentLanguage } = useContext(LanguageContext);
+  const { toast } = useToast();
   const [activeCategory, setActiveCategory] = useState("Барлығы");
   
   // Initialize with stored view and like counts
@@ -144,7 +146,7 @@ const NewsPage: React.FC = () => {
   useEffect(() => {
     // Initialize user views tracking
     if (isAuthenticated) {
-      const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).id : null;
+      const userId = user?.id || '';
       if (userId) {
         // Initialize viewed articles for this user if not already set
         if (!localStorage.getItem(`user_viewed_articles_${userId}`)) {
@@ -157,15 +159,15 @@ const NewsPage: React.FC = () => {
         }
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
   
   // Function to update view counts when clicking on news
   const incrementViewCount = (type: 'featured' | 'side' | 'recent', id: string) => {
     let hasViewed = false;
     
     // Check if user is authenticated to track if they've already viewed
-    if (isAuthenticated) {
-      const userId = JSON.parse(localStorage.getItem('user')!).id;
+    if (isAuthenticated && user) {
+      const userId = user.id;
       const viewedArticles = JSON.parse(localStorage.getItem(`user_viewed_articles_${userId}`) || '[]');
       hasViewed = viewedArticles.includes(id);
       
@@ -209,40 +211,65 @@ const NewsPage: React.FC = () => {
   
   const handleLike = (articleId: string) => {
     if (!isAuthenticated) {
+      toast({
+        title: currentLanguage === 'kk' ? "Кіру қажет" : "Требуется вход",
+        description: currentLanguage === 'kk' ? "Лайк басу үшін жүйеге кіріңіз" : "Войдите в систему, чтобы поставить лайк",
+        variant: "default"
+      });
       return;
     }
     
-    const userId = JSON.parse(localStorage.getItem('user')!).id;
+    if (!user) return;
+    
+    const userId = user.id;
     const likedArticles = JSON.parse(localStorage.getItem(`user_liked_articles_${userId}`) || '[]');
     const hasLiked = likedArticles.includes(articleId);
     
-    if (!hasLiked) {
-      // Add article to user's liked list
-      likedArticles.push(articleId);
-      localStorage.setItem(`user_liked_articles_${userId}`, JSON.stringify(likedArticles));
-      
-      // Get current like count
-      const storedLikes = localStorage.getItem(`news_likes_${articleId}`);
-      const currentLikes = storedLikes ? parseInt(storedLikes, 10) : 0;
-      
-      // Update like count
-      const newLikeCount = currentLikes + 1;
-      localStorage.setItem(`news_likes_${articleId}`, newLikeCount.toString());
-      
-      // Update state based on which article was liked
-      if (featuredNews.id === articleId) {
-        setFeaturedNews(prev => ({
-          ...prev,
-          likes: newLikeCount
-        }));
-      } else {
-        setRecentNews(prev =>
-          prev.map(article =>
-            article.id === articleId ? { ...article, likes: newLikeCount } : article
-          )
-        );
-      }
+    if (hasLiked) {
+      toast({
+        title: currentLanguage === 'kk' ? "Лайк қойылған" : "Лайк уже поставлен",
+        description: currentLanguage === 'kk' ? "Сіз бұл жаңалыққа лайк бастыңыз" : "Вы уже поставили лайк этой новости",
+        variant: "default"
+      });
+      return;
     }
+    
+    // Add article to user's liked list
+    likedArticles.push(articleId);
+    localStorage.setItem(`user_liked_articles_${userId}`, JSON.stringify(likedArticles));
+    
+    // Get current like count
+    const storedLikes = localStorage.getItem(`news_likes_${articleId}`);
+    const currentLikes = storedLikes ? parseInt(storedLikes, 10) : 0;
+    
+    // Update like count
+    const newLikeCount = currentLikes + 1;
+    localStorage.setItem(`news_likes_${articleId}`, newLikeCount.toString());
+    
+    // Update state based on which article was liked
+    if (featuredNews.id === articleId) {
+      setFeaturedNews(prev => ({
+        ...prev,
+        likes: newLikeCount
+      }));
+    } else {
+      setSideNews(prev =>
+        prev.map(article =>
+          article.id === articleId ? { ...article, likes: newLikeCount } : article
+        )
+      );
+      setRecentNews(prev =>
+        prev.map(article =>
+          article.id === articleId ? { ...article, likes: newLikeCount } : article
+        )
+      );
+    }
+    
+    toast({
+      title: currentLanguage === 'kk' ? "Лайк қойылды" : "Лайк поставлен",
+      description: currentLanguage === 'kk' ? "Рахмет, сіздің дауысыңыз қабылданды" : "Спасибо, ваш голос принят",
+      variant: "default"
+    });
   };
   
   return (
@@ -277,6 +304,15 @@ const NewsPage: React.FC = () => {
                   </div>
                 </div>
               </Link>
+              <div className="absolute top-4 right-4 flex space-x-2">
+                <button 
+                  className={`flex items-center gap-1 rounded-full bg-white/80 backdrop-blur px-3 py-1 text-sm shadow-sm transition-colors hover:bg-white ${isAuthenticated ? '' : 'cursor-not-allowed'}`}
+                  onClick={() => handleLike(featuredNews.id)}
+                >
+                  <ThumbsUp className="h-4 w-4" />
+                  <span>{featuredNews.likes}</span>
+                </button>
+              </div>
             </div>
             
             <div className="flex flex-col gap-6">
@@ -346,7 +382,7 @@ const NewsPage: React.FC = () => {
                       className="block"
                       onClick={() => incrementViewCount('recent', news.id)}
                     >
-                      <h3 className="font-bold text-lg mb-2 hover:text-tandablue transition-colors">{news.title}</h3>
+                      <h3 className="font-bold text-lg mb-2 hover:text-blue-600 transition-colors">{news.title}</h3>
                     </Link>
                     <p className="text-sm text-gray-600 mb-4 line-clamp-2">{news.description}</p>
                     <div className="flex items-center justify-between text-sm text-gray-500">
@@ -366,15 +402,14 @@ const NewsPage: React.FC = () => {
                             e.preventDefault();
                             handleLike(news.id);
                           }}
-                          disabled={!isAuthenticated}
                         >
                           <ThumbsUp className="h-4 w-4 mr-1" />
                           <span>{news.likes}</span>
                         </button>
-                        <button className="flex items-center">
+                        <Link to={`/news/${news.id}`} className="flex items-center">
                           <MessageSquare className="h-4 w-4 mr-1" />
                           <span>{news.comments}</span>
-                        </button>
+                        </Link>
                         <button className="flex items-center">
                           <Share2 className="h-4 w-4" />
                         </button>

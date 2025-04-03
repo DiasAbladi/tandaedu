@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { AuthContext } from '@/contexts/AuthContext';
 import { LanguageContext } from '@/contexts/LanguageContext';
 import { useToast } from "@/hooks/use-toast";
-import { User, Lock, AtSign } from "lucide-react";
+import { User, AtSign, Lock } from "lucide-react";
 
 const ProfilePage = () => {
   const { user, updateUserProfile, updateUserEmail, updateUserPassword, logout } = useContext(AuthContext);

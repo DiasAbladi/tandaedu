@@ -3,15 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, User } from "lucide-react";
-import { 
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle
-} from "@/components/ui/navigation-menu";
+import { Menu, User, LogOut } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import LanguageSwitcher from './LanguageSwitcher';
 import { AuthContext } from '@/contexts/AuthContext';
 import { LanguageContext } from '@/contexts/LanguageContext';
@@ -30,148 +21,64 @@ const Navbar = () => {
   const { currentLanguage, translations } = useContext(LanguageContext);
   const navigate = useNavigate();
 
-  // Fixed DOM nesting issues by separating the navigation trigger from the Link component
-  const handleNavigation = (path: string) => {
-    navigate(path);
-  };
-
   return (
     <header className="bg-white border-b">
       <div className="container mx-auto px-4 md:px-6 py-4">
-        <div className="flex items-center">
-          {/* Logo - Left aligned */}
-          <Link to="/" className="flex-shrink-0 mr-8">
-            <span className="text-xl font-bold text-tandablue">TandaEdu</span>
-          </Link>
+        <div className="flex items-center justify-between">
+          {/* Logo and navigation */}
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center mr-8">
+              <img src="/public/lovable-uploads/9f4a4e27-b330-408c-8835-141c0be40d78.png" alt="TandaEdu Logo" className="h-6 mr-2" />
+              <span className="text-xl font-bold">TandaEdu</span>
+            </Link>
 
-          {/* Desktop Nav - centered */}
-          <div className="hidden md:flex justify-center flex-1">
-            <NavigationMenu>
-              <NavigationMenuList className="gap-1">
-                <NavigationMenuItem>
-                  <div 
-                    onClick={() => handleNavigation('/')} 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer"
-                    )}
-                  >
-                    {translations.navHome[currentLanguage]}
-                  </div>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>
-                    {translations.navUniversities[currentLanguage]}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 md:w-[400px]">
-                      <div
-                        onClick={() => handleNavigation('/universities')}
-                        className="flex h-full w-full flex-col justify-end rounded-md bg-gradient-to-b from-tandablue/20 to-tandablue/50 p-6 no-underline outline-none focus:shadow-md cursor-pointer"
-                      >
-                        <div className="mb-2 mt-4 text-lg font-medium">
-                          {translations.navUniversities[currentLanguage]}
-                        </div>
-                        <p className="text-sm leading-tight text-muted-foreground">
-                          {currentLanguage === 'kk' 
-                            ? 'Қазақстандағы барлық жоғары оқу орындары' 
-                            : 'Все высшие учебные заведения Казахстана'}
-                        </p>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <div 
-                    onClick={() => handleNavigation('/majors')} 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer"
-                    )}
-                  >
-                    {translations.navMajors[currentLanguage]}
-                  </div>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <div 
-                    onClick={() => handleNavigation('/news')} 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer"
-                    )}
-                  >
-                    {translations.navNews[currentLanguage]}
-                  </div>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <div 
-                    onClick={() => handleNavigation('/test')} 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer"
-                    )}
-                  >
-                    {translations.navTest[currentLanguage]}
-                  </div>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <div 
-                    onClick={() => handleNavigation('/counseling')} 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer"
-                    )}
-                  >
-                    {translations.navCounseling[currentLanguage]}
-                  </div>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <div 
-                    onClick={() => handleNavigation('/blog')} 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer"
-                    )}
-                  >
-                    {translations.navBlog[currentLanguage]}
-                  </div>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center space-x-6">
+              <Link to="/universities" className="text-gray-700 hover:text-blue-600 transition-colors">
+                {translations.navUniversities[currentLanguage]}
+              </Link>
+              <Link to="/majors" className="text-gray-700 hover:text-blue-600 transition-colors">
+                {translations.navMajors[currentLanguage]}
+              </Link>
+              <Link to="/test" className="text-gray-700 hover:text-blue-600 transition-colors">
+                {translations.navTest[currentLanguage]}
+              </Link>
+              <Link to="/counseling" className="text-gray-700 hover:text-blue-600 transition-colors">
+                {translations.navCounseling[currentLanguage]}
+              </Link>
+              <Link to="/news" className="text-gray-700 hover:text-blue-600 transition-colors">
+                {translations.navNews[currentLanguage]}
+              </Link>
+              <Link to="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
+                {translations.navBlog[currentLanguage]}
+              </Link>
+            </div>
           </div>
 
-          {/* Right-aligned items (language switcher and auth buttons) */}
-          <div className="flex items-center ml-auto space-x-2">
+          {/* Right-aligned items */}
+          <div className="flex items-center space-x-3">
             <LanguageSwitcher />
             
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative rounded-full h-9 w-9 p-0">
-                    <div className="flex items-center justify-center rounded-full bg-gray-100 h-full w-full">
-                      <User className="h-4 w-4" />
-                    </div>
+                  <Button variant="ghost" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span>{user?.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium">{user?.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-                    </div>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-4 py-3 font-medium">
+                    {currentLanguage === 'kk' ? 'Менің аккаунтым' : 'Мой аккаунт'}
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
-                    {currentLanguage === 'kk' ? 'Менің аккаунтым' : 'Мой аккаунт'}
+                    <User className="h-4 w-4 mr-2" />
+                    <span>{currentLanguage === 'kk' ? 'Профиль' : 'Профиль'}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={logout}>
-                    {currentLanguage === 'kk' ? 'Шығу' : 'Выход'}
+                    <LogOut className="h-4 w-4 mr-2" />
+                    <span>{currentLanguage === 'kk' ? 'Шығу' : 'Выход'}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -183,7 +90,6 @@ const Navbar = () => {
                 <Button
                   variant="default"
                   onClick={() => navigate('/register')}
-                  className="hidden md:inline-flex"
                 >
                   {translations.navRegister[currentLanguage]}
                 </Button>
