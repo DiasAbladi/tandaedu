@@ -1,6 +1,6 @@
 
 import { createContext, useState, useEffect, ReactNode } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface User {
   id: string;
@@ -14,6 +14,9 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  updateUserProfile: (name: string) => void;
+  updateUserEmail: (email: string) => void;
+  updateUserPassword: (currentPassword: string, newPassword: string) => void;
   testAttemptsRemaining: number;
   decrementTestAttempts: () => void;
 }
@@ -24,6 +27,9 @@ export const AuthContext = createContext<AuthContextType>({
   login: async () => false,
   register: async () => false,
   logout: () => {},
+  updateUserProfile: () => {},
+  updateUserEmail: () => {},
+  updateUserPassword: () => {},
   testAttemptsRemaining: 5,
   decrementTestAttempts: () => {}
 });
@@ -146,6 +152,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       description: "Сіз жүйеден сәтті шықтыңыз",
     });
   };
+
+  const updateUserProfile = (name: string) => {
+    if (user) {
+      const updatedUser = {
+        ...user,
+        name
+      };
+      setUser(updatedUser);
+    }
+  };
+
+  const updateUserEmail = (email: string) => {
+    if (user) {
+      const updatedUser = {
+        ...user,
+        email
+      };
+      setUser(updatedUser);
+    }
+  };
+
+  const updateUserPassword = (currentPassword: string, newPassword: string) => {
+    // In a real app, this would validate the current password against the stored password
+    // and then update it in the database
+    console.log("Password updated from", currentPassword, "to", newPassword);
+    // Since we're just simulating, we'll just show a success message in the component
+  };
   
   const decrementTestAttempts = () => {
     if (testAttemptsRemaining > 0) {
@@ -160,6 +193,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       login, 
       register, 
       logout,
+      updateUserProfile,
+      updateUserEmail,
+      updateUserPassword,
       testAttemptsRemaining,
       decrementTestAttempts
     }}>

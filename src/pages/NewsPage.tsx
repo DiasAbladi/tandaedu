@@ -1,10 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
 import { Clock, ThumbsUp, MessageSquare, Share2, Eye } from "lucide-react";
+import { AuthContext } from '@/contexts/AuthContext';
+import { LanguageContext } from '@/contexts/LanguageContext';
 
 interface NewsArticle {
   id: string;
@@ -19,95 +21,227 @@ interface NewsArticle {
 }
 
 const NewsPage: React.FC = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+  const { currentLanguage } = useContext(LanguageContext);
   const [activeCategory, setActiveCategory] = useState("Барлығы");
   
-  // Data with proper image paths
-  const [featuredNews, setFeaturedNews] = useState<NewsArticle>({
-    id: "university-rating-2025",
-    title: "2025 жылғы үздік университеттер рейтингі жарияланды",
-    category: "Университеттер",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    description: "Қазақстандағы жоғары оқу орындарының жаңа рейтингі жарияланды. Топ үштікте қандай университеттер орын алды?",
-    views: 1700,
-    timestamp: "2 сағат бұрын"
+  // Initialize with stored view and like counts
+  const [featuredNews, setFeaturedNews] = useState<NewsArticle>(() => {
+    const id = "university-rating-2025";
+    const storedViews = localStorage.getItem(`news_views_${id}`);
+    const viewCount = storedViews ? parseInt(storedViews, 10) : 1700;
+    
+    const storedLikes = localStorage.getItem(`news_likes_${id}`);
+    const likesCount = storedLikes ? parseInt(storedLikes, 10) : 0;
+    
+    return {
+      id: id,
+      title: "2025 жылғы үздік университеттер рейтингі жарияланды",
+      category: "Университеттер",
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      description: "Қазақстандағы жоғары оқу орындарының жаңа рейтингі жарияланды. Топ үштікте қандай университеттер орын алды?",
+      views: viewCount,
+      timestamp: "2 сағат бұрын",
+      likes: likesCount
+    };
   });
   
-  const [sideNews, setSideNews] = useState<NewsArticle[]>([
-    {
-      id: "ubt-preparation",
-      title: "ҰБТға дайындық: маңызды кеңестер",
-      category: "ҰБТ",
-      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-      description: "Сарапшылардың ҰБТ-ға дайындық бойынша ұсыныстары",
-      views: 856,
-      timestamp: "5 сағат бұрын"
-    },
-    {
-      id: "grants-2025",
-      title: "2025 жылғы мемлекеттік грант иегерлері анықталды",
-      category: "Гранттар",
-      image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80", 
-      description: "Биылғы грант иегерлерінің толық тізімі",
-      views: 1500,
-      timestamp: "1 күн бұрын"
-    }
-  ]);
+  const [sideNews, setSideNews] = useState<NewsArticle[]>(() => {
+    const articles = [
+      {
+        id: "ubt-preparation",
+        title: "ҰБТға дайындық: маңызды кеңестер",
+        category: "ҰБТ",
+        image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+        description: "Сарапшылардың ҰБТ-ға дайындық бойынша ұсыныстары",
+        views: 856,
+        timestamp: "5 сағат бұрын"
+      },
+      {
+        id: "grants-2025",
+        title: "2025 жылғы мемлекеттік грант иегерлері анықталды",
+        category: "Гранттар",
+        image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80", 
+        description: "Биылғы грант иегерлерінің толық тізімі",
+        views: 1500,
+        timestamp: "1 күн бұрын"
+      }
+    ];
+    
+    return articles.map(article => {
+      const storedViews = localStorage.getItem(`news_views_${article.id}`);
+      const viewCount = storedViews ? parseInt(storedViews, 10) : article.views;
+      
+      const storedLikes = localStorage.getItem(`news_likes_${article.id}`);
+      const likesCount = storedLikes ? parseInt(storedLikes, 10) : 0;
+      
+      return {
+        ...article,
+        views: viewCount,
+        likes: likesCount
+      };
+    });
+  });
   
-  const [recentNews, setRecentNews] = useState<NewsArticle[]>([
-    {
-      id: "student-conferences",
-      title: "Жаңа оқу жылында өткізілетін әлеуметтер",
-      category: "Білім",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-      description: "2025 жылғы оқу жылында күтілетін жиналыстар мен әлеуметтер",
-      views: 423,
-      timestamp: "3 күн бұрын",
-      likes: 24,
-      comments: 8
-    },
-    {
-      id: "new-university",
-      title: "Жаңа университет ашылады",
-      category: "Университеттер",
-      image: "https://images.unsplash.com/photo-1498322590555-139c697a8abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80",
-      description: "Алматыда жаңартылған дизайнмен жергілікті жаңа университет ашылады",
-      views: 755,
-      timestamp: "4 күн бұрын",
-      likes: 35,
-      comments: 12
-    },
-    {
-      id: "top-majors",
-      title: "Ең сұранысқа ие мамандықтар - 2025",
-      category: "Мамандықтар",
-      image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      description: "Болашақта сұранысқа ие болатын мамандықтар тізімі",
-      views: 612,
-      timestamp: "5 күн бұрын",
-      likes: 48,
-      comments: 16
+  const [recentNews, setRecentNews] = useState<NewsArticle[]>(() => {
+    const articles = [
+      {
+        id: "student-conferences",
+        title: "Жаңа оқу жылында өткізілетін әлеуметтер",
+        category: "Білім",
+        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+        description: "2025 жылғы оқу жылында күтілетін жиналыстар мен әлеуметтер",
+        views: 423,
+        timestamp: "3 күн бұрын",
+        likes: 24,
+        comments: 8
+      },
+      {
+        id: "new-university",
+        title: "Жаңа университет ашылады",
+        category: "Университеттер",
+        image: "https://images.unsplash.com/photo-1498322590555-139c697a8abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80",
+        description: "Алматыда жаңартылған дизайнмен жергілікті жаңа университет ашылады",
+        views: 755,
+        timestamp: "4 күн бұрын",
+        likes: 35,
+        comments: 12
+      },
+      {
+        id: "top-majors",
+        title: "Ең сұранысқа ие мамандықтар - 2025",
+        category: "Мамандықтар",
+        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+        description: "Болашақта сұранысқа ие болатын мамандықтар тізімі",
+        views: 612,
+        timestamp: "5 күн бұрын",
+        likes: 48,
+        comments: 16
+      }
+    ];
+    
+    return articles.map(article => {
+      const storedViews = localStorage.getItem(`news_views_${article.id}`);
+      const viewCount = storedViews ? parseInt(storedViews, 10) : article.views;
+      
+      const storedLikes = localStorage.getItem(`news_likes_${article.id}`);
+      const likesCount = storedLikes ? parseInt(storedLikes, 10) : article.likes || 0;
+      
+      const storedComments = localStorage.getItem(`news_comments_${article.id}`);
+      const commentsArray = storedComments ? JSON.parse(storedComments) : [];
+      const commentsCount = commentsArray.length || article.comments || 0;
+      
+      return {
+        ...article,
+        views: viewCount,
+        likes: likesCount,
+        comments: commentsCount
+      };
+    });
+  });
+  
+  // Check if user has viewed articles before
+  useEffect(() => {
+    // Initialize user views tracking
+    if (isAuthenticated) {
+      const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).id : null;
+      if (userId) {
+        // Initialize viewed articles for this user if not already set
+        if (!localStorage.getItem(`user_viewed_articles_${userId}`)) {
+          localStorage.setItem(`user_viewed_articles_${userId}`, JSON.stringify([]));
+        }
+        
+        // Initialize liked articles for this user if not already set
+        if (!localStorage.getItem(`user_liked_articles_${userId}`)) {
+          localStorage.setItem(`user_liked_articles_${userId}`, JSON.stringify([]));
+        }
+      }
     }
-  ]);
+  }, [isAuthenticated]);
   
   // Function to update view counts when clicking on news
   const incrementViewCount = (type: 'featured' | 'side' | 'recent', id: string) => {
-    if (type === 'featured') {
-      setFeaturedNews(prev => ({
-        ...prev,
-        views: prev.views + 1
-      }));
-    } else if (type === 'side') {
-      setSideNews(prev => 
-        prev.map(news => 
-          news.id === id ? { ...news, views: news.views + 1 } : news
-        )
-      );
-    } else if (type === 'recent') {
-      setRecentNews(prev => 
-        prev.map(news => 
-          news.id === id ? { ...news, views: news.views + 1 } : news
-        )
-      );
+    let hasViewed = false;
+    
+    // Check if user is authenticated to track if they've already viewed
+    if (isAuthenticated) {
+      const userId = JSON.parse(localStorage.getItem('user')!).id;
+      const viewedArticles = JSON.parse(localStorage.getItem(`user_viewed_articles_${userId}`) || '[]');
+      hasViewed = viewedArticles.includes(id);
+      
+      if (!hasViewed) {
+        // Add article to user's viewed list
+        viewedArticles.push(id);
+        localStorage.setItem(`user_viewed_articles_${userId}`, JSON.stringify(viewedArticles));
+      }
+    }
+    
+    if (!hasViewed) {
+      // Get current view count
+      const storedViews = localStorage.getItem(`news_views_${id}`);
+      const currentViews = storedViews ? parseInt(storedViews, 10) : 0;
+      
+      // Update view count
+      const newViewCount = currentViews + 1;
+      localStorage.setItem(`news_views_${id}`, newViewCount.toString());
+      
+      // Update state based on article type
+      if (type === 'featured') {
+        setFeaturedNews(prev => ({
+          ...prev,
+          views: newViewCount
+        }));
+      } else if (type === 'side') {
+        setSideNews(prev => 
+          prev.map(news => 
+            news.id === id ? { ...news, views: newViewCount } : news
+          )
+        );
+      } else if (type === 'recent') {
+        setRecentNews(prev => 
+          prev.map(news => 
+            news.id === id ? { ...news, views: newViewCount } : news
+          )
+        );
+      }
+    }
+  };
+  
+  const handleLike = (articleId: string) => {
+    if (!isAuthenticated) {
+      return;
+    }
+    
+    const userId = JSON.parse(localStorage.getItem('user')!).id;
+    const likedArticles = JSON.parse(localStorage.getItem(`user_liked_articles_${userId}`) || '[]');
+    const hasLiked = likedArticles.includes(articleId);
+    
+    if (!hasLiked) {
+      // Add article to user's liked list
+      likedArticles.push(articleId);
+      localStorage.setItem(`user_liked_articles_${userId}`, JSON.stringify(likedArticles));
+      
+      // Get current like count
+      const storedLikes = localStorage.getItem(`news_likes_${articleId}`);
+      const currentLikes = storedLikes ? parseInt(storedLikes, 10) : 0;
+      
+      // Update like count
+      const newLikeCount = currentLikes + 1;
+      localStorage.setItem(`news_likes_${articleId}`, newLikeCount.toString());
+      
+      // Update state based on which article was liked
+      if (featuredNews.id === articleId) {
+        setFeaturedNews(prev => ({
+          ...prev,
+          likes: newLikeCount
+        }));
+      } else {
+        setRecentNews(prev =>
+          prev.map(article =>
+            article.id === articleId ? { ...article, likes: newLikeCount } : article
+          )
+        );
+      }
     }
   };
   
@@ -226,11 +360,20 @@ const NewsPage: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center space-x-3">
-                        <button className="flex items-center">
+                        <button 
+                          className={`flex items-center ${isAuthenticated ? 'hover:text-red-500' : ''}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleLike(news.id);
+                          }}
+                          disabled={!isAuthenticated}
+                        >
                           <ThumbsUp className="h-4 w-4 mr-1" />
+                          <span>{news.likes}</span>
                         </button>
                         <button className="flex items-center">
                           <MessageSquare className="h-4 w-4 mr-1" />
+                          <span>{news.comments}</span>
                         </button>
                         <button className="flex items-center">
                           <Share2 className="h-4 w-4" />
