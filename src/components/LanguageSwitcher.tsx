@@ -18,6 +18,7 @@ const LanguageSwitcher = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Globe className="h-5 w-5" />
+          <span className="sr-only">Тілді таңдау</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white">
