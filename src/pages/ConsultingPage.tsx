@@ -173,7 +173,7 @@ const ConsultingPage: React.FC = () => {
     name: "",
     email: "",
     phone: "",
-    topic: "not-specified",
+    topic: "none",
     message: ""
   });
   
@@ -187,7 +187,7 @@ const ConsultingPage: React.FC = () => {
       name: "",
       email: "",
       phone: "",
-      topic: "not-specified",
+      topic: "none",
       message: ""
     });
     setSelectedDate("");
@@ -230,7 +230,7 @@ const ConsultingPage: React.FC = () => {
       name: "",
       email: "",
       phone: "",
-      topic: "not-specified",
+      topic: "none",
       message: ""
     });
     setSelectedDate("");
@@ -404,7 +404,7 @@ const ConsultingPage: React.FC = () => {
                           <SelectValue placeholder={translations.consultingSelectTopic[currentLanguage]} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="not-specified">{translations.consultingSelectTopic[currentLanguage]}</SelectItem>
+                          <SelectItem value="none">{translations.consultingSelectTopic[currentLanguage]}</SelectItem>
                           <SelectItem value="career">{currentLanguage === 'kk' ? 'Мансап жоспарлау' : 'Планирование карьеры'}</SelectItem>
                           <SelectItem value="university">{currentLanguage === 'kk' ? 'Университет таңдау' : 'Выбор университета'}</SelectItem>
                           <SelectItem value="major">{currentLanguage === 'kk' ? 'Мамандық таңдау' : 'Выбор специальности'}</SelectItem>
