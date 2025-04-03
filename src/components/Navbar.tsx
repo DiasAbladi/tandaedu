@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Globe } from "lucide-react";
+import { Menu } from "lucide-react";
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -31,13 +31,14 @@ const Navbar = () => {
   return (
     <header className="bg-white border-b">
       <div className="container mx-auto px-4 md:px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
+        <div className="flex items-center">
+          {/* Logo - Left aligned */}
+          <Link to="/" className="flex-shrink-0 mr-8">
             <span className="text-xl font-bold text-tandablue">TandaBilim</span>
           </Link>
 
           {/* Desktop Nav - centered */}
-          <div className="hidden md:flex items-center justify-center flex-1">
+          <div className="hidden md:flex justify-center flex-1">
             <NavigationMenu>
               <NavigationMenuList className="gap-1">
                 <NavigationMenuItem>
@@ -172,7 +173,8 @@ const Navbar = () => {
             </NavigationMenu>
           </div>
 
-          <div className="flex items-center space-x-2">
+          {/* Right-aligned items (language switcher and auth buttons) */}
+          <div className="flex items-center ml-auto space-x-2">
             <LanguageSwitcher />
             
             {isAuthenticated ? (

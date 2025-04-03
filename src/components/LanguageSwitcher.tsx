@@ -3,39 +3,32 @@ import { useContext } from 'react';
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { LanguageContext } from '@/contexts/LanguageContext';
 
 const LanguageSwitcher = () => {
   const { currentLanguage, setLanguage } = useContext(LanguageContext);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Globe className="h-5 w-5" />
-          <span className="sr-only">Тілді таңдау</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white">
-        <DropdownMenuItem 
-          onClick={() => setLanguage('kk')}
-          className={currentLanguage === 'kk' ? 'bg-gray-100' : ''}
-        >
-          Қазақша
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => setLanguage('ru')}
-          className={currentLanguage === 'ru' ? 'bg-gray-100' : ''}
-        >
-          Русский
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Select value={currentLanguage} onValueChange={(value: 'kk' | 'ru') => setLanguage(value)}>
+      <SelectTrigger className="w-[100px] bg-white border-gray-200">
+        <SelectValue>
+          <div className="flex items-center">
+            <Globe className="h-4 w-4 mr-2" />
+            {currentLanguage === 'kk' ? 'Қаз' : 'Рус'}
+          </div>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="kk">Қазақша</SelectItem>
+        <SelectItem value="ru">Русский</SelectItem>
+      </SelectContent>
+    </Select>
   );
 };
 
