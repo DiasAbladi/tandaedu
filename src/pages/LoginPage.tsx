@@ -1,13 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { AuthContext } from '@/contexts/AuthContext';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -15,8 +16,9 @@ const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
@@ -29,25 +31,10 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    // In a real app, you'd make an API call to authenticate
-    // For demo purposes, we'll use a mock login
-    // Extract name from email for display purposes
-    const userName = email.split('@')[0];
-    
-    // Save user info to localStorage
-    const userData = {
-      email,
-      name: userName.charAt(0).toUpperCase() + userName.slice(1), // Capitalize first letter
-      isLoggedIn: true
-    };
-    
-    localStorage.setItem('user', JSON.stringify(userData));
-    
-    toast({
-      title: "Сәтті кіру!",
-      description: "Жүйеге кіру сәтті болды.",
-    });
-    navigate('/');
+    const success = await login(email, password);
+    if (success) {
+      navigate('/');
+    }
   };
 
   return (
@@ -56,10 +43,10 @@ const LoginPage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-tandablue">TandaEdu жүйесіне кіру</h2>
+            <h2 className="text-2xl font-bold text-blue-600">TandaEdu жүйесіне кіру</h2>
             <p className="mt-2 text-sm text-gray-600">
               Әлі аккаунтыңыз жоқ па? {" "}
-              <Link to="/register" className="font-medium text-tandablue hover:text-blue-800">
+              <Link to="/register" className="font-medium text-blue-600 hover:text-blue-800">
                 Тіркелу
               </Link>
             </p>
@@ -112,7 +99,7 @@ const LoginPage: React.FC = () => {
                   </Label>
                 </div>
                 <div>
-                  <Link to="/forgot-password" className="text-sm font-medium text-tandablue hover:text-blue-800">
+                  <Link to="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-800">
                     Құпия сөзді ұмыттыңыз ба?
                   </Link>
                 </div>

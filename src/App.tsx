@@ -20,7 +20,6 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -41,11 +40,11 @@ const App = () => (
               <Route path="/news" element={<NewsPage />} />
               <Route path="/news/:id" element={<NewsDetailPage />} />
               <Route path="/test" element={<CareerTestPage />} />
-              <Route path="/test/question" element={<ProtectedRoute><TestQuestionPage /></ProtectedRoute>} />
-              <Route path="/counseling" element={<ProtectedRoute><ConsultingPage /></ProtectedRoute>} />
+              <Route path="/test/question" element={<TestQuestionPage />} />
+              <Route path="/counseling" element={<ConsultingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

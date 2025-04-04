@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, User, LogOut } from "lucide-react";
+import { User, LogOut, Menu, Search } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import LanguageSwitcher from './LanguageSwitcher';
 import { AuthContext } from '@/contexts/AuthContext';
-import { LanguageContext } from '@/contexts/LanguageContext';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useContext(AuthContext);
-  const { currentLanguage, translations } = useContext(LanguageContext);
   const navigate = useNavigate();
 
   return (
@@ -40,7 +38,7 @@ const Navbar = () => {
                 Мамандықтар
               </Link>
               <Link to="/test" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Кәсіби тест
+                Кәсіби бағдар тесті
               </Link>
               <Link to="/counseling" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Кеңес алу
@@ -54,6 +52,12 @@ const Navbar = () => {
           {/* Right-aligned items */}
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
+            
+            {/* Search icon */}
+            <Button variant="ghost" size="icon">
+              <Search className="h-[1.2rem] w-[1.2rem]" />
+              <span className="sr-only">Іздеу</span>
+            </Button>
             
             {isAuthenticated ? (
               <DropdownMenu>
@@ -150,7 +154,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    Кәсіби тест
+                    Кәсіби бағдар тесті
                   </Button>
                   <Button
                     variant="ghost"

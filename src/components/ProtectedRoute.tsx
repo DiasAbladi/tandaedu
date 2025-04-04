@@ -1,4 +1,3 @@
-
 import { useContext, ReactNode, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '@/contexts/AuthContext';
@@ -9,24 +8,8 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated } = useContext(AuthContext);
-  const { toast } = useToast();
-  const location = useLocation();
-  
-  useEffect(() => {
-    if (!isAuthenticated) {
-      toast({
-        title: "Кіру қажет",
-        description: "Бұл бетке кіру үшін жүйеге кіру қажет",
-        variant: "destructive"
-      });
-    }
-  }, [isAuthenticated, toast]);
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} />;
-  }
-  
+  // We'll keep this component but make it pass through all users
+  // This allows us to gradually transition if we want to add restrictions again later
   return <>{children}</>;
 };
 

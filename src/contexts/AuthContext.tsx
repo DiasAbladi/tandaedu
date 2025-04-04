@@ -66,10 +66,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Simulate API call
       // In a real app, this would be an API call to validate credentials
       if (email && password) {
+        // Extract username from email for display (before the @ symbol)
+        const userName = email.split('@')[0];
+        
         // Simulate successful login
         const mockUser = {
           id: 'user-' + Date.now(),
-          name: email.split('@')[0],
+          name: userName,
           email
         };
         
@@ -160,6 +163,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         name
       };
       setUser(updatedUser);
+      
+      toast({
+        title: "Сәтті жаңартылды",
+        description: "Профиль ақпараты сәтті жаңартылды",
+      });
     }
   };
 
@@ -170,6 +178,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email
       };
       setUser(updatedUser);
+      
+      toast({
+        title: "Сәтті жаңартылды",
+        description: "Электрондық пошта сәтті жаңартылды",
+      });
     }
   };
 
@@ -177,7 +190,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // In a real app, this would validate the current password against the stored password
     // and then update it in the database
     console.log("Password updated from", currentPassword, "to", newPassword);
-    // Since we're just simulating, we'll just show a success message in the component
+    
+    toast({
+      title: "Сәтті жаңартылды",
+      description: "Құпия сөз сәтті жаңартылды",
+    });
   };
   
   const decrementTestAttempts = () => {

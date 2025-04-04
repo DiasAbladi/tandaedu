@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -9,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Clock, AlertTriangle } from "lucide-react";
 import { AuthContext } from '@/contexts/AuthContext';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { LanguageContext } from '@/contexts/LanguageContext';
 
 interface Question {
@@ -93,7 +92,6 @@ const questions: Question[] = [
       { id: 'd', text: { kk: 'Зерттеу және талдау', ru: 'Исследования и анализ' } }
     ]
   },
-  // Добавьте больше вопросов по необходимости
 ];
 
 interface TestAnswer {
@@ -110,7 +108,7 @@ interface TestHistory {
 
 const TestQuestionPage: React.FC = () => {
   const { currentLanguage } = useContext(LanguageContext);
-  const { testAttemptsRemaining, decrementTestAttempts } = useContext(AuthContext);
+  const { isAuthenticated, user, testAttemptsRemaining, decrementTestAttempts } = useContext(AuthContext);
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -124,22 +122,9 @@ const TestQuestionPage: React.FC = () => {
   });
   
   useEffect(() => {
-    // Check if user has attempts remaining
-    if (testAttemptsRemaining <= 0) {
-      toast({
-        title: currentLanguage === 'kk' ? "Мүмкіндік аяқталды" : "Возможности исчерпаны",
-        description: currentLanguage === 'kk' 
-          ? "Сіз барлық тегін тест мүмкіндіктерін пайдаландыңыз" 
-          : "Вы использовали все бесплатные попытки теста",
-        variant: "destructive"
-      });
-      navigate('/test');
-      return;
-    }
-    
     // Save test history to localStorage when it changes
     localStorage.setItem('testHistory', JSON.stringify(testHistory));
-  }, [testHistory, testAttemptsRemaining]);
+  }, [testHistory]);
   
   // Timer effect
   useEffect(() => {
@@ -213,8 +198,10 @@ const TestQuestionPage: React.FC = () => {
     
     setTestHistory(prev => [newTestRecord, ...prev]);
     
-    // Decrement remaining attempts
-    decrementTestAttempts();
+    // If user is authenticated, decrement remaining attempts
+    if (isAuthenticated) {
+      decrementTestAttempts();
+    }
     
     // Navigate to the results page or show results
     toast({
@@ -325,13 +312,15 @@ const TestQuestionPage: React.FC = () => {
             </Button>
           </div>
           
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-500">
-              {currentLanguage === 'kk' 
-                ? `Қалған тегін талпыныстар: ${testAttemptsRemaining}` 
-                : `Оставшиеся бесплатные попытки: ${testAttemptsRemaining}`}
-            </p>
-          </div>
+          {isAuthenticated && (
+            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+              <p className="text-sm text-gray-500">
+                {currentLanguage === 'kk' 
+                  ? `Қалған тегін талпыныстар: ${testAttemptsRemaining}` 
+                  : `Оставшиеся бесплатные попытки: ${testAttemptsRemaining}`}
+              </p>
+            </div>
+          )}
         </div>
       </main>
       
