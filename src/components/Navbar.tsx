@@ -25,32 +25,28 @@ const Navbar = () => {
     <header className="bg-white border-b">
       <div className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo and navigation */}
+          {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center mr-8">
-              <img src="/public/lovable-uploads/9f4a4e27-b330-408c-8835-141c0be40d78.png" alt="TandaEdu Logo" className="h-6 mr-2" />
-              <span className="text-xl font-bold">TandaEdu</span>
+              <span className="text-xl font-bold text-blue-600">TandaEdu</span>
             </Link>
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center space-x-6">
               <Link to="/universities" className="text-gray-700 hover:text-blue-600 transition-colors">
-                {translations.navUniversities[currentLanguage]}
+                Университеттер
               </Link>
               <Link to="/majors" className="text-gray-700 hover:text-blue-600 transition-colors">
-                {translations.navMajors[currentLanguage]}
+                Мамандықтар
               </Link>
               <Link to="/test" className="text-gray-700 hover:text-blue-600 transition-colors">
-                {translations.navTest[currentLanguage]}
+                Кәсіби тест
               </Link>
               <Link to="/counseling" className="text-gray-700 hover:text-blue-600 transition-colors">
-                {translations.navCounseling[currentLanguage]}
+                Кеңес алу
               </Link>
               <Link to="/news" className="text-gray-700 hover:text-blue-600 transition-colors">
-                {translations.navNews[currentLanguage]}
-              </Link>
-              <Link to="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
-                {translations.navBlog[currentLanguage]}
+                Жаңалықтар
               </Link>
             </div>
           </div>
@@ -69,29 +65,29 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-4 py-3 font-medium">
-                    {currentLanguage === 'kk' ? 'Менің аккаунтым' : 'Мой аккаунт'}
+                    Менің аккаунтым
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
                     <User className="h-4 w-4 mr-2" />
-                    <span>{currentLanguage === 'kk' ? 'Профиль' : 'Профиль'}</span>
+                    <span>Профиль</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={logout}>
                     <LogOut className="h-4 w-4 mr-2" />
-                    <span>{currentLanguage === 'kk' ? 'Шығу' : 'Выход'}</span>
+                    <span>Шығу</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <>
                 <Button variant="ghost" onClick={() => navigate('/login')}>
-                  {translations.navLogin[currentLanguage]}
+                  Кіру
                 </Button>
                 <Button
                   variant="default"
                   onClick={() => navigate('/register')}
                 >
-                  {translations.navRegister[currentLanguage]}
+                  Тіркелу
                 </Button>
               </>
             )}
@@ -101,7 +97,7 @@ const Navbar = () => {
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="outline" size="icon">
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Open navigation menu</span>
+                  <span className="sr-only">Навигацияны ашу</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
@@ -114,7 +110,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    {translations.navHome[currentLanguage]}
+                    Басты бет
                   </Button>
                   <Button
                     variant="ghost"
@@ -124,7 +120,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    {translations.navUniversities[currentLanguage]}
+                    Университеттер
                   </Button>
                   <Button
                     variant="ghost"
@@ -134,7 +130,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    {translations.navMajors[currentLanguage]}
+                    Мамандықтар
                   </Button>
                   <Button
                     variant="ghost"
@@ -144,7 +140,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    {translations.navNews[currentLanguage]}
+                    Жаңалықтар
                   </Button>
                   <Button
                     variant="ghost"
@@ -154,7 +150,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    {translations.navTest[currentLanguage]}
+                    Кәсіби тест
                   </Button>
                   <Button
                     variant="ghost"
@@ -164,17 +160,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    {translations.navCounseling[currentLanguage]}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    onClick={() => {
-                      navigate('/blog');
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    {translations.navBlog[currentLanguage]}
+                    Кеңес алу
                   </Button>
                   
                   {isAuthenticated ? (
@@ -187,7 +173,7 @@ const Navbar = () => {
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        {currentLanguage === 'kk' ? 'Менің аккаунтым' : 'Мой аккаунт'}
+                        Менің аккаунтым
                       </Button>
                       <Button 
                         variant="outline" 
@@ -197,7 +183,7 @@ const Navbar = () => {
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        {currentLanguage === 'kk' ? 'Шығу' : 'Выход'}
+                        Шығу
                       </Button>
                     </>
                   ) : (
@@ -210,7 +196,7 @@ const Navbar = () => {
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        {translations.navLogin[currentLanguage]}
+                        Кіру
                       </Button>
                       <Button
                         className="w-full justify-start"
@@ -219,7 +205,7 @@ const Navbar = () => {
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        {translations.navRegister[currentLanguage]}
+                        Тіркелу
                       </Button>
                     </>
                   )}

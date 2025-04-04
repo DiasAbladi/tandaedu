@@ -35,10 +35,6 @@ const defaultTranslations = {
     kk: 'Кеңес алу',
     ru: 'Консультации'
   },
-  navBlog: {
-    kk: 'Блог',
-    ru: 'Блог'
-  },
   navLogin: {
     kk: 'Кіру',
     ru: 'Вход'
@@ -171,11 +167,8 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  // Try to get the language from localStorage, default to 'kk'
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return (savedLanguage === 'kk' || savedLanguage === 'ru') ? savedLanguage : 'kk';
-  });
+  // Always default to 'kk' (Kazakh)
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('kk');
 
   // Save language preference to localStorage when it changes
   useEffect(() => {

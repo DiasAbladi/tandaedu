@@ -7,13 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthContext } from '@/contexts/AuthContext';
-import { LanguageContext } from '@/contexts/LanguageContext';
 import { useToast } from "@/hooks/use-toast";
 import { User, AtSign, Lock } from "lucide-react";
 
 const ProfilePage = () => {
   const { user, updateUserProfile, updateUserEmail, updateUserPassword, logout } = useContext(AuthContext);
-  const { currentLanguage } = useContext(LanguageContext);
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -29,8 +27,8 @@ const ProfilePage = () => {
     e.preventDefault();
     if (name.trim() === "") {
       toast({
-        title: currentLanguage === 'kk' ? "Қате" : "Ошибка",
-        description: currentLanguage === 'kk' ? "Аты-жөніңізді енгізіңіз" : "Введите ваше имя",
+        title: "Қате",
+        description: "Аты-жөніңізді енгізіңіз",
         variant: "destructive"
       });
       return;
@@ -38,8 +36,8 @@ const ProfilePage = () => {
     
     updateUserProfile(name);
     toast({
-      title: currentLanguage === 'kk' ? "Сәтті сақталды" : "Успешно сохранено",
-      description: currentLanguage === 'kk' ? "Профиль мәліметтері жаңартылды" : "Данные профиля обновлены"
+      title: "Сәтті сақталды",
+      description: "Профиль мәліметтері жаңартылды",
     });
   };
   
@@ -47,8 +45,8 @@ const ProfilePage = () => {
     e.preventDefault();
     if (email.trim() === "" || !email.includes('@')) {
       toast({
-        title: currentLanguage === 'kk' ? "Қате" : "Ошибка",
-        description: currentLanguage === 'kk' ? "Жарамды электрондық пошта енгізіңіз" : "Введите действительный email",
+        title: "Қате",
+        description: "Жарамды электрондық пошта енгізіңіз",
         variant: "destructive"
       });
       return;
@@ -56,8 +54,8 @@ const ProfilePage = () => {
     
     updateUserEmail(email);
     toast({
-      title: currentLanguage === 'kk' ? "Сәтті сақталды" : "Успешно сохранено",
-      description: currentLanguage === 'kk' ? "Электрондық пошта жаңартылды" : "Email обновлен"
+      title: "Сәтті сақталды",
+      description: "Электрондық пошта жаңартылды",
     });
   };
   
@@ -65,8 +63,8 @@ const ProfilePage = () => {
     e.preventDefault();
     if (!currentPassword || !newPassword || !confirmPassword) {
       toast({
-        title: currentLanguage === 'kk' ? "Қате" : "Ошибка",
-        description: currentLanguage === 'kk' ? "Барлық өрістерді толтырыңыз" : "Заполните все поля",
+        title: "Қате",
+        description: "Барлық өрістерді толтырыңыз",
         variant: "destructive"
       });
       return;
@@ -74,8 +72,8 @@ const ProfilePage = () => {
     
     if (newPassword !== confirmPassword) {
       toast({
-        title: currentLanguage === 'kk' ? "Қате" : "Ошибка",
-        description: currentLanguage === 'kk' ? "Жаңа құпиясөздер сәйкес келмейді" : "Новые пароли не совпадают",
+        title: "Қате",
+        description: "Жаңа құпиясөздер сәйкес келмейді",
         variant: "destructive"
       });
       return;
@@ -87,8 +85,8 @@ const ProfilePage = () => {
     setConfirmPassword("");
     
     toast({
-      title: currentLanguage === 'kk' ? "Сәтті сақталды" : "Успешно сохранено",
-      description: currentLanguage === 'kk' ? "Құпиясөз жаңартылды" : "Пароль обновлен"
+      title: "Сәтті сақталды",
+      description: "Құпиясөз жаңартылды",
     });
   };
   
@@ -121,7 +119,7 @@ const ProfilePage = () => {
                   onClick={() => setActiveTab("profile")}
                 >
                   <User className="h-4 w-4 mr-2" />
-                  {currentLanguage === 'kk' ? 'Профиль' : 'Профиль'}
+                  Профиль
                 </Button>
                 <Button 
                   variant={activeTab === "email" ? "default" : "ghost"} 
@@ -129,7 +127,7 @@ const ProfilePage = () => {
                   onClick={() => setActiveTab("email")}
                 >
                   <AtSign className="h-4 w-4 mr-2" />
-                  {currentLanguage === 'kk' ? 'Email' : 'Email'}
+                  Email
                 </Button>
                 <Button 
                   variant={activeTab === "password" ? "default" : "ghost"} 
@@ -137,14 +135,14 @@ const ProfilePage = () => {
                   onClick={() => setActiveTab("password")}
                 >
                   <Lock className="h-4 w-4 mr-2" />
-                  {currentLanguage === 'kk' ? 'Құпиясөз' : 'Пароль'}
+                  Құпиясөз
                 </Button>
                 <Button 
                   variant="outline" 
                   className="w-full justify-start mt-6 text-red-500"
                   onClick={handleLogout}
                 >
-                  {currentLanguage === 'kk' ? 'Шығу' : 'Выход'}
+                  Шығу
                 </Button>
               </div>
             </div>
@@ -154,26 +152,26 @@ const ProfilePage = () => {
               {activeTab === "profile" && (
                 <div>
                   <h2 className="text-xl font-bold mb-6">
-                    {currentLanguage === 'kk' ? 'Профиль мәліметтері' : 'Данные профиля'}
+                    Профиль мәліметтері
                   </h2>
                   
                   <form onSubmit={handleUpdateProfile}>
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">
-                          {currentLanguage === 'kk' ? 'Аты-жөні' : 'Имя'}
+                          Аты-жөні
                         </Label>
                         <Input 
                           id="name" 
                           type="text" 
                           value={name} 
                           onChange={(e) => setName(e.target.value)} 
-                          placeholder={currentLanguage === 'kk' ? 'Аты-жөніңізді енгізіңіз' : 'Введите ваше имя'}
+                          placeholder="Аты-жөніңізді енгізіңіз"
                         />
                       </div>
                       
                       <Button type="submit">
-                        {currentLanguage === 'kk' ? 'Сақтау' : 'Сохранить'}
+                        Сақтау
                       </Button>
                     </div>
                   </form>
@@ -183,26 +181,26 @@ const ProfilePage = () => {
               {activeTab === "email" && (
                 <div>
                   <h2 className="text-xl font-bold mb-6">
-                    {currentLanguage === 'kk' ? 'Email жаңарту' : 'Обновить email'}
+                    Email жаңарту
                   </h2>
                   
                   <form onSubmit={handleUpdateEmail}>
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="email">
-                          {currentLanguage === 'kk' ? 'Электрондық пошта' : 'Email'}
+                          Электрондық пошта
                         </Label>
                         <Input 
                           id="email" 
                           type="email" 
                           value={email} 
                           onChange={(e) => setEmail(e.target.value)} 
-                          placeholder={currentLanguage === 'kk' ? 'Электрондық поштаңызды енгізіңіз' : 'Введите ваш email'}
+                          placeholder="Электрондық поштаңызды енгізіңіз"
                         />
                       </div>
                       
                       <Button type="submit">
-                        {currentLanguage === 'kk' ? 'Сақтау' : 'Сохранить'}
+                        Сақтау
                       </Button>
                     </div>
                   </form>
@@ -212,52 +210,52 @@ const ProfilePage = () => {
               {activeTab === "password" && (
                 <div>
                   <h2 className="text-xl font-bold mb-6">
-                    {currentLanguage === 'kk' ? 'Құпиясөзді жаңарту' : 'Обновить пароль'}
+                    Құпиясөзді жаңарту
                   </h2>
                   
                   <form onSubmit={handleUpdatePassword}>
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="current-password">
-                          {currentLanguage === 'kk' ? 'Ағымдағы құпиясөз' : 'Текущий пароль'}
+                          Ағымдағы құпиясөз
                         </Label>
                         <Input 
                           id="current-password" 
                           type="password" 
                           value={currentPassword} 
                           onChange={(e) => setCurrentPassword(e.target.value)} 
-                          placeholder={currentLanguage === 'kk' ? 'Ағымдағы құпиясөзді енгізіңіз' : 'Введите текущий пароль'}
+                          placeholder="Ағымдағы құпиясөзді енгізіңіз"
                         />
                       </div>
                       
                       <div className="space-y-2">
                         <Label htmlFor="new-password">
-                          {currentLanguage === 'kk' ? 'Жаңа құпиясөз' : 'Новый пароль'}
+                          Жаңа құпиясөз
                         </Label>
                         <Input 
                           id="new-password" 
                           type="password" 
                           value={newPassword} 
                           onChange={(e) => setNewPassword(e.target.value)} 
-                          placeholder={currentLanguage === 'kk' ? 'Жаңа құпиясөзді енгізіңіз' : 'Введите новый пароль'}
+                          placeholder="Жаңа құпиясөзді енгізіңіз"
                         />
                       </div>
                       
                       <div className="space-y-2">
                         <Label htmlFor="confirm-password">
-                          {currentLanguage === 'kk' ? 'Құпиясөзді растаңыз' : 'Подтвердите пароль'}
+                          Құпиясөзді растаңыз
                         </Label>
                         <Input 
                           id="confirm-password" 
                           type="password" 
                           value={confirmPassword} 
                           onChange={(e) => setConfirmPassword(e.target.value)} 
-                          placeholder={currentLanguage === 'kk' ? 'Жаңа құпиясөзді қайталаңыз' : 'Повторите новый пароль'}
+                          placeholder="Жаңа құпиясөзді қайталаңыз"
                         />
                       </div>
                       
                       <Button type="submit">
-                        {currentLanguage === 'kk' ? 'Сақтау' : 'Сохранить'}
+                        Сақтау
                       </Button>
                     </div>
                   </form>

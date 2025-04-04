@@ -16,7 +16,6 @@ import NewsDetailPage from "./pages/NewsDetailPage";
 import CareerTestPage from "./pages/CareerTestPage";
 import TestQuestionPage from "./pages/TestQuestionPage";
 import ConsultingPage from "./pages/ConsultingPage";
-import BlogPage from "./pages/BlogPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -44,7 +43,6 @@ const App = () => (
               <Route path="/test" element={<CareerTestPage />} />
               <Route path="/test/question" element={<ProtectedRoute><TestQuestionPage /></ProtectedRoute>} />
               <Route path="/counseling" element={<ProtectedRoute><ConsultingPage /></ProtectedRoute>} />
-              <Route path="/blog" element={<BlogPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
