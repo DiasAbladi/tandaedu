@@ -152,7 +152,19 @@ const NewsDetailPage: React.FC = () => {
           setNews(newsData);
           setLoading(false);
           
-          // Increment view count
+          // Load view count from localStorage
+          const storedViews = localStorage.getItem(`news_views_${id}`);
+          if (storedViews) {
+            setNews(prev => prev ? {...prev, views: parseInt(storedViews, 10)} : null);
+          }
+          
+          // Load like count from localStorage
+          const storedLikes = localStorage.getItem(`news_likes_${id}`);
+          if (storedLikes) {
+            setNews(prev => prev ? {...prev, likes: parseInt(storedLikes, 10)} : null);
+          }
+          
+          // Increment view count only if user hasn't viewed this article before
           incrementViewCount(id || "");
         }, 500);
       } catch (error) {
@@ -198,11 +210,6 @@ const NewsDetailPage: React.FC = () => {
       
       // Update state
       setNews(prev => prev ? {...prev, views: newViewCount} : null);
-    } else {
-      // Retrieve current view count
-      const storedViews = localStorage.getItem(`news_views_${newsId}`);
-      const currentViews = storedViews ? parseInt(storedViews, 10) : 0;
-      setNews(prev => prev ? {...prev, views: currentViews} : null);
     }
   };
   

@@ -53,9 +53,9 @@ const BlogPage: React.FC = () => {
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     author: currentLanguage === 'kk' ? "Админ" : "Админ",
     date: currentLanguage === 'kk' ? "2 сағат бұрын" : "2 часа назад",
-    views: 1700,
-    likes: 24,
-    comments: 8
+    views: 0,
+    likes: 0,
+    comments: 0
   });
 
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([
@@ -67,9 +67,9 @@ const BlogPage: React.FC = () => {
       image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
       author: currentLanguage === 'kk' ? "Админ" : "Админ",
       date: currentLanguage === 'kk' ? "5 сағат бұрын" : "5 часов назад",
-      views: 856,
-      likes: 15,
-      comments: 3
+      views: 0,
+      likes: 0,
+      comments: 0
     },
     {
       id: "grants-2025",
@@ -79,9 +79,9 @@ const BlogPage: React.FC = () => {
       image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", 
       author: currentLanguage === 'kk' ? "Админ" : "Админ",
       date: currentLanguage === 'kk' ? "1 күн бұрын" : "1 день назад",
-      views: 1500,
-      likes: 32,
-      comments: 12
+      views: 0,
+      likes: 0,
+      comments: 0
     },
     {
       id: "student-conferences",
@@ -91,9 +91,9 @@ const BlogPage: React.FC = () => {
       image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
       author: currentLanguage === 'kk' ? "Админ" : "Админ",
       date: currentLanguage === 'kk' ? "3 күн бұрын" : "3 дня назад",
-      views: 423,
-      likes: 9,
-      comments: 2
+      views: 0,
+      likes: 0,
+      comments: 0
     },
     {
       id: "new-university",
@@ -103,9 +103,9 @@ const BlogPage: React.FC = () => {
       image: "https://images.unsplash.com/photo-1498322590555-139c697a8abe?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
       author: currentLanguage === 'kk' ? "Админ" : "Админ",
       date: currentLanguage === 'kk' ? "4 күн бұрын" : "4 дня назад",
-      views: 755,
-      likes: 18,
-      comments: 5
+      views: 0,
+      likes: 0,
+      comments: 0
     },
     {
       id: "top-majors",
@@ -115,9 +115,9 @@ const BlogPage: React.FC = () => {
       image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
       author: currentLanguage === 'kk' ? "Админ" : "Админ",
       date: currentLanguage === 'kk' ? "5 күн бұрын" : "5 дней назад",
-      views: 612,
-      likes: 22,
-      comments: 7
+      views: 0,
+      likes: 0,
+      comments: 0
     }
   ]);
 
@@ -153,30 +153,131 @@ const BlogPage: React.FC = () => {
     };
     
     updateLocalizedContent();
-  }, [currentLanguage]);
-
-  // Function to update view counts when clicking on blog posts
-  const incrementViewCount = (type: 'featured' | 'regular', id: string) => {
-    if (type === 'featured') {
-      const newViewCount = featuredPost.views + 1;
-      setFeaturedPost(prev => ({
-        ...prev,
-        views: newViewCount
-      }));
+    
+    // Load view counts from localStorage
+    const loadViewCounts = () => {
+      // For featured post
+      const storedViews = localStorage.getItem(`news_views_${featuredPost.id}`);
+      if (storedViews) {
+        setFeaturedPost(prev => ({
+          ...prev,
+          views: parseInt(storedViews, 10)
+        }));
+      }
       
-      // Save to localStorage
-      localStorage.setItem(`blog_views_${id}`, newViewCount.toString());
-    } else if (type === 'regular') {
+      // For blog posts
       const updatedPosts = blogPosts.map(post => {
-        if (post.id === id) {
-          const newViewCount = post.views + 1;
-          localStorage.setItem(`blog_views_${id}`, newViewCount.toString());
-          return { ...post, views: newViewCount };
+        const storedPostViews = localStorage.getItem(`news_views_${post.id}`);
+        if (storedPostViews) {
+          return {
+            ...post,
+            views: parseInt(storedPostViews, 10)
+          };
         }
         return post;
       });
       
       setBlogPosts(updatedPosts);
+    };
+    
+    // Load like counts from localStorage
+    const loadLikeCounts = () => {
+      // For featured post
+      const storedLikes = localStorage.getItem(`news_likes_${featuredPost.id}`);
+      if (storedLikes) {
+        setFeaturedPost(prev => ({
+          ...prev,
+          likes: parseInt(storedLikes, 10)
+        }));
+      }
+      
+      // For blog posts
+      const updatedPosts = blogPosts.map(post => {
+        const storedPostLikes = localStorage.getItem(`news_likes_${post.id}`);
+        if (storedPostLikes) {
+          return {
+            ...post,
+            likes: parseInt(storedPostLikes, 10)
+          };
+        }
+        return post;
+      });
+      
+      setBlogPosts(updatedPosts);
+    };
+    
+    // Load comment counts from localStorage
+    const loadCommentCounts = () => {
+      // For featured post
+      const storedComments = localStorage.getItem(`news_comments_${featuredPost.id}`);
+      if (storedComments) {
+        const commentsArray = JSON.parse(storedComments);
+        setFeaturedPost(prev => ({
+          ...prev,
+          comments: commentsArray.length
+        }));
+      }
+      
+      // For blog posts
+      const updatedPosts = blogPosts.map(post => {
+        const storedPostComments = localStorage.getItem(`news_comments_${post.id}`);
+        if (storedPostComments) {
+          const commentsArray = JSON.parse(storedPostComments);
+          return {
+            ...post,
+            comments: commentsArray.length
+          };
+        }
+        return post;
+      });
+      
+      setBlogPosts(updatedPosts);
+    };
+    
+    loadViewCounts();
+    loadLikeCounts();
+    loadCommentCounts();
+  }, [currentLanguage]);
+
+  // Function to update view counts when clicking on blog posts
+  const incrementViewCount = (type: 'featured' | 'regular', id: string) => {
+    if (!isAuthenticated) return;
+    
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+    
+    const viewedArticles = JSON.parse(localStorage.getItem(`user_viewed_articles_${userId}`) || '[]');
+    const hasViewed = viewedArticles.includes(id);
+    
+    if (!hasViewed) {
+      // Add article to user's viewed list
+      viewedArticles.push(id);
+      localStorage.setItem(`user_viewed_articles_${userId}`, JSON.stringify(viewedArticles));
+      
+      // Get current view count
+      const storedViews = localStorage.getItem(`news_views_${id}`);
+      const currentViews = storedViews ? parseInt(storedViews, 10) : 0;
+      const newViewCount = currentViews + 1;
+      
+      // Save to localStorage
+      localStorage.setItem(`news_views_${id}`, newViewCount.toString());
+      
+      // Update state
+      if (type === 'featured') {
+        setFeaturedPost(prev => ({
+          ...prev,
+          views: newViewCount
+        }));
+      } else if (type === 'regular') {
+        const updatedPosts = blogPosts.map(post => {
+          if (post.id === id) {
+            return { ...post, views: newViewCount };
+          }
+          return post;
+        });
+        
+        setBlogPosts(updatedPosts);
+      }
     }
   };
   
@@ -192,16 +293,50 @@ const BlogPage: React.FC = () => {
       return;
     }
     
-    const updatedPosts = blogPosts.map(post => {
-      if (post.id === postId) {
-        const newLikes = post.likes + 1;
-        localStorage.setItem(`blog_likes_${postId}`, newLikes.toString());
-        return { ...post, likes: newLikes };
-      }
-      return post;
-    });
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
     
-    setBlogPosts(updatedPosts);
+    const likedArticles = JSON.parse(localStorage.getItem(`user_liked_articles_${userId}`) || '[]');
+    const hasLiked = likedArticles.includes(postId);
+    
+    if (hasLiked) {
+      toast({
+        title: currentLanguage === 'kk' ? "Лайк қойылған" : "Лайк добавлен",
+        description: currentLanguage === 'kk' 
+          ? "Сіз бұл жаңалыққа лайк бастыңыз" 
+          : "Вы уже поставили лайк этой новости",
+      });
+      return;
+    }
+    
+    // Add article to user's liked list
+    likedArticles.push(postId);
+    localStorage.setItem(`user_liked_articles_${userId}`, JSON.stringify(likedArticles));
+    
+    // Get current like count
+    const storedLikes = localStorage.getItem(`news_likes_${postId}`);
+    const currentLikes = storedLikes ? parseInt(storedLikes, 10) : 0;
+    const newLikeCount = currentLikes + 1;
+    
+    // Save to localStorage
+    localStorage.setItem(`news_likes_${postId}`, newLikeCount.toString());
+    
+    // Update state
+    if (featuredPost.id === postId) {
+      setFeaturedPost(prev => ({
+        ...prev,
+        likes: newLikeCount
+      }));
+    } else {
+      const updatedPosts = blogPosts.map(post => {
+        if (post.id === postId) {
+          return { ...post, likes: newLikeCount };
+        }
+        return post;
+      });
+      
+      setBlogPosts(updatedPosts);
+    }
     
     toast({
       title: currentLanguage === 'kk' ? "Лайк қойылды" : "Лайк добавлен",

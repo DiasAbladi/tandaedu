@@ -101,11 +101,11 @@ const NewsPage: React.FC = () => {
     }
   ]);
   
-  // Check if user has viewed articles before
+  // Load data from localStorage when component mounts
   useEffect(() => {
-    // Initialize user views tracking
-    if (isAuthenticated) {
-      const userId = user?.id || '';
+    // Check if user has viewed articles before
+    if (isAuthenticated && user) {
+      const userId = user.id;
       if (userId) {
         // Initialize viewed articles for this user if not already set
         if (!localStorage.getItem(`user_viewed_articles_${userId}`)) {
@@ -118,6 +118,127 @@ const NewsPage: React.FC = () => {
         }
       }
     }
+    
+    // Load view counts
+    const loadViewCounts = () => {
+      // For featured news
+      const featuredViews = localStorage.getItem(`news_views_${featuredNews.id}`);
+      if (featuredViews) {
+        setFeaturedNews(prev => ({
+          ...prev,
+          views: parseInt(featuredViews, 10)
+        }));
+      }
+      
+      // For side news
+      const updatedSideNews = sideNews.map(news => {
+        const storedViews = localStorage.getItem(`news_views_${news.id}`);
+        if (storedViews) {
+          return {
+            ...news,
+            views: parseInt(storedViews, 10)
+          };
+        }
+        return news;
+      });
+      setSideNews(updatedSideNews);
+      
+      // For recent news
+      const updatedRecentNews = recentNews.map(news => {
+        const storedViews = localStorage.getItem(`news_views_${news.id}`);
+        if (storedViews) {
+          return {
+            ...news,
+            views: parseInt(storedViews, 10)
+          };
+        }
+        return news;
+      });
+      setRecentNews(updatedRecentNews);
+    };
+    
+    // Load like counts
+    const loadLikeCounts = () => {
+      // For featured news
+      const featuredLikes = localStorage.getItem(`news_likes_${featuredNews.id}`);
+      if (featuredLikes) {
+        setFeaturedNews(prev => ({
+          ...prev,
+          likes: parseInt(featuredLikes, 10)
+        }));
+      }
+      
+      // For side news
+      const updatedSideNews = sideNews.map(news => {
+        const storedLikes = localStorage.getItem(`news_likes_${news.id}`);
+        if (storedLikes) {
+          return {
+            ...news,
+            likes: parseInt(storedLikes, 10)
+          };
+        }
+        return news;
+      });
+      setSideNews(updatedSideNews);
+      
+      // For recent news
+      const updatedRecentNews = recentNews.map(news => {
+        const storedLikes = localStorage.getItem(`news_likes_${news.id}`);
+        if (storedLikes) {
+          return {
+            ...news,
+            likes: parseInt(storedLikes, 10)
+          };
+        }
+        return news;
+      });
+      setRecentNews(updatedRecentNews);
+    };
+    
+    // Load comment counts
+    const loadCommentCounts = () => {
+      // For featured news
+      const featuredComments = localStorage.getItem(`news_comments_${featuredNews.id}`);
+      if (featuredComments) {
+        const commentsArray = JSON.parse(featuredComments);
+        setFeaturedNews(prev => ({
+          ...prev,
+          comments: commentsArray.length
+        }));
+      }
+      
+      // For side news
+      const updatedSideNews = sideNews.map(news => {
+        const storedComments = localStorage.getItem(`news_comments_${news.id}`);
+        if (storedComments) {
+          const commentsArray = JSON.parse(storedComments);
+          return {
+            ...news,
+            comments: commentsArray.length
+          };
+        }
+        return news;
+      });
+      setSideNews(updatedSideNews);
+      
+      // For recent news
+      const updatedRecentNews = recentNews.map(news => {
+        const storedComments = localStorage.getItem(`news_comments_${news.id}`);
+        if (storedComments) {
+          const commentsArray = JSON.parse(storedComments);
+          return {
+            ...news,
+            comments: commentsArray.length
+          };
+        }
+        return news;
+      });
+      setRecentNews(updatedRecentNews);
+    };
+    
+    loadViewCounts();
+    loadLikeCounts();
+    loadCommentCounts();
   }, [isAuthenticated, user]);
   
   // Function to update view counts when clicking on news
@@ -133,22 +254,30 @@ const NewsPage: React.FC = () => {
       viewedArticles.push(id);
       localStorage.setItem(`user_viewed_articles_${userId}`, JSON.stringify(viewedArticles));
       
-      // Update view count
+      // Get current view count
+      const storedViews = localStorage.getItem(`news_views_${id}`);
+      const currentViews = storedViews ? parseInt(storedViews, 10) : 0;
+      const newViewCount = currentViews + 1;
+      
+      // Save to localStorage
+      localStorage.setItem(`news_views_${id}`, newViewCount.toString());
+      
+      // Update state
       if (type === 'featured') {
         setFeaturedNews(prev => ({
           ...prev,
-          views: prev.views + 1
+          views: newViewCount
         }));
       } else if (type === 'side') {
         setSideNews(prev => 
           prev.map(news => 
-            news.id === id ? { ...news, views: news.views + 1 } : news
+            news.id === id ? { ...news, views: newViewCount } : news
           )
         );
       } else if (type === 'recent') {
         setRecentNews(prev => 
           prev.map(news => 
-            news.id === id ? { ...news, views: news.views + 1 } : news
+            news.id === id ? { ...news, views: newViewCount } : news
           )
         );
       }
@@ -184,21 +313,29 @@ const NewsPage: React.FC = () => {
     likedArticles.push(articleId);
     localStorage.setItem(`user_liked_articles_${userId}`, JSON.stringify(likedArticles));
     
-    // Update like count in state
+    // Get current like count
+    const storedLikes = localStorage.getItem(`news_likes_${articleId}`);
+    const currentLikes = storedLikes ? parseInt(storedLikes, 10) : 0;
+    const newLikeCount = currentLikes + 1;
+    
+    // Save to localStorage
+    localStorage.setItem(`news_likes_${articleId}`, newLikeCount.toString());
+    
+    // Update state
     if (featuredNews.id === articleId) {
       setFeaturedNews(prev => ({
         ...prev,
-        likes: prev.likes + 1
+        likes: newLikeCount
       }));
     } else {
       setSideNews(prev =>
         prev.map(article =>
-          article.id === articleId ? { ...article, likes: article.likes + 1 } : article
+          article.id === articleId ? { ...article, likes: newLikeCount } : article
         )
       );
       setRecentNews(prev =>
         prev.map(article =>
-          article.id === articleId ? { ...article, likes: article.likes + 1 } : article
+          article.id === articleId ? { ...article, likes: newLikeCount } : article
         )
       );
     }
