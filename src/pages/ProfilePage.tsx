@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -6,6 +5,7 @@ import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { AuthContext } from '@/contexts/AuthContext';
 import { useToast } from "@/hooks/use-toast";
 import { User, AtSign, Lock } from "lucide-react";
@@ -22,6 +22,19 @@ const ProfilePage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   
   const [activeTab, setActiveTab] = useState("profile");
+
+  const getRoleLabel = (role: string | undefined) => {
+    switch (role) {
+      case 'student':
+        return 'Студент';
+      case 'pupil':
+        return 'Оқушы';
+      case 'parent':
+        return 'Ата-ана';
+      default:
+        return '';
+    }
+  };
   
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +115,6 @@ const ProfilePage = () => {
       <main className="flex-1 bg-gray-50 py-12">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8">
-            {/* Sidebar */}
             <div className="bg-white p-6 rounded-lg shadow-sm h-fit">
               <div className="flex flex-col items-center mb-6">
                 <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-3">
@@ -110,6 +122,11 @@ const ProfilePage = () => {
                 </div>
                 <h3 className="font-medium text-lg">{user?.name}</h3>
                 <p className="text-sm text-gray-500 mt-1">{user?.email}</p>
+                {user?.role && (
+                  <Badge variant="outline" className="mt-2">
+                    {getRoleLabel(user.role)}
+                  </Badge>
+                )}
               </div>
               
               <div className="space-y-1">
@@ -147,7 +164,6 @@ const ProfilePage = () => {
               </div>
             </div>
             
-            {/* Main content */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
               {activeTab === "profile" && (
                 <div>
@@ -169,6 +185,20 @@ const ProfilePage = () => {
                           placeholder="Аты-жөніңізді енгізіңіз"
                         />
                       </div>
+                      
+                      {user?.role && (
+                        <div className="space-y-2">
+                          <Label htmlFor="role">
+                            Рөліңіз
+                          </Label>
+                          <div className="flex items-center h-10 px-4 border border-gray-200 rounded-md bg-gray-50">
+                            <span>{getRoleLabel(user.role)}</span>
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            Рөл тіркелу кезінде орнатылады және өзгертілмейді
+                          </p>
+                        </div>
+                      )}
                       
                       <Button type="submit">
                         Сақтау

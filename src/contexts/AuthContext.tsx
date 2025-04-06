@@ -1,4 +1,3 @@
-
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
@@ -68,7 +67,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return attempts ? parseInt(attempts, 10) : 0;
   });
   
-  // Simulate a database of registered emails
   const [registeredEmails, setRegisteredEmails] = useState<Record<string, boolean>>(() => {
     const savedEmails = localStorage.getItem('registeredEmails');
     return savedEmails ? JSON.parse(savedEmails) : {};
@@ -82,16 +80,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem('registeredEmails', JSON.stringify(registeredEmails));
   }, [isAuthenticated, user, testAttemptsRemaining, loginAttempts, registeredEmails]);
   
-  // Track user sessions
   useEffect(() => {
     const checkSession = () => {
       if (isAuthenticated && user) {
-        // Check if another session with the same user is active
         const currentSessionId = user.sessionId;
         const storedSessionId = localStorage.getItem(`session_${user.id}`);
         
         if (storedSessionId && storedSessionId !== currentSessionId) {
-          // Another session is active, log out this session
           toast({
             title: "Сессия аяқталды",
             description: "Сіздің аккаунтыңыз басқа құрылғыда кірді",
@@ -102,25 +97,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     };
     
-    // Check session on load and periodically
     checkSession();
-    const interval = setInterval(checkSession, 30000); // Check every 30 seconds
+    const interval = setInterval(checkSession, 30000);
     
     return () => clearInterval(interval);
   }, [isAuthenticated, user]);
   
-  // Check if email exists in our "database"
   const checkEmailExists = async (email: string): Promise<boolean> => {
-    // In a real app, this would be an API call to check if the email exists
     return !!registeredEmails[email];
   };
   
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Simulate API call
-      // In a real app, this would be an API call to validate credentials
       if (email && password) {
-        // Check login attempts for security
         if (loginAttempts >= 5) {
           toast({
             title: "Кіру шектелген",
@@ -130,7 +119,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           return false;
         }
         
-        // Check if email exists
         if (!registeredEmails[email]) {
           toast({
             title: "Қате",
@@ -138,21 +126,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             variant: "destructive"
           });
           
-          // Increment login attempts
           setLoginAttempts(prev => prev + 1);
           
           return false;
         }
         
-        // Generate a unique session ID
-        const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-        
-        // Retrieve user information (in a real app, this would come from a database)
         const savedUsers = localStorage.getItem('users');
         const users = savedUsers ? JSON.parse(savedUsers) : {};
         const userData = users[email];
         
         if (userData) {
+          if (userData.password !== password) {
+            toast({
+              title: "Қате",
+              description: "Құпия сөз қате",
+              variant: "destructive"
+            });
+            
+            setLoginAttempts(prev => prev + 1);
+            
+            return false;
+          }
+          
+          const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+          
           const mockUser = {
             id: userData.id,
             name: userData.name,
@@ -161,12 +158,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             sessionId
           };
           
-          // Store session ID in localStorage to track active sessions
           localStorage.setItem(`session_${mockUser.id}`, sessionId);
           
           setUser(mockUser);
           setIsAuthenticated(true);
-          // Reset login attempts after successful login
           setLoginAttempts(0);
           
           toast({
@@ -178,7 +173,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }
       
-      // Increment login attempts
       setLoginAttempts(prev => prev + 1);
       
       toast({
@@ -189,7 +183,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       return false;
     } catch (error) {
-      // Increment login attempts
       setLoginAttempts(prev => prev + 1);
       
       toast({
@@ -204,10 +197,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   
   const resetPassword = async (email: string): Promise<boolean> => {
     try {
-      // In a real application, you would send password reset email here
-      // For now, we'll just simulate success
       if (email) {
-        // Check if email exists in our system
         if (!registeredEmails[email]) {
           toast({
             title: "Қате",
@@ -222,7 +212,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           description: "Құпия сөзді қалпына келтіру нұсқаулары электрондық поштаңызға жіберілді",
         });
         
-        // Reset login attempts after requesting password reset
         setLoginAttempts(0);
         
         return true;
@@ -248,7 +237,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   
   const register = async (name: string, email: string, password: string, role: 'student' | 'pupil' | 'parent'): Promise<boolean> => {
     try {
-      // Check if email already exists
       if (registeredEmails[email]) {
         toast({
           title: "Қате",
@@ -258,14 +246,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return false;
       }
       
-      // Simulate API call
-      // In a real app, this would be an API call to register a new user
       if (name && email && password && role) {
-        // Generate a unique session ID
         const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
         const userId = 'user-' + Date.now();
         
-        // Simulate successful registration
         const newUser = {
           id: userId,
           name,
@@ -274,22 +258,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           sessionId
         };
         
-        // Store session ID in localStorage to track active sessions
         localStorage.setItem(`session_${newUser.id}`, sessionId);
         
-        // Update our "database" of registered emails
         setRegisteredEmails(prev => ({
           ...prev,
           [email]: true
         }));
         
-        // Store user information (in a real app, this would be saved to a database)
         const savedUsers = localStorage.getItem('users');
         const users = savedUsers ? JSON.parse(savedUsers) : {};
         users[email] = {
           id: userId,
           name,
-          role
+          role,
+          password
         };
         localStorage.setItem('users', JSON.stringify(users));
         
@@ -324,7 +306,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   
   const logout = () => {
     if (user) {
-      // Clear session
       localStorage.removeItem(`session_${user.id}`);
     }
     
@@ -347,7 +328,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       toast({
         title: "Сәтті жаңартылды",
-        description: "Профиль ақпараты сәтті жаңартылды",
+        description: "Профиль ақпараты сәтті жаң��ртылды",
       });
     }
   };
@@ -368,8 +349,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const updateUserPassword = (currentPassword: string, newPassword: string) => {
-    // In a real app, this would validate the current password against the stored password
-    // and then update it in the database
     console.log("Password updated from", currentPassword, "to", newPassword);
     
     toast({
