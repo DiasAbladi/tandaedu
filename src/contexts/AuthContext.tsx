@@ -1,4 +1,3 @@
-
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,6 +19,8 @@ interface AuthContextType {
   updateUserPassword: (currentPassword: string, newPassword: string) => void;
   testAttemptsRemaining: number;
   decrementTestAttempts: () => void;
+  loginAttempts: number;
+  resetPassword: (email: string) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -32,7 +33,9 @@ export const AuthContext = createContext<AuthContextType>({
   updateUserEmail: () => {},
   updateUserPassword: () => {},
   testAttemptsRemaining: 5,
-  decrementTestAttempts: () => {}
+  decrementTestAttempts: () => {},
+  loginAttempts: 0,
+  resetPassword: async () => false
 });
 
 interface AuthProviderProps {
@@ -56,11 +59,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return attempts ? parseInt(attempts, 10) : 5;
   });
   
+  const [loginAttempts, setLoginAttempts] = useState<number>(() => {
+    const attempts = localStorage.getItem('loginAttempts');
+    return attempts ? parseInt(attempts, 10) : 0;
+  });
+  
   useEffect(() => {
     localStorage.setItem('isAuthenticated', isAuthenticated.toString());
     localStorage.setItem('user', user ? JSON.stringify(user) : '');
     localStorage.setItem('testAttemptsRemaining', testAttemptsRemaining.toString());
-  }, [isAuthenticated, user, testAttemptsRemaining]);
+    localStorage.setItem('loginAttempts', loginAttempts.toString());
+  }, [isAuthenticated, user, testAttemptsRemaining, loginAttempts]);
   
   // Track user sessions
   useEffect(() => {
@@ -94,6 +103,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Simulate API call
       // In a real app, this would be an API call to validate credentials
       if (email && password) {
+        // Check login attempts for security
+        if (loginAttempts >= 5) {
+          toast({
+            title: "Кіру шектелген",
+            description: "Тым көп сәтсіз әрекеттер. Құпия сөзді қалпына келтіріңіз немесе кейінірек қайталап көріңіз.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        
         // Extract username from email for display (before the @ symbol)
         const userName = email.split('@')[0];
         
@@ -113,6 +132,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         
         setUser(mockUser);
         setIsAuthenticated(true);
+        // Reset login attempts after successful login
+        setLoginAttempts(0);
         
         toast({
           title: "Сәтті кіру",
@@ -122,6 +143,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return true;
       }
       
+      // Increment login attempts
+      setLoginAttempts(prev => prev + 1);
+      
       toast({
         title: "Қате",
         description: "Электрондық пошта немесе құпия сөз қате",
@@ -130,9 +154,46 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       return false;
     } catch (error) {
+      // Increment login attempts
+      setLoginAttempts(prev => prev + 1);
+      
       toast({
         title: "Қате",
         description: "Кіру кезінде қате орын алды",
+        variant: "destructive"
+      });
+      
+      return false;
+    }
+  };
+  
+  const resetPassword = async (email: string): Promise<boolean> => {
+    try {
+      // In a real application, you would send password reset email here
+      // For now, we'll just simulate success
+      if (email) {
+        toast({
+          title: "Сәтті жіберілді",
+          description: "Құпия сөзді қалпына келтіру нұсқаулары электрондық поштаңызға жіберілді",
+        });
+        
+        // Reset login attempts after requesting password reset
+        setLoginAttempts(0);
+        
+        return true;
+      }
+      
+      toast({
+        title: "Қате",
+        description: "Жарамды электрондық пошта енгізіңіз",
+        variant: "destructive"
+      });
+      
+      return false;
+    } catch (error) {
+      toast({
+        title: "Қате",
+        description: "Құпия сөзді қалпына келтіру сұрауын өңдеу кезінде қате орын алды",
         variant: "destructive"
       });
       
@@ -261,7 +322,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       updateUserEmail,
       updateUserPassword,
       testAttemptsRemaining,
-      decrementTestAttempts
+      decrementTestAttempts,
+      loginAttempts,
+      resetPassword
     }}>
       {children}
     </AuthContext.Provider>
