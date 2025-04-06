@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { AuthContext } from '@/contexts/AuthContext';
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -17,8 +18,16 @@ const RegisterPage: React.FC = () => {
   const [agreedTerms, setAgreedTerms] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { register, isAuthenticated, user } = useContext(AuthContext);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate('/');
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
@@ -49,23 +58,10 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    // In a real app, you'd make an API call to register the user
-    // For demo purposes, we'll use a mock registration
-    
-    // Save user info to localStorage
-    const userData = {
-      name,
-      email,
-      isLoggedIn: true
-    };
-    
-    localStorage.setItem('user', JSON.stringify(userData));
-    
-    toast({
-      title: "Тіркелу сәтті аяқталды!",
-      description: "Сіз сәтті тіркелдіңіз.",
-    });
-    navigate('/');
+    const success = await register(name, email, password);
+    if (success) {
+      navigate('/');
+    }
   };
 
   return (

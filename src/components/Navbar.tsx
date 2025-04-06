@@ -1,6 +1,6 @@
 
-import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User, LogOut, Menu, Search } from "lucide-react";
@@ -18,6 +18,11 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <header className="bg-white border-b">
@@ -31,19 +36,34 @@ const Navbar = () => {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link to="/universities" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link 
+                to="/universities" 
+                className={`transition-colors ${isActive('/universities') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}`}
+              >
                 Университеттер
               </Link>
-              <Link to="/majors" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link 
+                to="/majors" 
+                className={`transition-colors ${isActive('/majors') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}`}
+              >
                 Мамандықтар
               </Link>
-              <Link to="/test" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link 
+                to="/test" 
+                className={`transition-colors ${isActive('/test') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}`}
+              >
                 Кәсіби бағдар тесті
               </Link>
-              <Link to="/counseling" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link 
+                to="/counseling" 
+                className={`transition-colors ${isActive('/counseling') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}`}
+              >
                 Кеңес алу
               </Link>
-              <Link to="/news" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link 
+                to="/news" 
+                className={`transition-colors ${isActive('/news') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}`}
+              >
                 Жаңалықтар
               </Link>
             </div>
@@ -107,7 +127,7 @@ const Navbar = () => {
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <nav className="flex flex-col gap-4 mt-8">
                   <Button
-                    variant="ghost"
+                    variant={isActive('/') ? "default" : "ghost"}
                     className="w-full justify-start"
                     onClick={() => {
                       navigate('/');
@@ -117,7 +137,7 @@ const Navbar = () => {
                     Басты бет
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={isActive('/universities') ? "default" : "ghost"}
                     className="w-full justify-start"
                     onClick={() => {
                       navigate('/universities');
@@ -127,7 +147,7 @@ const Navbar = () => {
                     Университеттер
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={isActive('/majors') ? "default" : "ghost"}
                     className="w-full justify-start"
                     onClick={() => {
                       navigate('/majors');
@@ -137,7 +157,7 @@ const Navbar = () => {
                     Мамандықтар
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={isActive('/news') ? "default" : "ghost"}
                     className="w-full justify-start"
                     onClick={() => {
                       navigate('/news');
@@ -147,7 +167,7 @@ const Navbar = () => {
                     Жаңалықтар
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={isActive('/test') ? "default" : "ghost"}
                     className="w-full justify-start"
                     onClick={() => {
                       navigate('/test');
@@ -157,7 +177,7 @@ const Navbar = () => {
                     Кәсіби бағдар тесті
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={isActive('/counseling') ? "default" : "ghost"}
                     className="w-full justify-start"
                     onClick={() => {
                       navigate('/counseling');
@@ -170,7 +190,7 @@ const Navbar = () => {
                   {isAuthenticated ? (
                     <>
                       <Button
-                        variant="ghost"
+                        variant={isActive('/profile') ? "default" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => {
                           navigate('/profile');

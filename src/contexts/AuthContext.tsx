@@ -6,6 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  sessionId?: string;
 }
 
 interface AuthContextType {
@@ -61,6 +62,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem('testAttemptsRemaining', testAttemptsRemaining.toString());
   }, [isAuthenticated, user, testAttemptsRemaining]);
   
+  // Track user sessions
+  useEffect(() => {
+    const checkSession = () => {
+      if (isAuthenticated && user) {
+        // Check if another session with the same user is active
+        const currentSessionId = user.sessionId;
+        const storedSessionId = localStorage.getItem(`session_${user.id}`);
+        
+        if (storedSessionId && storedSessionId !== currentSessionId) {
+          // Another session is active, log out this session
+          toast({
+            title: "Сессия аяқталды",
+            description: "Сіздің аккаунтыңыз басқа құрылғыда кірді",
+            variant: "destructive"
+          });
+          logout();
+        }
+      }
+    };
+    
+    // Check session on load and periodically
+    checkSession();
+    const interval = setInterval(checkSession, 30000); // Check every 30 seconds
+    
+    return () => clearInterval(interval);
+  }, [isAuthenticated, user]);
+  
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       // Simulate API call
@@ -69,12 +97,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Extract username from email for display (before the @ symbol)
         const userName = email.split('@')[0];
         
+        // Generate a unique session ID
+        const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        
         // Simulate successful login
         const mockUser = {
           id: 'user-' + Date.now(),
           name: userName,
-          email
+          email,
+          sessionId
         };
+        
+        // Store session ID in localStorage to track active sessions
+        localStorage.setItem(`session_${mockUser.id}`, sessionId);
         
         setUser(mockUser);
         setIsAuthenticated(true);
@@ -110,12 +145,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Simulate API call
       // In a real app, this would be an API call to register a new user
       if (name && email && password) {
+        // Generate a unique session ID
+        const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        
         // Simulate successful registration
         const newUser = {
           id: 'user-' + Date.now(),
           name,
-          email
+          email,
+          sessionId
         };
+        
+        // Store session ID in localStorage to track active sessions
+        localStorage.setItem(`session_${newUser.id}`, sessionId);
         
         setUser(newUser);
         setIsAuthenticated(true);
@@ -147,6 +189,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
   
   const logout = () => {
+    if (user) {
+      // Clear session
+      localStorage.removeItem(`session_${user.id}`);
+    }
+    
     setUser(null);
     setIsAuthenticated(false);
     
