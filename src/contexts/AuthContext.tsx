@@ -1,3 +1,4 @@
+
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
@@ -5,6 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  role: 'student' | 'pupil' | 'parent';
   sessionId?: string;
 }
 
@@ -12,7 +14,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string) => Promise<boolean>;
+  register: (name: string, email: string, password: string, role: 'student' | 'pupil' | 'parent') => Promise<boolean>;
   logout: () => void;
   updateUserProfile: (name: string) => void;
   updateUserEmail: (email: string) => void;
@@ -21,6 +23,7 @@ interface AuthContextType {
   decrementTestAttempts: () => void;
   loginAttempts: number;
   resetPassword: (email: string) => Promise<boolean>;
+  checkEmailExists: (email: string) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -35,7 +38,8 @@ export const AuthContext = createContext<AuthContextType>({
   testAttemptsRemaining: 5,
   decrementTestAttempts: () => {},
   loginAttempts: 0,
-  resetPassword: async () => false
+  resetPassword: async () => false,
+  checkEmailExists: async () => false
 });
 
 interface AuthProviderProps {
@@ -64,12 +68,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return attempts ? parseInt(attempts, 10) : 0;
   });
   
+  // Simulate a database of registered emails
+  const [registeredEmails, setRegisteredEmails] = useState<Record<string, boolean>>(() => {
+    const savedEmails = localStorage.getItem('registeredEmails');
+    return savedEmails ? JSON.parse(savedEmails) : {};
+  });
+  
   useEffect(() => {
     localStorage.setItem('isAuthenticated', isAuthenticated.toString());
     localStorage.setItem('user', user ? JSON.stringify(user) : '');
     localStorage.setItem('testAttemptsRemaining', testAttemptsRemaining.toString());
     localStorage.setItem('loginAttempts', loginAttempts.toString());
-  }, [isAuthenticated, user, testAttemptsRemaining, loginAttempts]);
+    localStorage.setItem('registeredEmails', JSON.stringify(registeredEmails));
+  }, [isAuthenticated, user, testAttemptsRemaining, loginAttempts, registeredEmails]);
   
   // Track user sessions
   useEffect(() => {
@@ -98,6 +109,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => clearInterval(interval);
   }, [isAuthenticated, user]);
   
+  // Check if email exists in our "database"
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    // In a real app, this would be an API call to check if the email exists
+    return !!registeredEmails[email];
+  };
+  
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       // Simulate API call
@@ -113,34 +130,52 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           return false;
         }
         
-        // Extract username from email for display (before the @ symbol)
-        const userName = email.split('@')[0];
+        // Check if email exists
+        if (!registeredEmails[email]) {
+          toast({
+            title: "Қате",
+            description: "Мұндай электрондық пошта тіркелмеген",
+            variant: "destructive"
+          });
+          
+          // Increment login attempts
+          setLoginAttempts(prev => prev + 1);
+          
+          return false;
+        }
         
         // Generate a unique session ID
         const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
         
-        // Simulate successful login
-        const mockUser = {
-          id: 'user-' + Date.now(),
-          name: userName,
-          email,
-          sessionId
-        };
+        // Retrieve user information (in a real app, this would come from a database)
+        const savedUsers = localStorage.getItem('users');
+        const users = savedUsers ? JSON.parse(savedUsers) : {};
+        const userData = users[email];
         
-        // Store session ID in localStorage to track active sessions
-        localStorage.setItem(`session_${mockUser.id}`, sessionId);
-        
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        // Reset login attempts after successful login
-        setLoginAttempts(0);
-        
-        toast({
-          title: "Сәтті кіру",
-          description: "Сіз жүйеге сәтті кірдіңіз",
-        });
-        
-        return true;
+        if (userData) {
+          const mockUser = {
+            id: userData.id,
+            name: userData.name,
+            email,
+            role: userData.role,
+            sessionId
+          };
+          
+          // Store session ID in localStorage to track active sessions
+          localStorage.setItem(`session_${mockUser.id}`, sessionId);
+          
+          setUser(mockUser);
+          setIsAuthenticated(true);
+          // Reset login attempts after successful login
+          setLoginAttempts(0);
+          
+          toast({
+            title: "Сәтті кіру",
+            description: "Сіз жүйеге сәтті кірдіңіз",
+          });
+          
+          return true;
+        }
       }
       
       // Increment login attempts
@@ -172,6 +207,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // In a real application, you would send password reset email here
       // For now, we'll just simulate success
       if (email) {
+        // Check if email exists in our system
+        if (!registeredEmails[email]) {
+          toast({
+            title: "Қате",
+            description: "Мұндай электрондық пошта тіркелмеген",
+            variant: "destructive"
+          });
+          return false;
+        }
+        
         toast({
           title: "Сәтті жіберілді",
           description: "Құпия сөзді қалпына келтіру нұсқаулары электрондық поштаңызға жіберілді",
@@ -201,24 +246,52 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
   
-  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+  const register = async (name: string, email: string, password: string, role: 'student' | 'pupil' | 'parent'): Promise<boolean> => {
     try {
+      // Check if email already exists
+      if (registeredEmails[email]) {
+        toast({
+          title: "Қате",
+          description: "Бұл электрондық пошта бұрыннан тіркелген",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
       // Simulate API call
       // In a real app, this would be an API call to register a new user
-      if (name && email && password) {
+      if (name && email && password && role) {
         // Generate a unique session ID
         const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        const userId = 'user-' + Date.now();
         
         // Simulate successful registration
         const newUser = {
-          id: 'user-' + Date.now(),
+          id: userId,
           name,
           email,
+          role,
           sessionId
         };
         
         // Store session ID in localStorage to track active sessions
         localStorage.setItem(`session_${newUser.id}`, sessionId);
+        
+        // Update our "database" of registered emails
+        setRegisteredEmails(prev => ({
+          ...prev,
+          [email]: true
+        }));
+        
+        // Store user information (in a real app, this would be saved to a database)
+        const savedUsers = localStorage.getItem('users');
+        const users = savedUsers ? JSON.parse(savedUsers) : {};
+        users[email] = {
+          id: userId,
+          name,
+          role
+        };
+        localStorage.setItem('users', JSON.stringify(users));
         
         setUser(newUser);
         setIsAuthenticated(true);
@@ -324,7 +397,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       testAttemptsRemaining,
       decrementTestAttempts,
       loginAttempts,
-      resetPassword
+      resetPassword,
+      checkEmailExists
     }}>
       {children}
     </AuthContext.Provider>

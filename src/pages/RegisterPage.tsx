@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { AuthContext } from '@/contexts/AuthContext';
-import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react";
 import { PasswordStrengthBar } from "@/components/PasswordStrengthBar";
 
 const RegisterPage: React.FC = () => {
@@ -17,14 +18,18 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<'student' | 'pupil' | 'parent'>('student');
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordError, setPasswordError] = useState("");
+  const [checkingEmail, setCheckingEmail] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { register, isAuthenticated, user } = useContext(AuthContext);
+  const { register, isAuthenticated, user, checkEmailExists } = useContext(AuthContext);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -69,6 +74,28 @@ const RegisterPage: React.FC = () => {
     }
   }, [password]);
 
+  // Check if email exists
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    
+    if (!emailTouched) {
+      setEmailTouched(true);
+    }
+    
+    if (newEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      setCheckingEmail(true);
+      checkEmailExists(newEmail)
+        .then(exists => {
+          setEmailExists(exists);
+          setCheckingEmail(false);
+        })
+        .catch(() => {
+          setCheckingEmail(false);
+        });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -110,7 +137,17 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    const success = await register(name, email, password);
+    // Check if email already exists
+    if (emailExists) {
+      toast({
+        title: "Қате",
+        description: "Бұл электрондық пошта бұрыннан тіркелген",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const success = await register(name, email, password, role);
     if (success) {
       navigate('/');
     }
@@ -160,15 +197,52 @@ const RegisterPage: React.FC = () => {
                 <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Электрондық пошта
                 </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email@example.com"
-                  required
-                  className="mt-1"
-                />
+                <div className="relative">
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="email@example.com"
+                    required
+                    className={`mt-1 ${emailExists ? 'border-red-500' : ''}`}
+                  />
+                  {checkingEmail && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
+                    </div>
+                  )}
+                </div>
+                {emailTouched && emailExists && (
+                  <div className="mt-1 flex items-center text-sm text-red-500">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    <span>Бұл электрондық пошта бұрыннан тіркелген</span>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                  Сіздің рөліңіз
+                </Label>
+                <RadioGroup 
+                  value={role} 
+                  onValueChange={(value) => setRole(value as 'student' | 'pupil' | 'parent')}
+                  className="mt-2 flex flex-col space-y-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="student" id="student" />
+                    <Label htmlFor="student">Студент</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="pupil" id="pupil" />
+                    <Label htmlFor="pupil">Оқушы</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="parent" id="parent" />
+                    <Label htmlFor="parent">Ата-ана</Label>
+                  </div>
+                </RadioGroup>
               </div>
 
               <div>
