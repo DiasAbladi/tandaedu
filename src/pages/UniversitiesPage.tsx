@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -41,12 +40,12 @@ const universities: University[] = [
     id: "kaznu",
     name: "Әл-Фараби атындағы ҚазҰУ",
     fullName: "Әл-Фараби атындағы Қазақ Ұлттық Университеті",
-    location: "Алматы қ.",
+    location: "Алматы қ., Әл-Фараби даңғылы 71",
     city: "Алматы",
     rating: 4.8,
     students: "25,000+ студент",
     tuition: "850,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/885aa16e-67cc-42e6-8c48-60db393a06ee.png",
     badge: "Топ",
     badgeNumber: 1,
     majors: ["Информатика", "Экономика", "Құқықтану", "Биология", "Химия", "Физика"]
@@ -55,12 +54,12 @@ const universities: University[] = [
     id: "abaiuni",
     name: "Абай университеті",
     fullName: "Абай атындағы Қазақ ұлттық педагогикалық университеті",
-    location: "Астана қ.",
-    city: "Астана",
+    location: "Алматы қ., Достық даңғылы 13",
+    city: "Алматы",
     rating: 4.9,
     students: "15,000+ студент",
     tuition: "1,200,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/7807c993-b7c8-4c78-9d7d-9d79e6dc3606.png",
     badge: "Топ",
     badgeNumber: 2,
     majors: ["Педагогика", "Психология", "Филология", "Тарих"]
@@ -69,12 +68,12 @@ const universities: University[] = [
     id: "kimep",
     name: "КИМЭП Университеті",
     fullName: "Қазақстан менеджмент, экономика және болжау институты",
-    location: "Алматы қ.",
+    location: "Алматы қ., Абай даңғылы 4",
     city: "Алматы",
     rating: 4.7,
     students: "7,000+ студент",
     tuition: "950,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/39fb90f3-2b54-4dfe-9051-78ea3f3c3627.png",
     badge: "Топ",
     badgeNumber: 3,
     majors: ["Қаржы", "Менеджмент", "IT", "Маркетинг", "Халықаралық қатынастар"]
@@ -83,12 +82,12 @@ const universities: University[] = [
     id: "kbtu",
     name: "КБТУ",
     fullName: "Қазақстан-Британ техникалық университеті",
-    location: "Алматы қ.",
+    location: "Алматы қ., Төле би көшесі 59",
     city: "Алматы",
     rating: 4.6,
     students: "5,000+ студент",
     tuition: "1,800,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/3ff402b5-eb8f-45bf-8a7e-a114af708eda.png",
     badge: "Топ",
     badgeNumber: 4,
     majors: ["IT", "Мұнай-газ инженериясы", "Бизнес әкімшілігі", "Машина жасау"]
@@ -97,12 +96,12 @@ const universities: University[] = [
     id: "sdu",
     name: "Сүлейман Демирел университеті",
     fullName: "Сүлейман Демирел атындағы университет",
-    location: "Қаскелең қ.",
+    location: "Қаскелең қ., Әбілайхан көшесі 1/1",
     city: "Қаскелең",
     rating: 4.5,
     students: "8,000+ студент",
     tuition: "1,400,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1431576901776-e539bd916ba2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/d6efe010-b6cd-4c24-91e4-86e30526a77a.png",
     badge: "Топ",
     badgeNumber: 5,
     majors: ["IT технологиялар", "Инженерия", "Бизнес", "Медицина"]
@@ -116,7 +115,7 @@ const universities: University[] = [
     rating: 4.4,
     students: "10,000+ студент",
     tuition: "900,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/56762d93-79e1-433d-a329-283f6851a301.png",
     badge: "Топ",
     badgeNumber: 6,
     majors: ["Экономика", "Қаржы", "Есеп және аудит", "Менеджмент", "Маркетинг"]
@@ -130,7 +129,7 @@ const universities: University[] = [
     rating: 4.5,
     students: "6,000+ студент",
     tuition: "1,100,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/71fd4b3b-9b52-4e9b-a05e-ac774b7d3bac.png",
     badge: "Топ",
     badgeNumber: 7,
     majors: ["IT", "Киберқауіпсіздік", "Телекоммуникация", "Мультимедиа"]
@@ -144,7 +143,7 @@ const universities: University[] = [
     rating: 4.6,
     students: "18,000+ студент",
     tuition: "780,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1460574283810-2aab119d8511?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/6a01e60c-e412-4666-9c8a-37b2e0f7f00e.png",
     badge: "Топ",
     badgeNumber: 8,
     majors: ["Халықаралық қатынастар", "Филология", "Тарих", "Физика"]
@@ -158,7 +157,7 @@ const universities: University[] = [
     rating: 4.5,
     students: "14,000+ студент",
     tuition: "850,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/aa68e8be-f0fe-4264-810e-1f1b50e70513.png",
     badge: "Топ",
     badgeNumber: 9,
     majors: ["Инженерия", "Металлургия", "Геология", "Мұнай-газ ісі"]

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
@@ -22,7 +21,7 @@ const universities: University[] = [
     id: "kaznu",
     name: "Әл-Фараби атындағы ҚазҰУ",
     location: "Алматы қ.",
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/885aa16e-67cc-42e6-8c48-60db393a06ee.png",
     rating: 4.8,
     category: "Top 10",
     badge: "Топ",
@@ -34,7 +33,7 @@ const universities: University[] = [
     id: "abaiuni",
     name: "Абай университеті",
     location: "Астана қ.",
-    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/7807c993-b7c8-4c78-9d7d-9d79e6dc3606.png",
     rating: 4.9,
     category: "Top 10",
     badge: "Топ",
@@ -46,7 +45,7 @@ const universities: University[] = [
     id: "kimep",
     name: "КИМЭП Университеті",
     location: "Алматы қ.",
-    image: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/39fb90f3-2b54-4dfe-9051-78ea3f3c3627.png",
     rating: 4.7,
     category: "Top 10",
     badge: "Топ",
