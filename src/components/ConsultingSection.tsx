@@ -1,11 +1,9 @@
-
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { 
   CalendarDays,
   Users,
-  User,
   Star,
   ArrowRight
 } from "lucide-react";
@@ -13,75 +11,69 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { LanguageContext } from '@/contexts/LanguageContext';
 
-interface Consultant {
-  id: number;
-  name: {
-    kk: string;
-    ru: string;
-  };
-  role: {
-    kk: string;
-    ru: string;
-  };
-  image: string;
-  experience: {
-    kk: string;
-    ru: string;
-  };
-  rating: number;
-}
-
-const consultants: Consultant[] = [
+const consultants = [
   {
     id: 1,
     name: {
-      kk: "Айгүл Ахметова",
-      ru: "Айгуль Ахметова"
+      kk: "Аблади Диас",
+      ru: "Аблади Диас"
     },
     role: {
       kk: "Карьералық кеңесші",
       ru: "Карьерный консультант"
     },
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/415696c9-4ede-402b-96f7-ef15567a3640.png",
     experience: {
-      kk: "8 жыл",
-      ru: "8 лет"
+      kk: "5 жыл",
+      ru: "5 лет"
+    },
+    price: {
+      kk: "15,000 ₸/сағат",
+      ru: "15,000 ₸/час"
     },
     rating: 4.9
   },
   {
     id: 2,
     name: {
-      kk: "Дәулет Сәрсенов",
-      ru: "Даулет Сарсенов"
+      kk: "Абитай Саттархан",
+      ru: "Абитай Саттархан"
     },
     role: {
-      kk: "Оқу бағдарламалары маманы",
-      ru: "Специалист по учебным программам"
+      kk: "IT саласының маманы",
+      ru: "Специалист в области IT"
     },
-    image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/93d4f861-eaff-4a58-a39a-cccae16687f1.png",
     experience: {
-      kk: "5 жыл",
-      ru: "5 лет"
+      kk: "7 жыл",
+      ru: "7 лет"
     },
-    rating: 4.7
+    price: {
+      kk: "20,000 ₸/сағат",
+      ru: "20,000 ₸/час"
+    },
+    rating: 4.8
   },
   {
     id: 3,
     name: {
-      kk: "Гүлнұр Жұмабаева",
-      ru: "Гульнур Жумабаева"
+      kk: "Керімбек Олжас",
+      ru: "Керимбек Олжас"
     },
     role: {
       kk: "Психолог-кеңесші",
       ru: "Психолог-консультант"
     },
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/ab3ef471-cac2-4bb7-a97d-eb14f7212448.png",
     experience: {
-      kk: "10 жыл",
-      ru: "10 лет"
+      kk: "6 жыл",
+      ru: "6 лет"
     },
-    rating: 4.8
+    price: {
+      kk: "13,000 ₸/сағат",
+      ru: "13,000 ₸/час"
+    },
+    rating: 4.7
   }
 ];
 
@@ -126,7 +118,7 @@ const ConsultingSection: React.FC = () => {
                 </div>
                 <div className="flex items-center">
                   <Users className="h-4 w-4 mr-1 text-tandablue" />
-                  <span>500+ {currentLanguage === 'kk' ? 'студент' : 'студентов'}</span>
+                  <span>{consultant.price[currentLanguage]}</span>
                 </div>
               </div>
               
