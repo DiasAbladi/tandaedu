@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -18,7 +17,7 @@ const universities = {
     rating: 4.8,
     students: "25,000+",
     tuition: "850,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/885aa16e-67cc-42e6-8c48-60db393a06ee.png",
     description: "Әл-Фараби атындағы Қазақ ұлттық университеті — Қазақстандағы ең көне әрі ең ірі жоғары оқу орындарының бірі. Университет 1934 жылы құрылған және еліміздің жетекші ғылыми-білім беру орталығы болып табылады.",
     phone: "+7 (727) 377-33-33",
     email: "info@kaznu.kz",
@@ -89,7 +88,7 @@ const universities = {
     rating: 4.9,
     students: "15,000+",
     tuition: "1,200,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/7807c993-b7c8-4c78-9d7d-9d79e6dc3606.png",
     description: "Абай атындағы Қазақ ұлттық педагогикалық университеті — Қазақстандағы педагогикалық мамандар даярлау саласындағы жетекші жоғары оқу орны. Университет 1928 жылы құрылған.",
     phone: "+7 (727) 291-57-68",
     email: "rector@kaznpu.kz",
@@ -149,7 +148,7 @@ const universities = {
     rating: 4.7,
     students: "7,000+",
     tuition: "950,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/39fb90f3-2b54-4dfe-9051-78ea3f3c3627.png",
     description: "КИМЭП Университеті — Орталық Азиядағы жетекші тәуелсіз білім беру ұйымы. Университет 1992 жылы құрылған және халықаралық стандарттарға сәйкес жоғары білім береді.",
     phone: "+7 (727) 270-42-00",
     email: "info@kimep.kz",
@@ -209,7 +208,7 @@ const universities = {
     rating: 4.6,
     students: "5,000+",
     tuition: "1,800,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/3ff402b5-eb8f-45bf-8a7e-a114af708eda.png",
     description: "Қазақстан-Британ техникалық университеті — Қазақстандағы беделді техникалық жоғары оқу орындарының бірі. Университет техникалық және IT мамандықтар бойынша көшбасшы болып табылады.",
     phone: "+7 (727) 250-46-66",
     email: "info@kbtu.kz",
@@ -259,7 +258,7 @@ const universities = {
     rating: 4.5,
     students: "8,000+",
     tuition: "1,400,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1431576901776-e539bd916ba2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/d6efe010-b6cd-4c24-91e4-86e30526a77a.png",
     description: "Сүлейман Демирел атындағы университет — халықаралық деңгейде танылған жоғары оқу орны. SDU студенттері жаhандық бәсекеге қабілетті заманауи білім алады.",
     phone: "+7 (727) 307-95-65",
     email: "info@sdu.edu.kz",
@@ -311,7 +310,7 @@ const universities = {
     rating: 4.5,
     students: "6,000+",
     tuition: "1,100,000 ₸/жыл",
-    image: "https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "/lovable-uploads/71fd4b3b-9b52-4e9b-a05e-ac774b7d3bac.png",
     description: "ХАТУ — IT саласында мамандар даярлайтын Қазақстандағы жетекші университет. Халықаралық сертификаттауға ие бакалавриат және магистратура бағдарламалары бар.",
     phone: "+7 (727) 330-85-56",
     email: "info@iitu.edu.kz",
@@ -349,6 +348,150 @@ const universities = {
         degree: "Бакалавр",
         price: "1,050,000 ₸/жыл",
         universities: ["ХАТУ", "ҚазҰУ"]
+      }
+    ]
+  },
+  "narxoz": {
+    id: "narxoz",
+    name: "Нархоз Университеті",
+    fullName: "Нархоз Университеті",
+    location: "Алматы қ.",
+    rating: 4.4,
+    students: "10,000+",
+    tuition: "900,000 ₸/жыл",
+    image: "/lovable-uploads/56762d93-79e1-433d-a329-283f6851a301.png",
+    description: "Нархоз Университеті",
+    phone: "+7 (727) 377-33-33",
+    email: "info@narxoz.kz",
+    website: "www.narxoz.kz",
+    faculties: [
+      "Экономика факультеті",
+      "Бизнес факультеті",
+      "Құқық факультеті"
+    ],
+    facilities: [
+      "Кітапхана",
+      "Спорт кешені",
+      "Студенттік жатақханалар",
+      "Медициналық орталық",
+      "Мәдениет орталығы"
+    ],
+    programs: [
+      "Бакалавриат",
+      "Магистратура",
+      "Докторантура",
+      "Қашықтықтан оқыту"
+    ],
+    majors: [
+      {
+        name: "Экономика",
+        code: "6B06101",
+        duration: "4 жыл",
+        degree: "Бакалавр",
+        price: "850,000 ₸/жыл",
+        universities: ["ҚазҰУ", "ЕҰУ", "ХАТУ", "КБТУ", "СДУ"]
+      },
+      {
+        name: "Құқықтану",
+        code: "6B04106",
+        duration: "4 жыл",
+        degree: "Бакалавр",
+        price: "800,000 ₸/жыл",
+        universities: ["ҚазҰУ", "Нархоз", "КИМЭП", "ЕҰУ"]
+      }
+    ]
+  },
+  "enu": {
+    id: "enu",
+    name: "Еуразия ұлттық университеті",
+    fullName: "Л.Н. Гумилев атындағы Еуразия ұлттық университеті",
+    location: "Астана қ.",
+    rating: 4.6,
+    students: "18,000+",
+    tuition: "780,000 ₸/жыл",
+    image: "/lovable-uploads/6a01e60c-e412-4666-9c8a-37b2e0f7f00e.png",
+    description: "Еуразия ұлттық университеті",
+    phone: "+7 (727) 377-33-33",
+    email: "info@enu.kz",
+    website: "www.enu.kz",
+    faculties: [
+      "Механика-математика факультеті",
+      "Физика-техникалық факультеті",
+      "Химия және химиялық технология факультеті"
+    ],
+    facilities: [
+      "Кітапхана",
+      "Спорт кешені",
+      "Студенттік жатақханалар"
+    ],
+    programs: [
+      "Бакалавриат",
+      "Магистратура",
+      "Докторантура"
+    ],
+    majors: [
+      {
+        name: "Информатика",
+        code: "6B06101",
+        duration: "4 жыл",
+        degree: "Бакалавр",
+        price: "850,000 ₸/жыл",
+        universities: ["ҚазҰУ", "ЕҰУ", "ХАТУ", "КБТУ", "СДУ"]
+      },
+      {
+        name: "Экономика",
+        code: "6B04106",
+        duration: "4 жыл",
+        degree: "Бакалавр",
+        price: "800,000 ₸/жыл",
+        universities: ["ҚазҰУ", "Нархоз", "КИМЭП", "ЕҰУ"]
+      }
+    ]
+  },
+  "satbayev": {
+    id: "satbayev",
+    name: "Сәтбаев Университеті",
+    fullName: "Қ.И. Сәтбаев атындағы Қазақ ұлттық техникалық университеті",
+    location: "Алматы қ.",
+    rating: 4.5,
+    students: "14,000+",
+    tuition: "850,000 ₸/жыл",
+    image: "/lovable-uploads/aa68e8be-f0fe-4264-810e-1f1b50e70513.png",
+    description: "Сәтбаев Университеті",
+    phone: "+7 (727) 377-33-33",
+    email: "info@satbayev.kz",
+    website: "www.satbayev.kz",
+    faculties: [
+      "Механика-математика факультеті",
+      "Физика-техникалық факультеті",
+      "Химия және химиялық технология факультеті"
+    ],
+    facilities: [
+      "Кітапхана",
+      "Спорт кешені",
+      "Студенттік жатақханалар"
+    ],
+    programs: [
+      "Бакалавриат",
+      "Магистратура",
+      "Докторантура"
+    ],
+    majors: [
+      {
+        name: "Информатика",
+        code: "6B06101",
+        duration: "4 жыл",
+        degree: "Бакалавр",
+        price: "850,000 ₸/жыл",
+        universities: ["ҚазҰУ", "ЕҰУ", "ХАТУ", "КБТУ", "СДУ"]
+      },
+      {
+        name: "Экономика",
+        code: "6B04106",
+        duration: "4 жыл",
+        degree: "Бакалавр",
+        price: "800,000 ₸/жыл",
+        universities: ["ҚазҰУ", "Нархоз", "КИМЭП", "ЕҰУ"]
       }
     ]
   }
@@ -524,40 +667,4 @@ const UniversityDetailPage: React.FC = () => {
                 {university.facilities.map((facility, index) => (
                   <div key={index} className="p-4 border rounded-lg flex items-center">
                     <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                      <Building className="h-4 w-4 text-tandablue" />
-                    </div>
-                    {facility}
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="majors" className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-2xl font-bold mb-4">Мамандықтар</h2>
-              <Alert className="mb-5">
-                <BookOpen className="h-4 w-4" />
-                <AlertTitle>Мамандық туралы ақпарат</AlertTitle>
-                <AlertDescription>
-                  Төмендегі тізімде осы университетте оқуға болатын мамандықтар көрсетілген. Сонымен қатар, бұл мамандықтардың қай университеттерде бар екенін көре аласыз.
-                </AlertDescription>
-              </Alert>
-              
-              {university.majors?.map((major, index) => (
-                <MajorCard key={index} major={major} />
-              ))}
-            </TabsContent>
-          </Tabs>
-
-          <div className="text-center mb-8">
-            <Link to="/counseling">
-              <Button className="px-8">Консультация алу</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </>
-  );
-};
-
-export default UniversityDetailPage;
+                      <Building className="h
