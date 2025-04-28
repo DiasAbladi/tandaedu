@@ -3,9 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Users, Phone, Mail, Globe, ArrowLeft, Building, GraduationCap, BookOpen, Award } from "lucide-react";
+import { Star, MapPin, Users, Phone, Mail, Globe, ArrowLeft, Building, GraduationCap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 // Mock data for university details
 const universities = {
@@ -565,7 +564,10 @@ const UniversityDetailPage: React.FC = () => {
       <Navbar />
       <div className="bg-gray-50 min-h-screen">
         {/* Header Section with Image */}
-        <div className="w-full h-64 md:h-96 bg-cover bg-center relative" style={{ backgroundImage: `url(${university.image})` }}>
+        <div 
+          className="w-full h-64 md:h-96 bg-cover bg-center relative" 
+          style={{ backgroundImage: `url(${university.image})` }}
+        >
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
           <div className="container relative z-10 h-full flex flex-col justify-end p-6">
             <Link to="/universities" className="text-white flex items-center mb-4 hover:underline">
@@ -667,4 +669,26 @@ const UniversityDetailPage: React.FC = () => {
                 {university.facilities.map((facility, index) => (
                   <div key={index} className="p-4 border rounded-lg flex items-center">
                     <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                      <Building className="h
+                      <Building className="h-5 w-5 text-blue-600" />
+                    </div>
+                    {facility}
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="majors" className="bg-white rounded-lg p-6 shadow-sm">
+              <h2 className="text-2xl font-bold mb-4">Мамандықтар</h2>
+              {university.majors.map((major, index) => (
+                <MajorCard key={index} major={major} />
+              ))}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+export default UniversityDetailPage;
