@@ -1,4 +1,3 @@
-
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,8 @@ import {
   CalendarDays,
   Users,
   Star,
-  ArrowRight
+  ArrowRight,
+  User
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
