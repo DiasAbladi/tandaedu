@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -15,14 +16,14 @@ const consultants = [
   {
     id: 1,
     name: {
-      kk: "Аблади Диас",
-      ru: "Аблади Диас"
+      kk: "Абылай Димаш",
+      ru: "Абылай Димаш"
     },
     role: {
       kk: "Карьералық кеңесші",
       ru: "Карьерный консультант"
     },
-    image: "/lovable-uploads/415696c9-4ede-402b-96f7-ef15567a3640.png",
+    image: "/lovable-uploads/711a23b3-38d3-479d-8396-3e392be7d0c1.png",
     experience: {
       kk: "5 жыл",
       ru: "5 лет"
@@ -36,14 +37,14 @@ const consultants = [
   {
     id: 2,
     name: {
-      kk: "Абитай Саттархан",
-      ru: "Абитай Саттархан"
+      kk: "Дастан Омар",
+      ru: "Дастан Омар"
     },
     role: {
       kk: "IT саласының маманы",
       ru: "Специалист в области IT"
     },
-    image: "/lovable-uploads/93d4f861-eaff-4a58-a39a-cccae16687f1.png",
+    image: "/lovable-uploads/cef18049-233b-4991-9350-90dc716bd49c.png",
     experience: {
       kk: "7 жыл",
       ru: "7 лет"
@@ -57,14 +58,14 @@ const consultants = [
   {
     id: 3,
     name: {
-      kk: "Керімбек Олжас",
-      ru: "Керимбек Олжас"
+      kk: "Өмірбек Аяулым",
+      ru: "Омирбек Аяулым"
     },
     role: {
       kk: "Психолог-кеңесші",
       ru: "Психолог-консультант"
     },
-    image: "/lovable-uploads/ab3ef471-cac2-4bb7-a97d-eb14f7212448.png",
+    image: "/lovable-uploads/4950e1ab-542c-4159-a64b-79321de90563.png",
     experience: {
       kk: "6 жыл",
       ru: "6 лет"
@@ -74,6 +75,27 @@ const consultants = [
       ru: "13,000 ₸/час"
     },
     rating: 4.7
+  },
+  {
+    id: 4,
+    name: {
+      kk: "Қайрат Керімбек",
+      ru: "Кайрат Керимбек"
+    },
+    role: {
+      kk: "Оқу бағдарламалары маманы",
+      ru: "Специалист по учебным программам"
+    },
+    image: "/lovable-uploads/6375adf0-5c77-4a37-89ee-ec7db32be04f.png",
+    experience: {
+      kk: "5 жыл",
+      ru: "5 лет"
+    },
+    price: {
+      kk: "13,000 ₸/сағат",
+      ru: "13,000 ₸/час"
+    },
+    rating: 4.6
   }
 ];
 
@@ -90,7 +112,7 @@ const ConsultingSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {consultants.map(consultant => (
             <Card key={consultant.id} className="p-6 hover:shadow-md transition-shadow">
               <div className="flex flex-col items-center text-center mb-4">
@@ -136,7 +158,7 @@ const ConsultingSection: React.FC = () => {
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <div className="bg-blue-100 p-2 rounded-full mr-3">
-                    <User className="h-5 w-5 text-tandablue" />
+                    <Users className="h-5 w-5 text-tandablue" />
                   </div>
                   <div>
                     <span className="font-medium">{currentLanguage === 'kk' ? 'Жеке кеңес' : 'Личная консультация'}</span>
