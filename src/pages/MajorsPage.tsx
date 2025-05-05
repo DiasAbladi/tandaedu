@@ -1,23 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { 
-  Laptop, 
-  BarChart2, 
-  FlaskConical, 
-  Heart, 
   Search,
-  Briefcase,
-  GraduationCap,
-  MonitorSmartphone,
-  Brain,
-  Microscope,
-  Building2,
-  Landmark
+  FileText,
+  Filter,
+  SortAsc
 } from "lucide-react";
 import { 
   Select,
@@ -28,153 +20,78 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent } from "@/components/ui/card";
-
-interface Major {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  badge: string;
-  description: string;
-  duration: string;
-  salary: string;
-  category: string;
-}
-
-const majors: Major[] = [
-  {
-    id: "programming",
-    name: "Бағдарламалық қамтамасыз ету",
-    icon: <Laptop className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Компьютерлік бағдарламалар мен жүйелерді әзірлеу",
-    duration: "4 жыл",
-    salary: "400,000 - 800,000 ₸",
-    category: "IT және компьютерлік ғылымдар"
-  },
-  {
-    id: "finance",
-    name: "Қаржы және есеп",
-    icon: <BarChart2 className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Қаржылық талдау және бухгалтерлік есеп",
-    duration: "4 жыл",
-    salary: "300,000 - 600,000 ₸",
-    category: "Экономика және бизнес"
-  },
-  {
-    id: "biotech",
-    name: "Биотехнология",
-    icon: <FlaskConical className="h-10 w-10 text-tandablue" />,
-    badge: "Орташа сұраныс",
-    description: "Биологиялық процестерді зерттеу және қолдану",
-    duration: "4 жыл",
-    salary: "250,000 - 500,000 ₸",
-    category: "Жаратылыстану ғылымдары"
-  },
-  {
-    id: "medicine",
-    name: "Медицина",
-    icon: <Heart className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Адам денсаулығын сақтау және емдеу",
-    duration: "5-7 жыл",
-    salary: "350,000 - 900,000 ₸",
-    category: "Денсаулық сақтау"
-  },
-  {
-    id: "digital-marketing",
-    name: "Цифрлық маркетинг",
-    icon: <MonitorSmartphone className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Онлайн маркетинг стратегиялары мен сандық брендинг",
-    duration: "4 жыл",
-    salary: "300,000 - 700,000 ₸",
-    category: "Маркетинг және коммуникация"
-  },
-  {
-    id: "psychology",
-    name: "Психология",
-    icon: <Brain className="h-10 w-10 text-tandablue" />,
-    badge: "Орташа сұраныс",
-    description: "Адам мінез-құлқы мен психикалық процестерді зерттеу",
-    duration: "4 жыл",
-    salary: "250,000 - 500,000 ₸",
-    category: "Әлеуметтік ғылымдар"
-  }
-];
-
-const categories = [
-  "Барлығы",
-  "IT және компьютерлік ғылымдар",
-  "Экономика және бизнес",
-  "Жаратылыстану ғылымдары",
-  "Денсаулық сақтау",
-  "Маркетинг және коммуникация",
-  "Әлеуметтік ғылымдар",
-  "Инженерия",
-  "Білім беру",
-  "Өнер және дизайн"
-];
-
-const MajorCard: React.FC<{ major: Major }> = ({ major }) => {
-  return (
-    <Card className="overflow-hidden hover:shadow-md transition-all">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="p-3 bg-blue-50 rounded-full">
-            {major.icon}
-          </div>
-          <div className={`inline-block px-3 py-1 text-xs font-medium rounded-full
-            ${major.badge === "Жоғары сұраныс" ? "bg-green-100 text-green-700" : 
-            major.badge === "Орташа сұраныс" ? "bg-yellow-100 text-yellow-700" : 
-            "bg-blue-100 text-blue-700"}`}>
-            {major.badge}
-          </div>
-        </div>
-        
-        <h3 className="text-lg font-bold mb-2">{major.name}</h3>
-        <p className="text-sm text-gray-600 mb-4">{major.description}</p>
-        
-        <div className="space-y-2 mb-5">
-          <div className="flex items-center text-sm">
-            <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-            <span className="text-gray-600">Оқу мерзімі: </span>
-            <span className="ml-1 font-medium">{major.duration}</span>
-          </div>
-          <div className="flex items-center text-sm">
-            <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-            <span className="text-gray-600">Орташа жалақы: </span>
-            <span className="ml-1 font-medium">{major.salary}</span>
-          </div>
-        </div>
-        
-        <Link to={`/majors/${major.id}`}>
-          <Button className="w-full">Толығырақ</Button>
-        </Link>
-      </div>
-    </Card>
-  );
-};
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { majorsData, majorCategories, demandLevels, studyDurations } from '@/data/majors';
+import MajorCard from '@/components/majors/MajorCard';
 
 const MajorsPage: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = React.useState("Барлығы");
-  const [searchValue, setSearchValue] = React.useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Барлығы");
+  const [searchValue, setSearchValue] = useState("");
+  const [selectedDemand, setSelectedDemand] = useState<string[]>([]);
+  const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+  const [sortOption, setSortOption] = useState("popular");
   const navigate = useNavigate();
 
-  const filteredMajors = majors.filter(major => {
+  const handleDemandChange = (value: string) => {
+    setSelectedDemand(prev => 
+      prev.includes(value)
+        ? prev.filter(item => item !== value)
+        : [...prev, value]
+    );
+  };
+
+  const handleDurationChange = (value: string) => {
+    setSelectedDurations(prev => 
+      prev.includes(value)
+        ? prev.filter(item => item !== value)
+        : [...prev, value]
+    );
+  };
+
+  const filteredMajors = majorsData.filter(major => {
+    // Категория бойынша фильтрлеу
     if (selectedCategory !== "Барлығы" && major.category !== selectedCategory) {
       return false;
     }
-    if (searchValue && !major.name.toLowerCase().includes(searchValue.toLowerCase())) {
+    
+    // Сұраныс деңгейі бойынша фильтрлеу
+    if (selectedDemand.length > 0 && !selectedDemand.includes(major.badge)) {
       return false;
     }
+    
+    // Оқу мерзімі бойынша фильтрлеу
+    if (selectedDurations.length > 0 && !selectedDurations.includes(major.duration)) {
+      return false;
+    }
+    
+    // Іздеу сұранысы бойынша фильтрлеу
+    if (searchValue && !major.name.toLowerCase().includes(searchValue.toLowerCase()) && 
+        !major.code.toLowerCase().includes(searchValue.toLowerCase())) {
+      return false;
+    }
+    
     return true;
+  }).sort((a, b) => {
+    // Сұрыптау
+    switch (sortOption) {
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "code":
+        return a.code.localeCompare(b.code);
+      case "score-high":
+        return (b.minScore || 0) - (a.minScore || 0);
+      case "score-low":
+        return (a.minScore || 0) - (b.minScore || 0);
+      default:
+        return 0;
+    }
   });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Search logic is already implemented with the filter
+    // Search is already implemented with the filter
   };
 
   return (
@@ -186,9 +103,17 @@ const MajorsPage: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl font-bold mb-4">Мамандықтар каталогы</h1>
             <p className="text-gray-600">
-              Болашақ мамандығыңызды таңдауға көмектесетін толық ақпарат: оқу бағдарламалары, жұмыс мүмкіндіктері және табыс деңгейі.
+              Болашақ мамандығыңызды таңдауға көмектесетін толық ақпарат: оқу бағдарламалары, талап етілетін пәндер және шекті балл.
             </p>
           </div>
+          
+          <Tabs defaultValue="Барлық мамандықтар" className="mt-8 max-w-2xl mx-auto">
+            <TabsList className="grid grid-cols-3 bg-blue-100">
+              <TabsTrigger value="Барлық мамандықтар">Барлық мамандықтар</TabsTrigger>
+              <TabsTrigger value="Бакалавриат">Бакалавриат</TabsTrigger>
+              <TabsTrigger value="Магистратура">Магистратура</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
 
@@ -199,7 +124,7 @@ const MajorsPage: React.FC = () => {
             <div>
               <h3 className="font-medium text-lg mb-4">Мамандық салалары</h3>
               <div className="space-y-2">
-                {categories.map((category) => (
+                {majorCategories.map((category) => (
                   <div key={category} className="flex items-center">
                     <Checkbox 
                       id={`category-${category}`} 
@@ -223,33 +148,22 @@ const MajorsPage: React.FC = () => {
             <div>
               <h3 className="font-medium text-lg mb-4">Оқу мерзімі</h3>
               <div className="space-y-2">
-                <div className="flex items-center">
-                  <Checkbox id="duration-2-3" className="mr-2" />
-                  <label 
-                    htmlFor="duration-2-3"
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    2-3 жыл
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <Checkbox id="duration-4" className="mr-2" />
-                  <label 
-                    htmlFor="duration-4"
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    4 жыл
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <Checkbox id="duration-5-6" className="mr-2" />
-                  <label 
-                    htmlFor="duration-5-6"
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    5-6 жыл
-                  </label>
-                </div>
+                {studyDurations.map((duration) => (
+                  <div key={duration} className="flex items-center">
+                    <Checkbox 
+                      id={`duration-${duration}`} 
+                      checked={selectedDurations.includes(duration)}
+                      onCheckedChange={() => handleDurationChange(duration)}
+                      className="mr-2" 
+                    />
+                    <label 
+                      htmlFor={`duration-${duration}`}
+                      className="text-sm text-gray-700 cursor-pointer"
+                    >
+                      {duration}
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
             
@@ -258,33 +172,22 @@ const MajorsPage: React.FC = () => {
             <div>
               <h3 className="font-medium text-lg mb-4">Сұраныс деңгейі</h3>
               <div className="space-y-2">
-                <div className="flex items-center">
-                  <Checkbox id="demand-high" className="mr-2" />
-                  <label 
-                    htmlFor="demand-high"
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    Жоғары сұраныс
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <Checkbox id="demand-medium" className="mr-2" />
-                  <label 
-                    htmlFor="demand-medium"
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    Орташа сұраныс
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <Checkbox id="demand-low" className="mr-2" />
-                  <label 
-                    htmlFor="demand-low"
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    Төмен сұраныс
-                  </label>
-                </div>
+                {demandLevels.map((demand) => (
+                  <div key={demand} className="flex items-center">
+                    <Checkbox 
+                      id={`demand-${demand}`} 
+                      checked={selectedDemand.includes(demand)}
+                      onCheckedChange={() => handleDemandChange(demand)}
+                      className="mr-2" 
+                    />
+                    <label 
+                      htmlFor={`demand-${demand}`}
+                      className="text-sm text-gray-700 cursor-pointer"
+                    >
+                      {demand}
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -296,7 +199,7 @@ const MajorsPage: React.FC = () => {
                 <div className="relative flex-1">
                   <Input 
                     type="text" 
-                    placeholder="Мамандық атауын енгізіңіз" 
+                    placeholder="Мамандық атауын немесе кодын енгізіңіз" 
                     className="pl-10"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
@@ -304,37 +207,100 @@ const MajorsPage: React.FC = () => {
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 </div>
                 <div className="flex gap-2">
-                  <Select defaultValue="popular">
+                  <Select 
+                    defaultValue="popular"
+                    value={sortOption}
+                    onValueChange={setSortOption}
+                  >
                     <SelectTrigger className="w-full md:w-auto">
                       <SelectValue placeholder="Сұрыптау" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="popular">Танымалдылық бойынша</SelectItem>
-                      <SelectItem value="salary-high">Жалақы (жоғарыдан)</SelectItem>
-                      <SelectItem value="salary-low">Жалақы (төменнен)</SelectItem>
                       <SelectItem value="name">Атауы бойынша</SelectItem>
+                      <SelectItem value="code">Коды бойынша</SelectItem>
+                      <SelectItem value="score-high">Шекті балл (жоғарыдан)</SelectItem>
+                      <SelectItem value="score-low">Шекті балл (төменнен)</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button type="submit">Іздеу</Button>
+                  <div className="flex rounded-md border">
+                    <Button 
+                      type="button" 
+                      variant={viewMode === "grid" ? "default" : "ghost"}
+                      className="rounded-r-none" 
+                      onClick={() => setViewMode("grid")}
+                    >
+                      <FileText className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant={viewMode === "table" ? "default" : "ghost"}
+                      className="rounded-l-none" 
+                      onClick={() => setViewMode("table")}
+                    >
+                      <Table className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </form>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredMajors.length > 0 ? (
-                filteredMajors.map((major) => (
-                  <MajorCard key={major.id} major={major} />
-                ))
-              ) : (
-                <div className="col-span-full text-center py-12">
-                  <Search className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                  <h3 className="text-lg font-semibold">Мамандықтар табылмады</h3>
-                  <p className="text-gray-600 mt-2">Іздеу сұранысыңызды өзгертіп, қайталап көріңіз</p>
-                </div>
-              )}
-            </div>
+            {viewMode === "grid" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredMajors.length > 0 ? (
+                  filteredMajors.map((major) => (
+                    <MajorCard key={major.id} major={major} />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <Search className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                    <h3 className="text-lg font-semibold">Мамандықтар табылмады</h3>
+                    <p className="text-gray-600 mt-2">Іздеу сұранысыңызды өзгертіп, қайталап көріңіз</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[100px]">Код</TableHead>
+                      <TableHead>Мамандық атауы</TableHead>
+                      <TableHead>Пәндер</TableHead>
+                      <TableHead className="text-right">Шекті балл (2024)</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredMajors.length > 0 ? (
+                      filteredMajors.map((major) => (
+                        <TableRow key={major.id} className="cursor-pointer hover:bg-gray-50" onClick={() => navigate(`/majors/${major.id}`)}>
+                          <TableCell className="font-medium text-blue-600">{major.code}</TableCell>
+                          <TableCell>{major.name}</TableCell>
+                          <TableCell>{major.subjects}</TableCell>
+                          <TableCell className="text-right">
+                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium
+                              ${(major.minScore || 0) >= 90 ? "bg-green-100 text-green-700" : 
+                               (major.minScore || 0) >= 75 ? "bg-yellow-100 text-yellow-700" : 
+                               "bg-blue-100 text-blue-700"}`}>
+                              {major.minScore || "–"} балл
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8">
+                          <Search className="h-8 w-8 mx-auto text-gray-300 mb-2" />
+                          <p className="text-gray-600">Мамандықтар табылмады</p>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
             
-            {filteredMajors.length > 0 && (
+            {filteredMajors.length > 20 && (
               <div className="mt-10 flex justify-center">
                 <Button variant="outline">Тағы жүктеу</Button>
               </div>

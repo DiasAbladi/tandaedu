@@ -1,110 +1,27 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import { 
-  Laptop, 
-  BarChart2, 
-  FlaskConical, 
-  Heart, 
-  Search,
-  Briefcase,
-  GraduationCap,
-  MonitorSmartphone
-} from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-
-interface Major {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  badge: string;
-  description: string;
-  duration: string;
-  salary: string;
-}
-
-const majors: Major[] = [
-  {
-    id: "programming",
-    name: "Бағдарламалық қамтамасыз ету",
-    icon: <Laptop className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Компьютерлік бағдарламалар мен жүйелерді әзірлеу",
-    duration: "4 жыл",
-    salary: "400,000 - 800,000 ₸"
-  },
-  {
-    id: "finance",
-    name: "Қаржы және есеп",
-    icon: <BarChart2 className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Қаржылық талдау және бухгалтерлік есеп",
-    duration: "4 жыл",
-    salary: "300,000 - 600,000 ₸"
-  },
-  {
-    id: "biotech",
-    name: "Биотехнология",
-    icon: <FlaskConical className="h-10 w-10 text-tandablue" />,
-    badge: "Орташа сұраныс",
-    description: "Биологиялық процестерді зерттеу және қолдану",
-    duration: "4 жыл",
-    salary: "250,000 - 500,000 ₸"
-  },
-  {
-    id: "medicine",
-    name: "Медицина",
-    icon: <Heart className="h-10 w-10 text-tandablue" />,
-    badge: "Жоғары сұраныс",
-    description: "Адам денсаулығын сақтау және емдеу",
-    duration: "5-7 жыл",
-    salary: "350,000 - 900,000 ₸"
-  }
-];
-
-const MajorCard: React.FC<{ major: Major }> = ({ major }) => {
-  return (
-    <Card className="overflow-hidden hover:shadow-md transition-all">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="p-3 bg-blue-50 rounded-full">
-            {major.icon}
-          </div>
-          <div className={`inline-block px-3 py-1 text-xs font-medium rounded-full
-            ${major.badge === "Жоғары сұраныс" ? "bg-green-100 text-green-700" : 
-            major.badge === "Орташа сұраныс" ? "bg-yellow-100 text-yellow-700" : 
-            "bg-blue-100 text-blue-700"}`}>
-            {major.badge}
-          </div>
-        </div>
-        
-        <h3 className="text-lg font-bold mb-2">{major.name}</h3>
-        <p className="text-sm text-gray-600 mb-4">{major.description}</p>
-        
-        <div className="space-y-2 mb-5">
-          <div className="flex items-center text-sm">
-            <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-            <span className="text-gray-600">Оқу мерзімі: </span>
-            <span className="ml-1 font-medium">{major.duration}</span>
-          </div>
-          <div className="flex items-center text-sm">
-            <span className="inline-block w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-            <span className="text-gray-600">Орташа жалақы: </span>
-            <span className="ml-1 font-medium">{major.salary}</span>
-          </div>
-        </div>
-        
-        <Link to={`/majors/${major.id}`}>
-          <Button className="w-full">Толығырақ</Button>
-        </Link>
-      </div>
-    </Card>
-  );
-};
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { featuredMajors, majorCategories } from "@/data/majors";
+import MajorCard from './majors/MajorCard';
 
 const MajorsSection: React.FC = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Барлығы');
+
+  const filteredMajors = featuredMajors.filter(major => {
+    if (selectedCategory !== 'Барлығы' && major.category !== selectedCategory) {
+      return false;
+    }
+    if (searchValue && !major.name.toLowerCase().includes(searchValue.toLowerCase())) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container px-4 md:px-6">
@@ -115,29 +32,46 @@ const MajorsSection: React.FC = () => {
           </p>
         </div>
         
-        <div className="flex flex-col md:flex-row gap-4 mb-10">
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="relative flex-1">
             <Input 
               type="text" 
               placeholder="Мамандық атауын енгізіңіз" 
               className="pl-10 py-2 w-full"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
             />
             <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" className="flex-1 md:flex-none whitespace-nowrap">
-              Барлық салалар <span className="ml-1">▼</span>
-            </Button>
-            <Button variant="outline" className="flex-1 md:flex-none whitespace-nowrap">
-              Оқу мерзімі <span className="ml-1">▼</span>
-            </Button>
-          </div>
         </div>
+
+        <Tabs defaultValue="Барлығы" className="mb-8">
+          <TabsList className="mb-4 flex flex-wrap h-auto bg-transparent p-0 space-x-2">
+            {majorCategories.slice(0, 6).map((category) => (
+              <TabsTrigger 
+                key={category} 
+                value={category}
+                onClick={() => setSelectedCategory(category)}
+                className="mb-2 border border-gray-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                {category}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {majors.map(major => (
-            <MajorCard key={major.id} major={major} />
-          ))}
+          {filteredMajors.length > 0 ? (
+            filteredMajors.map(major => (
+              <MajorCard key={major.id} major={major} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <Search className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+              <h3 className="text-lg font-semibold">Мамандықтар табылмады</h3>
+              <p className="text-gray-600 mt-2">Іздеу сұранысыңызды өзгертіп, қайталап көріңіз</p>
+            </div>
+          )}
         </div>
         
         <div className="mt-10 text-center">

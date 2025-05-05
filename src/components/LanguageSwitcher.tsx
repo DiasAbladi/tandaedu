@@ -1,29 +1,32 @@
 
-import { useContext } from 'react';
-import { Button } from "@/components/ui/button";
-import { LanguageContext } from '@/contexts/LanguageContext';
+import React from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
 
-const LanguageSwitcher = () => {
-  const { currentLanguage, setLanguage } = useContext(LanguageContext);
+const LanguageSwitcher: React.FC = () => {
+  const { language, changeLanguage } = useLanguage();
+
+  const handleLanguageChange = (selectedLanguage: "kk" | "ru") => {
+    changeLanguage(selectedLanguage);
+  };
 
   return (
-    <div className="flex items-center">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className={`${currentLanguage === 'kk' ? 'font-bold' : 'font-normal'} px-2`}
-        onClick={() => setLanguage('kk')}
+    <div className="flex items-center space-x-2">
+      <Button
+        variant={language === "kk" ? "default" : "outline"}
+        size="sm"
+        onClick={() => handleLanguageChange("kk")}
+        className="text-xs"
       >
-        Қаз
+        ҚАЗ
       </Button>
-      <span className="text-gray-300">|</span>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className={`${currentLanguage === 'ru' ? 'font-bold' : 'font-normal'} px-2`}
-        onClick={() => setLanguage('ru')}
+      <Button
+        variant={language === "ru" ? "default" : "outline"}
+        size="sm"
+        onClick={() => handleLanguageChange("ru")}
+        className="text-xs"
       >
-        Рус
+        РУС
       </Button>
     </div>
   );
