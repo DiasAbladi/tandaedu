@@ -5,6 +5,7 @@ type Language = 'kk' | 'ru';
 
 interface LanguageContextType {
   language: Language;
+  currentLanguage: Language; // Add this property as an alias for language
   changeLanguage: (lang: Language) => void;
   translations: Record<string, Record<Language, string>>;
 }
@@ -158,6 +159,7 @@ const defaultTranslations = {
 
 export const LanguageContext = createContext<LanguageContextType>({
   language: 'kk',
+  currentLanguage: 'kk', // Add this property with the same default value
   changeLanguage: () => {},
   translations: defaultTranslations
 });
@@ -177,6 +179,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   return (
     <LanguageContext.Provider value={{ 
       language, 
+      currentLanguage: language, // Set currentLanguage as an alias to language
       changeLanguage,
       translations: defaultTranslations 
     }}>
