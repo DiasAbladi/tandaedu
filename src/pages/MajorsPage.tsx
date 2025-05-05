@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -9,7 +8,8 @@ import {
   Search,
   FileText,
   Filter,
-  SortAsc
+  SortAsc,
+  Table
 } from "lucide-react";
 import { 
   Select,
@@ -21,9 +21,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table as UITable, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { majorsData, majorCategories, demandLevels, studyDurations } from '@/data/majors';
 import MajorCard from '@/components/majors/MajorCard';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const MajorsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("Барлығы");
@@ -33,6 +34,7 @@ const MajorsPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [sortOption, setSortOption] = useState("popular");
   const navigate = useNavigate();
+  const { language } = useLanguage();
 
   const handleDemandChange = (value: string) => {
     setSelectedDemand(prev => 
@@ -261,7 +263,7 @@ const MajorsPage: React.FC = () => {
               </div>
             ) : (
               <div className="border rounded-lg overflow-hidden">
-                <Table>
+                <UITable>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[100px]">Код</TableHead>
@@ -296,7 +298,7 @@ const MajorsPage: React.FC = () => {
                       </TableRow>
                     )}
                   </TableBody>
-                </Table>
+                </UITable>
               </div>
             )}
             
