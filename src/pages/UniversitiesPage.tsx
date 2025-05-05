@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -19,159 +20,9 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
+import { universities } from '@/data/universities';
 
-interface University {
-  id: string;
-  name: string;
-  fullName?: string;
-  location: string;
-  city: string;
-  rating: number;
-  students: string;
-  tuition: string;
-  image: string;
-  badge?: string;
-  badgeNumber?: number;
-  majors?: string[];
-}
-
-const universities: University[] = [
-  {
-    id: "kaznu",
-    name: "Әл-Фараби атындағы ҚазҰУ",
-    fullName: "Әл-Фараби атындағы Қазақ Ұлттық Университеті",
-    location: "Алматы қ., Әл-Фараби даңғылы 71",
-    city: "Алматы",
-    rating: 4.8,
-    students: "25,000+ студент",
-    tuition: "850,000 ₸/жыл",
-    image: "/lovable-uploads/885aa16e-67cc-42e6-8c48-60db393a06ee.png",
-    badge: "Топ",
-    badgeNumber: 1,
-    majors: ["Информатика", "Экономика", "Құқықтану", "Биология", "Химия", "Физика"]
-  },
-  {
-    id: "abaiuni",
-    name: "Абай университеті",
-    fullName: "Абай атындағы Қазақ ұлттық педагогикалық университеті",
-    location: "Алматы қ., Достық даңғылы 13",
-    city: "Алматы",
-    rating: 4.9,
-    students: "15,000+ студент",
-    tuition: "1,200,000 ₸/жыл",
-    image: "/lovable-uploads/7807c993-b7c8-4c78-9d7d-9d79e6dc3606.png",
-    badge: "Топ",
-    badgeNumber: 2,
-    majors: ["Педагогика", "Психология", "Филология", "Тарих"]
-  },
-  {
-    id: "kimep",
-    name: "КИМЭП Университеті",
-    fullName: "Қазақстан менеджмент, экономика және болжау институты",
-    location: "Алматы қ., Абай даңғылы 4",
-    city: "Алматы",
-    rating: 4.7,
-    students: "7,000+ студент",
-    tuition: "950,000 ₸/жыл",
-    image: "/lovable-uploads/39fb90f3-2b54-4dfe-9051-78ea3f3c3627.png",
-    badge: "Топ",
-    badgeNumber: 3,
-    majors: ["Қаржы", "Менеджмент", "IT", "Маркетинг", "Халықаралық қатынастар"]
-  },
-  {
-    id: "kbtu",
-    name: "КБТУ",
-    fullName: "Қазақстан-Британ техникалық университеті",
-    location: "Алматы қ., Төле би көшесі 59",
-    city: "Алматы",
-    rating: 4.6,
-    students: "5,000+ студент",
-    tuition: "1,800,000 ₸/жыл",
-    image: "/lovable-uploads/3ff402b5-eb8f-45bf-8a7e-a114af708eda.png",
-    badge: "Топ",
-    badgeNumber: 4,
-    majors: ["IT", "Мұнай-газ инженериясы", "Бизнес әкімшілігі", "Машина жасау"]
-  },
-  {
-    id: "sdu",
-    name: "Сүлейман Демирел университеті",
-    fullName: "Сүлейман Демирел атындағы университет",
-    location: "Қаскелең қ., Әбілайхан көшесі 1/1",
-    city: "Қаскелең",
-    rating: 4.5,
-    students: "8,000+ студент",
-    tuition: "1,400,000 ₸/жыл",
-    image: "/lovable-uploads/d6efe010-b6cd-4c24-91e4-86e30526a77a.png",
-    badge: "Топ",
-    badgeNumber: 5,
-    majors: ["IT технологиялар", "Инженерия", "Бизнес", "Медицина"]
-  },
-  {
-    id: "narxoz",
-    name: "Нархоз Университеті",
-    fullName: "Нархоз Университеті",
-    location: "Алматы қ.",
-    city: "Алматы",
-    rating: 4.4,
-    students: "10,000+ студент",
-    tuition: "900,000 ₸/жыл",
-    image: "/lovable-uploads/56762d93-79e1-433d-a329-283f6851a301.png",
-    badge: "Топ",
-    badgeNumber: 6,
-    majors: ["Экономика", "Қаржы", "Есеп және аудит", "Менеджмент", "Маркетинг"]
-  },
-  {
-    id: "iitu",
-    name: "ХАТУ",
-    fullName: "Халықаралық ақпараттық технологиялар университеті",
-    location: "Алматы қ.",
-    city: "Алматы",
-    rating: 4.5,
-    students: "6,000+ студент",
-    tuition: "1,100,000 ₸/жыл",
-    image: "/lovable-uploads/71fd4b3b-9b52-4e9b-a05e-ac774b7d3bac.png",
-    badge: "Топ",
-    badgeNumber: 7,
-    majors: ["IT", "Киберқауіпсіздік", "Телекоммуникация", "Мультимедиа"]
-  },
-  {
-    id: "enu",
-    name: "Еуразия ұлттық университеті",
-    fullName: "Л.Н. Гумилев атындағы Еуразия ұлттық университеті",
-    location: "Астана қ.",
-    city: "Астана",
-    rating: 4.6,
-    students: "18,000+ студент",
-    tuition: "780,000 ₸/жыл",
-    image: "/lovable-uploads/6a01e60c-e412-4666-9c8a-37b2e0f7f00e.png",
-    badge: "Топ",
-    badgeNumber: 8,
-    majors: ["Халықаралық қатынастар", "Филология", "Тарих", "Физика"]
-  },
-  {
-    id: "satbayev",
-    name: "Сәтбаев Университеті",
-    fullName: "Қ.И. Сәтбаев атындағы Қазақ ұлттық техникалық университеті",
-    location: "Алматы қ.",
-    city: "Алматы",
-    rating: 4.5,
-    students: "14,000+ студент",
-    tuition: "850,000 ₸/жыл",
-    image: "/lovable-uploads/aa68e8be-f0fe-4264-810e-1f1b50e70513.png",
-    badge: "Топ",
-    badgeNumber: 9,
-    majors: ["Инженерия", "Металлургия", "Геология", "Мұнай-газ ісі"]
-  }
-];
-
-// Extract unique cities for filtering
-const cities = [...new Set(universities.map(uni => uni.city))];
-
-// Extract unique majors for filtering
-const allMajors = universities.flatMap(uni => uni.majors || []);
-const uniqueMajors = [...new Set(allMajors)];
-
-const UniversityCard: React.FC<{ university: University }> = ({ university }) => {
+const UniversityCard: React.FC<{ university: any }> = ({ university }) => {
   return (
     <div className="bg-white rounded-lg border overflow-hidden shadow-sm">
       <img
@@ -217,11 +68,18 @@ const UniversitiesPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
+  // Extract unique cities for filtering
+  const cities = [...new Set(universities.map(uni => uni.city))];
+
+  // Extract unique majors for filtering
+  const allMajors = universities.flatMap(uni => uni.majors || []);
+  const uniqueMajors = [...new Set(allMajors)];
+  
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("all");
   const [selectedRating, setSelectedRating] = useState<string>("all");
   const [selectedMajor, setSelectedMajor] = useState<string>("all");
-  const [filteredUniversities, setFilteredUniversities] = useState<University[]>(universities);
+  const [filteredUniversities, setFilteredUniversities] = useState(universities);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const universitiesPerPage = 6;
   

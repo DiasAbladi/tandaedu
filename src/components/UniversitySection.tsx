@@ -1,61 +1,14 @@
+
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { universities } from '@/data/universities';
 
-interface University {
-  id: string;
-  name: string;
-  location: string;
-  image: string;
-  rating: number;
-  category: string;
-  badge?: string;
-  badgeNumber?: number;
-  students: string;
-  tuition: string;
-}
+// Бас бетте көрсетілетін университеттердің саны
+const TOP_UNIVERSITIES_COUNT = 3;
 
-const universities: University[] = [
-  {
-    id: "kaznu",
-    name: "Әл-Фараби атындағы ҚазҰУ",
-    location: "Алматы қ.",
-    image: "/lovable-uploads/885aa16e-67cc-42e6-8c48-60db393a06ee.png",
-    rating: 4.8,
-    category: "Top 10",
-    badge: "Топ",
-    badgeNumber: 1,
-    students: "25,000+ студент",
-    tuition: "850,000 ₸/жыл"
-  },
-  {
-    id: "abaiuni",
-    name: "Абай университеті",
-    location: "Астана қ.",
-    image: "/lovable-uploads/7807c993-b7c8-4c78-9d7d-9d79e6dc3606.png",
-    rating: 4.9,
-    category: "Top 10",
-    badge: "Топ",
-    badgeNumber: 2,
-    students: "15,000+ студент",
-    tuition: "1,200,000 ₸/жыл"
-  },
-  {
-    id: "kimep",
-    name: "КИМЭП Университеті",
-    location: "Алматы қ.",
-    image: "/lovable-uploads/39fb90f3-2b54-4dfe-9051-78ea3f3c3627.png",
-    rating: 4.7,
-    category: "Top 10",
-    badge: "Топ",
-    badgeNumber: 3,
-    students: "7,000+ студент",
-    tuition: "950,000 ₸/жыл"
-  }
-];
-
-const UniversityCard: React.FC<{ university: University }> = ({ university }) => {
+const UniversityCard: React.FC<{ university: any }> = ({ university }) => {
   return (
     <div className="university-card bg-white border rounded-lg overflow-hidden shadow-sm">
       <div className="relative">
@@ -98,6 +51,9 @@ const UniversityCard: React.FC<{ university: University }> = ({ university }) =>
 };
 
 const UniversitySection: React.FC = () => {
+  // Танымал университеттерді алу (алғашқы 3)
+  const topUniversities = universities.slice(0, TOP_UNIVERSITIES_COUNT);
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container px-4 md:px-6">
@@ -108,7 +64,7 @@ const UniversitySection: React.FC = () => {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {universities.map(university => (
+          {topUniversities.map(university => (
             <UniversityCard key={university.id} university={university} />
           ))}
         </div>
