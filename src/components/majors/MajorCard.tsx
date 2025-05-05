@@ -4,13 +4,16 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Major } from '@/data/majors';
+import { Major } from '@/data/majorTypes';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface MajorCardProps {
   major: Major;
 }
 
 const MajorCard: React.FC<MajorCardProps> = ({ major }) => {
+  const { currentLanguage } = useLanguage();
+  
   return (
     <Card className="overflow-hidden hover:shadow-md transition-all">
       <div className="p-6">

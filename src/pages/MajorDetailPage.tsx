@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
@@ -20,10 +19,12 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useLanguage } from '@/context/LanguageContext';
 
 const MajorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
   
   const major = majorsData.find(m => m.id === id);
   
@@ -49,6 +50,12 @@ const MajorDetailPage: React.FC = () => {
   const relatedMajors = majorsData
     .filter(m => m.category === major.category && m.id !== major.id)
     .slice(0, 3);
+
+  // Пәндерді бөлу функциясы
+  const getSubjectsList = (subjectsString: string) => {
+    // Биология – Химия / Математика – Физика форматындағы жолды бөлеміз
+    return subjectsString.split(/\s*[–-]\s*|\s*\/\s*/).filter(s => s.trim());
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -151,7 +158,7 @@ const MajorDetailPage: React.FC = () => {
                 <div className="bg-gray-50 rounded-lg p-6">
                   <h3 className="font-medium mb-4">Профильдік пәндер</h3>
                   <div className="space-y-3">
-                    {major.subjects.split(" – ").map((subject, index) => (
+                    {getSubjectsList(major.subjects).map((subject, index) => (
                       <div key={index} className="flex items-center">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                         <span>{subject}</span>
