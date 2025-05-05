@@ -1,15 +1,12 @@
 
-import React, { useState, FormEvent, useContext } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
-import { LanguageContext } from '@/contexts/LanguageContext';
 
 const Hero: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const { currentLanguage } = useContext(LanguageContext);
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
@@ -17,13 +14,9 @@ const Hero: React.FC = () => {
     if (!searchQuery.trim()) return;
     
     // Check if the search query appears to be about universities or majors
-    const uniKeywords = currentLanguage === 'kk' 
-      ? ['университет', 'оқу орны', 'колледж', 'вуз', 'қазұу', 'кбту', 'кимэп', 'хату', 'казну', 'атындағы', 'нархоз', 'казнпу'] 
-      : ['университет', 'вуз', 'колледж', 'казну', 'кбту', 'кимэп', 'нархоз', 'казнпу'];
+    const uniKeywords = ['университет', 'оқу орны', 'колледж', 'вуз', 'қазұу', 'кбту', 'кимэп', 'хату', 'казну', 'атындағы', 'нархоз', 'казнпу'];
     
-    const majorKeywords = currentLanguage === 'kk'
-      ? ['мамандық', 'профессия', 'білім', 'программист', 'медицина', 'қаржы', 'маркетинг', 'биотехнология', 'психология', 'it']
-      : ['специальность', 'профессия', 'образование', 'программист', 'медицина', 'финансы', 'маркетинг', 'биотехнология', 'психология', 'it'];
+    const majorKeywords = ['мамандық', 'профессия', 'білім', 'программист', 'медицина', 'қаржы', 'маркетинг', 'биотехнология', 'психология', 'it'];
     
     let isUniSearch = false;
     let isMajorSearch = false;
@@ -53,19 +46,10 @@ const Hero: React.FC = () => {
     }
   };
 
-  const heroTitle = currentLanguage === 'kk' 
-    ? 'Болашақ, мамандығыңды табу оңай болсын'
-    : 'Будущее, легкий путь к профессии';
-
-  const heroDescription = currentLanguage === 'kk'
-    ? 'Қазақстандағы жоғары оқу орындары туралы толық ақпарат және мамандық таңдауға көмек'
-    : 'Полная информация о высших учебных заведениях Казахстана и помощь в выборе профессии';
-
-  const searchPlaceholder = currentLanguage === 'kk'
-    ? 'Университет немесе мамандық іздеу...'
-    : 'Поиск университета или специальности...';
-
-  const searchButtonText = currentLanguage === 'kk' ? 'Іздеу' : 'Поиск';
+  const heroTitle = 'Болашақ, мамандығыңды табу оңай болсын';
+  const heroDescription = 'Қазақстандағы жоғары оқу орындары туралы толық ақпарат және мамандық таңдауға көмек';
+  const searchPlaceholder = 'Университет немесе мамандық іздеу...';
+  const searchButtonText = 'Іздеу';
 
   return (
     <section className="bg-blue-50 py-16">
@@ -86,7 +70,6 @@ const Hero: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Search className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
             </div>
             <Button type="submit" className="bg-tandablue hover:bg-blue-700">
               {searchButtonText}

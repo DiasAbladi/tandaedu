@@ -1,9 +1,9 @@
 
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { User, LogOut, Menu, Search } from "lucide-react";
+import { User, LogOut, Menu } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import LanguageSwitcher from './LanguageSwitcher';
 import { AuthContext } from '@/contexts/AuthContext';
 
 const Navbar = () => {
@@ -71,14 +70,6 @@ const Navbar = () => {
 
           {/* Right-aligned items */}
           <div className="flex items-center space-x-3">
-            <LanguageSwitcher />
-            
-            {/* Search icon */}
-            <Button variant="ghost" size="icon">
-              <Search className="h-[1.2rem] w-[1.2rem]" />
-              <span className="sr-only">Іздеу</span>
-            </Button>
-            
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

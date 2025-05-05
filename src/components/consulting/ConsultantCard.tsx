@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { 
   CalendarDays,
-  Users,
   Star,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -30,22 +29,20 @@ interface ConsultantProps {
     ru: string;
   };
   rating: number;
-  currentLanguage: string;
-  translations: any;
 }
 
 const ConsultantCard: React.FC<ConsultantProps> = ({ 
-  id, name, role, image, experience, price, rating, currentLanguage, translations 
+  id, name, role, image, experience, price, rating
 }) => {
   return (
     <Card key={id} className="p-6 hover:shadow-md transition-shadow">
       <div className="flex flex-col items-center text-center mb-4">
         <Avatar className="h-24 w-24 mb-4">
-          <AvatarImage src={image} alt={name[currentLanguage]} />
-          <AvatarFallback>{name[currentLanguage].substring(0, 2)}</AvatarFallback>
+          <AvatarImage src={image} alt={name.kk} />
+          <AvatarFallback>{name.kk.substring(0, 2)}</AvatarFallback>
         </Avatar>
-        <h3 className="font-bold text-lg">{name[currentLanguage]}</h3>
-        <p className="text-gray-600 mb-2">{role[currentLanguage]}</p>
+        <h3 className="font-bold text-lg">{name.kk}</h3>
+        <p className="text-gray-600 mb-2">{role.kk}</p>
         <div className="flex items-center mb-1">
           {[...Array(5)].map((_, i) => (
             <Star
@@ -60,16 +57,15 @@ const ConsultantCard: React.FC<ConsultantProps> = ({
       <div className="flex justify-between items-center text-sm text-gray-600 mb-6">
         <div className="flex items-center">
           <CalendarDays className="h-4 w-4 mr-1 text-tandablue" />
-          <span>{translations.consultingExperience[currentLanguage]}: {experience[currentLanguage]}</span>
+          <span>Тәжірибе: {experience.kk}</span>
         </div>
         <div className="flex items-center">
-          <Users className="h-4 w-4 mr-1 text-tandablue" />
-          <span>{price[currentLanguage]}</span>
+          <span>{price.kk}</span>
         </div>
       </div>
       
       <Link to="/counseling">
-        <Button variant="outline" className="w-full">{currentLanguage === 'kk' ? 'Кеңес алу' : 'Получить консультацию'}</Button>
+        <Button variant="outline" className="w-full">Кеңес алу</Button>
       </Link>
     </Card>
   );
