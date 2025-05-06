@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { universities } from '@/data/universities';
 import UniversityCard from '@/components/UniversityCard';

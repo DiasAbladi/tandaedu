@@ -10,11 +10,11 @@ interface UniversityProps {
     id: string;
     name: string;
     location: string;
-    rating: string;
+    rating: string | number;
     students: string;
     tuition: string;
     badge?: string;
-    badgeNumber?: string;
+    badgeNumber?: string | number;
   }
 }
 

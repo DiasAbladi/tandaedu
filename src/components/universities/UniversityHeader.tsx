@@ -7,7 +7,7 @@ import { getUniversityImage } from '@/utils/universityImages';
 interface UniversityHeaderProps {
   university: {
     id: string;
-    fullName: string;
+    fullName?: string;
     location: string;
   }
 }
@@ -15,6 +15,9 @@ interface UniversityHeaderProps {
 const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
   // Университет суретін алу
   const universityImage = getUniversityImage(university.id);
+
+  // Use fullName or fallback to name or id if fullName is not available
+  const displayName = university.fullName || university.id;
 
   return (
     <div 
@@ -26,7 +29,7 @@ const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
         <Link to="/universities" className="text-white flex items-center mb-4 hover:underline">
           <ArrowLeft className="h-4 w-4 mr-1" /> Барлық университеттер
         </Link>
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{university.fullName}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{displayName}</h1>
         <div className="flex items-center text-white">
           <MapPin className="h-4 w-4 mr-1" />
           <span>{university.location}</span>
