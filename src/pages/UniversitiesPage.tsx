@@ -1,27 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, ChevronDown } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
 import { universities } from '@/data/universities';
 import UniversityCard from '@/components/UniversityCard';
+import UniversityFilters from '@/components/universities/UniversityFilters';
+import UniversityPagination from '@/components/universities/UniversityPagination';
 
 const UniversitiesPage: React.FC = () => {
   const location = useLocation();
@@ -136,59 +122,20 @@ const UniversitiesPage: React.FC = () => {
         <div className="container px-4 md:px-6">
           <h1 className="text-3xl font-bold mb-8">Қазақстан университеттері</h1>
           
-          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            <div className="relative">
-              <Input 
-                type="text" 
-                placeholder="Университет атауын іздеу" 
-                className="pl-10 py-2 w-full rounded-md border shadow-sm"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-            </div>
-            
-            <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Аймақ бойынша" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Барлық қалалар</SelectItem>
-                {cities.map(city => (
-                  <SelectItem key={city} value={city}>{city}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Select value={selectedRating} onValueChange={setSelectedRating}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Рейтинг бойынша" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Барлық рейтинг</SelectItem>
-                <SelectItem value="4.8">4.8+</SelectItem>
-                <SelectItem value="4.5">4.5+</SelectItem>
-                <SelectItem value="4.0">4.0+</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={selectedMajor} onValueChange={setSelectedMajor}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Мамандық бойынша" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Барлық мамандықтар</SelectItem>
-                {uniqueMajors.map(major => (
-                  <SelectItem key={major} value={major}>{major}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <div className="lg:col-span-4 flex justify-end">
-              <Button type="submit" className="mr-2">Іздеу</Button>
-              <Button type="button" variant="outline" onClick={resetFilters}>Тазарту</Button>
-            </div>
-          </form>
+          <UniversityFilters 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedCity={selectedCity}
+            setSelectedCity={setSelectedCity}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+            selectedMajor={selectedMajor}
+            setSelectedMajor={setSelectedMajor}
+            cities={cities}
+            uniqueMajors={uniqueMajors}
+            handleSearch={handleSearch}
+            resetFilters={resetFilters}
+          />
 
           {filteredUniversities.length > 0 ? (
             <>
@@ -198,36 +145,11 @@ const UniversitiesPage: React.FC = () => {
                 ))}
               </div>
               
-              <div className="flex justify-center gap-2">
-                <Button 
-                  variant="outline" 
-                  className="w-10 h-10 p-0" 
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  &lt;
-                </Button>
-                
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <Button 
-                    key={i}
-                    variant={currentPage === i + 1 ? "default" : "outline"}
-                    className="w-10 h-10 p-0"
-                    onClick={() => handlePageChange(i + 1)}
-                  >
-                    {i + 1}
-                  </Button>
-                ))}
-                
-                <Button 
-                  variant="outline" 
-                  className="w-10 h-10 p-0"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  &gt;
-                </Button>
-              </div>
+              <UniversityPagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+              />
             </>
           ) : (
             <div className="text-center p-10">

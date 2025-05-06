@@ -4,54 +4,12 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Users, Phone, Mail, Globe, ArrowLeft, Building, GraduationCap } from "lucide-react";
+import { Phone, Mail, Globe, Building } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { universities } from '@/data/universities';
-import { getUniversityImage } from '@/utils/universityImages';
-
-// Create a component for major details
-const MajorCard: React.FC<{ major: any }> = ({ major }) => {
-  return (
-    <div className="bg-white p-5 rounded-lg border mb-4">
-      <div className="flex items-center mb-3">
-        <GraduationCap className="h-6 w-6 text-tandablue mr-3" />
-        <h3 className="text-lg font-bold">{major.name}</h3>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center text-sm">
-            <span className="text-gray-600 mr-2">Код:</span>
-            <span className="font-medium">{major.code}</span>
-          </div>
-          <div className="flex items-center text-sm">
-            <span className="text-gray-600 mr-2">Оқу мерзімі:</span>
-            <span className="font-medium">{major.duration}</span>
-          </div>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center text-sm">
-            <span className="text-gray-600 mr-2">Дәреже:</span>
-            <span className="font-medium">{major.degree}</span>
-          </div>
-          <div className="flex items-center text-sm">
-            <span className="text-gray-600 mr-2">Оқу құны:</span>
-            <span className="font-medium text-blue-600">{major.price}</span>
-          </div>
-        </div>
-      </div>
-      <div className="mt-3">
-        <p className="text-sm mb-1">Бұл мамандық басқа университеттерде бар:</p>
-        <div className="flex flex-wrap gap-1">
-          {major.universities && major.universities.map((uni: string, index: number) => (
-            <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md">
-              {uni}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+import UniversityHeader from '@/components/universities/UniversityHeader';
+import UniversityStats from '@/components/universities/UniversityStats';
+import MajorCard from '@/components/universities/MajorCard';
 
 const UniversityDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -72,58 +30,16 @@ const UniversityDetailPage: React.FC = () => {
     );
   }
 
-  // Университет суретін алу
-  const universityImage = getUniversityImage(university.id);
-
   return (
     <>
       <Navbar />
       <div className="bg-gray-50 min-h-screen">
         {/* Header Section with Image */}
-        <div 
-          className="w-full h-64 md:h-96 bg-cover bg-center relative" 
-          style={{ backgroundImage: `url(${universityImage})` }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <div className="container relative z-10 h-full flex flex-col justify-end p-6">
-            <Link to="/universities" className="text-white flex items-center mb-4 hover:underline">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Барлық университеттер
-            </Link>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{university.fullName}</h1>
-            <div className="flex items-center text-white">
-              <MapPin className="h-4 w-4 mr-1" />
-              <span>{university.location}</span>
-            </div>
-          </div>
-        </div>
+        <UniversityHeader university={university} />
 
         <div className="container py-8">
           {/* Ratings and Quick Info */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white p-5 rounded-lg shadow-sm flex items-center">
-              <Star className="h-10 w-10 text-yellow-500 fill-yellow-500 mr-4" />
-              <div>
-                <p className="text-sm text-gray-500">Рейтинг</p>
-                <p className="text-xl font-bold">{university.rating}/5.0</p>
-              </div>
-            </div>
-            
-            <div className="bg-white p-5 rounded-lg shadow-sm flex items-center">
-              <Users className="h-10 w-10 text-blue-500 mr-4" />
-              <div>
-                <p className="text-sm text-gray-500">Студенттер саны</p>
-                <p className="text-xl font-bold">{university.students}</p>
-              </div>
-            </div>
-            
-            <div className="bg-white p-5 rounded-lg shadow-sm flex items-center">
-              <Building className="h-10 w-10 text-green-500 mr-4" />
-              <div>
-                <p className="text-sm text-gray-500">Оқу құны</p>
-                <p className="text-xl font-bold">{university.tuition}</p>
-              </div>
-            </div>
-          </div>
+          <UniversityStats university={university} />
 
           {/* Tabs Content */}
           <Tabs defaultValue="about" className="mb-12">

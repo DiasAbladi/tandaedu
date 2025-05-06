@@ -5,24 +5,39 @@ import { Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUniversityImage } from '@/utils/universityImages';
 
-const UniversityCard: React.FC<{ university: any }> = ({ university }) => {
+interface UniversityProps {
+  university: {
+    id: string;
+    name: string;
+    location: string;
+    rating: string;
+    students: string;
+    tuition: string;
+    badge?: string;
+    badgeNumber?: string;
+  }
+}
+
+const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
   // Университет суретін алу
   const universityImage = getUniversityImage(university.id);
 
   return (
-    <div className="bg-white rounded-lg border overflow-hidden shadow-sm">
-      <img
-        src={universityImage}
-        alt={university.name}
-        className="w-full h-48 object-cover"
-      />
-      <div className="p-5">
+    <div className="bg-white rounded-lg border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={universityImage}
+          alt={university.name}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
         {university.badge && (
-          <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded mb-2">
+          <span className="absolute top-2 left-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
             {university.badge} {university.badgeNumber}
           </span>
         )}
-        
+      </div>
+      <div className="p-5">
         <h3 className="text-xl font-bold mb-1">{university.name}</h3>
         <p className="text-gray-500 text-sm mb-3">{university.location}</p>
         
