@@ -9,11 +9,45 @@ import { universities } from '@/data/universities';
 const TOP_UNIVERSITIES_COUNT = 3;
 
 const UniversityCard: React.FC<{ university: any }> = ({ university }) => {
+  // Университет ішінен сурет алу логикасы
+  const getUniversityImage = (uniId: string) => {
+    switch(uniId) {
+      case "kaznu": 
+        return "public/lovable-uploads/93d4f861-eaff-4a58-a39a-cccae16687f1.png"; // КазНУ суреті
+      case "kazmu": 
+        return "public/lovable-uploads/9a91a880-f257-4936-9fbe-7d3290ff568e.png"; // ҚазҰМУ суреті
+      case "oku": 
+        return "public/lovable-uploads/bc219841-91c3-4f94-a231-68e33b713252.png"; // М. Әуезов атындағы ОҚУ
+      case "ktu": 
+        return "public/lovable-uploads/d8d26844-8131-41a5-ab7b-bb93e6983808.png"; // Қарағанды техникалық университеті
+      case "buketov": 
+        return "public/lovable-uploads/27c3eb85-807c-455a-acb3-72179747bb97.png"; // Бөкетов университеті
+      case "almau": 
+        return "public/lovable-uploads/83fbda14-7fa1-4abb-b8f1-f7c9f4f704a4.png"; // AlmaU
+      case "kazguu": 
+        return "public/lovable-uploads/61a90cf6-2caa-46d2-8f3a-27a4f392eb41.png"; // KAZGUU Университеті
+      case "kaznau": 
+        return "public/lovable-uploads/ee4e51e4-83d5-4a25-a5c3-545d8b931e47.png"; // ҚазҰАЗУ
+      case "seifullin": 
+        return "public/lovable-uploads/8671a5fd-2b18-4b79-985e-29c187014774.png"; // С.Сейфуллин атындағы ҚАЗАТУ
+      case "toraighyrov": 
+        return "public/lovable-uploads/4555b923-6286-4595-8054-f682902cac39.png"; // Торайғыров университеті
+      case "ektu": 
+        return "public/lovable-uploads/0b208751-1737-4280-a47f-55b36a6bbb41.png"; // Шығыс Қазақстан техникалық университеті
+      // Басқа университеттерге қажет болған жағдайда қосылады
+      default:
+        return university.image; // Қалғандарына бастапқы сурет қалады
+    }
+  };
+
+  // Университет суретін алу
+  const universityImage = getUniversityImage(university.id);
+
   return (
     <div className="university-card bg-white border rounded-lg overflow-hidden shadow-sm">
       <div className="relative">
         <img
-          src={university.image}
+          src={universityImage}
           alt={university.name}
           className="w-full h-48 object-cover"
         />
