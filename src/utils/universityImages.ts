@@ -53,7 +53,7 @@ export const getUniversityImage = (uniId: string): string => {
       return "public/lovable-uploads/415696c9-4ede-402b-96f7-ef15567a3640.png"; // 20. С. Аманжолов атындағы ШҚУ
     // Басқа университеттерге қажет болған жағдайда қосылады
     default:
-      // Егер университет ID-сі белгілі болмаса, оның өзінің суретін қайтарамыз
-      return university?.image || ""; 
+      // Егер университет ID-сі белгілі болмаса, әдепкі суретті қайтарамыз
+      return "public/placeholder.svg"; 
   }
 };
