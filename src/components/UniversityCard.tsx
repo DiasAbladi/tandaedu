@@ -30,6 +30,11 @@ const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
           alt={university.name}
           className="w-full h-full object-cover"
           loading="lazy"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = "public/placeholder.svg";
+          }}
         />
         {university.badge && (
           <span className="absolute top-2 left-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
