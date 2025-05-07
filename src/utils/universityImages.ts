@@ -10,17 +10,17 @@
 export const getUniversityImage = (uniId: string): string => {
   switch(uniId) {
     case "kaznu": 
-      return "public/lovable-uploads/c2c8e5ad-ea14-49e2-b936-ac5018901763.png"; // 1. Әл-Фараби атындағы ҚазҰУ
+      return "public/lovable-uploads/94601bdf-04ae-4fbc-801e-c6d177441763.png"; // 1. Әл-Фараби атындағы ҚазҰУ
     case "kimep": 
-      return "public/lovable-uploads/66954788-4f17-4e2d-861d-fb49fa669f14.png"; // 2. КИМЭП Университеті
+      return "public/lovable-uploads/958ea90f-e451-4c44-857f-591ab5103789.png"; // 2. КИМЭП Университеті
     case "enu": 
-      return "public/lovable-uploads/01566a9b-f676-4967-b2b4-8fb83b789577.png"; // 3. Еуразия ұлттық университеті
+      return "public/lovable-uploads/a68e425c-e7b5-4ad8-9353-8611db20d1d2.png"; // 3. Еуразия ұлттық университеті
     case "satbayev": 
-      return "public/lovable-uploads/3e3662fd-8328-4b34-b748-af41c130088a.png"; // 4. Сәтбаев Университеті
+      return "public/lovable-uploads/77acafa0-c745-4ea9-8518-38cd44f14d07.png"; // 4. Сәтбаев Университеті
     case "kazmu": 
-      return "public/lovable-uploads/66d955d8-f75f-4633-8b84-09b27fe21c26.png"; // 5. ҚазҰМУ
+      return "public/lovable-uploads/fed986c7-8398-4041-886d-bffd8f25ff57.png"; // 5. ҚазҰМУ
     case "oku": 
-      return "public/lovable-uploads/08ece5bd-f469-4453-8044-0976f14aebed.png"; // 6. М. Әуезов атындағы ОҚУ
+      return "public/lovable-uploads/84c14b6f-dd9a-47a0-939e-ccee8aa9ff4a.png"; // 6. М. Әуезов атындағы ОҚУ
     case "abay": 
       return "public/lovable-uploads/0c8f8cb3-aece-4e69-98e9-8808acbcbafc.png"; // 7. Абай университеті
     case "ktu": 
