@@ -13,7 +13,7 @@ interface UniversityHeaderProps {
 }
 
 const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
-  // Университет суретін алу
+  // Get the university image
   const universityImage = getUniversityImage(university.id);
 
   // Use fullName or fallback to name or id if fullName is not available
@@ -29,7 +29,7 @@ const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.onerror = null;
-          target.src = "public/placeholder.svg";
+          target.src = "/placeholder.svg"; // Updated path removing "public" prefix
         }}
       />
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>

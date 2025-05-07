@@ -19,7 +19,7 @@ interface UniversityProps {
 }
 
 const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
-  // Университет суретін алу
+  // Get the university image
   const universityImage = getUniversityImage(university.id);
 
   return (
@@ -33,7 +33,7 @@ const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null;
-            target.src = "public/placeholder.svg";
+            target.src = "/placeholder.svg"; // Updated path removing "public" prefix
           }}
         />
         {university.badge && (
