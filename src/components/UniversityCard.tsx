@@ -33,9 +33,15 @@ const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null;
-            target.src = "/placeholder.svg"; // Updated path removing "public" prefix
+            target.src = "/placeholder.svg";
           }}
         />
+        {/* Overlay for university name */}
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4">
+          <h3 className="text-lg font-bold text-white">{university.name}</h3>
+          <p className="text-white text-sm">{university.location}</p>
+        </div>
+        
         {university.badge && (
           <span className="absolute top-2 left-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
             {university.badge} {university.badgeNumber}
@@ -43,9 +49,6 @@ const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
         )}
       </div>
       <div className="p-5">
-        <h3 className="text-xl font-bold mb-1">{university.name}</h3>
-        <p className="text-gray-500 text-sm mb-3">{university.location}</p>
-        
         <div className="flex flex-col gap-2 mb-5">
           <div className="flex items-center">
             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />

@@ -29,16 +29,19 @@ const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.onerror = null;
-          target.src = "/placeholder.svg"; // Updated path removing "public" prefix
+          target.src = "/placeholder.svg";
         }}
       />
+      {/* Dark overlay for better text visibility */}
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-      <div className="container relative z-10 h-full flex flex-col justify-end p-6">
-        <Link to="/universities" className="text-white flex items-center mb-4 hover:underline">
+      
+      {/* Content overlay */}
+      <div className="absolute inset-0 flex flex-col justify-end p-6">
+        <Link to="/universities" className="text-white flex items-center mb-4 hover:underline z-10">
           <ArrowLeft className="h-4 w-4 mr-1" /> Барлық университеттер
         </Link>
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{displayName}</h1>
-        <div className="flex items-center text-white">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 z-10">{displayName}</h1>
+        <div className="flex items-center text-white z-10">
           <MapPin className="h-4 w-4 mr-1" />
           <span>{university.location}</span>
         </div>
