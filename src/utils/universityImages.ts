@@ -8,30 +8,31 @@
  */
 export const getUniversityImage = (uniId: string): string => {
   switch(uniId) {
-    case "kaznu": 
-      return "/lovable-uploads/94601bdf-04ae-4fbc-801e-c6d177441763.png"; // 1. Әл-Фараби атындағы ҚазҰУ
-    case "kimep": 
-      return "/lovable-uploads/958ea90f-e451-4c44-857f-591ab5103789.png"; // 2. КИМЭП Университеті
-    case "enu": 
-      return "/lovable-uploads/a68e425c-e7b5-4ad8-9353-8611db20d1d2.png"; // 3. Еуразия ұлттық университеті
-    case "satbayev": 
-      return "/lovable-uploads/77acafa0-c745-4ea9-8518-38cd44f14d07.png"; // 4. Сәтбаев Университеті
     case "kazmu": 
-      return "/lovable-uploads/fed986c7-8398-4041-886d-bffd8f25ff57.png"; // 5. ҚазҰМУ
+      return "/lovable-uploads/4c82d83e-8fa7-43a7-ac94-2803e506ce10.png"; // 1. ҚазҰМУ (New image)
     case "oku": 
-      return "/lovable-uploads/84c14b6f-dd9a-47a0-939e-ccee8aa9ff4a.png"; // 6. М. Әуезов атындағы ОҚУ
+      return "/lovable-uploads/cc63fc28-3597-44d0-b1de-70eb6b16ea54.png"; // 2. М. Әуезов атындағы ОҚУ (New image)
     case "abay": 
-      return "/lovable-uploads/0c8f8cb3-aece-4e69-98e9-8808acbcbafc.png"; // 7. Абай университеті
+      return "/lovable-uploads/0763771e-b6bc-42dc-bf5c-481684b79fb6.png"; // 3. Абай университеті (New image)
     case "ktu": 
-      return "/lovable-uploads/5019d79b-5622-449e-b4cb-be9c40e8c7cc.png"; // 8. Қарағанды техникалық университеті
-    case "buketov": 
-      return "/lovable-uploads/47b9657e-784e-4e68-893a-ef709e27674f.png"; // 9. Бөкетов университеті
-    case "kbtu": 
-      return "/lovable-uploads/426becec-681b-487e-9c58-766771f6f24f.png"; // 10. КБТУ
+      return "/lovable-uploads/d14403d7-4887-4da9-b138-f96cf5f620bf.png"; // 4. Қарағанды техникалық университеті (New image)
     case "iitu": 
-      return "/lovable-uploads/d5084532-e6c8-47ec-80d5-a815dcd5080d.png"; // 11. ХАТУ
+      return "/lovable-uploads/e1708cd5-dcf5-49f1-ac96-db74ff16e353.png"; // 5. ХАТУ (New image)
+    case "kbtu": 
+      return "/lovable-uploads/4ba89a5e-0b84-42a9-bff7-7b2b8987311d.png"; // 6. КБТУ (New image)
+      
+    case "kaznu": 
+      return "/lovable-uploads/94601bdf-04ae-4fbc-801e-c6d177441763.png"; // Әл-Фараби атындағы ҚазҰУ
+    case "kimep": 
+      return "/lovable-uploads/958ea90f-e451-4c44-857f-591ab5103789.png"; // КИМЭП Университеті
+    case "enu": 
+      return "/lovable-uploads/a68e425c-e7b5-4ad8-9353-8611db20d1d2.png"; // Еуразия ұлттық университеті
+    case "satbayev": 
+      return "/lovable-uploads/77acafa0-c745-4ea9-8518-38cd44f14d07.png"; // Сәтбаев Университеті
+    case "buketov": 
+      return "/lovable-uploads/47b9657e-784e-4e68-893a-ef709e27674f.png"; // Бөкетов университеті
     case "almau": 
-      return "/lovable-uploads/30ddaca0-b3f1-4f53-a5c9-20cf92317b77.png"; // 12. AlmaU
+      return "/lovable-uploads/30ddaca0-b3f1-4f53-a5c9-20cf92317b77.png"; // AlmaU
     case "kazguu": 
       return "/lovable-uploads/61a90cf6-2caa-46d2-8f3a-27a4f392eb41.png"; // KAZGUU Университеті
     case "kaznau": 
@@ -62,7 +63,6 @@ export const getUniversityImage = (uniId: string): string => {
       return "/lovable-uploads/9f4a4e27-b330-408c-8835-141c0be40d78.png"; // М. Оспанов атындағы БҚМУ
     case "amanzholov": 
       return "/lovable-uploads/415696c9-4ede-402b-96f7-ef15567a3640.png"; // С. Аманжолов атындағы ШҚУ
-    // New example images to demonstrate flexibility
     case "new-university-1":
       return "/lovable-uploads/663c563b-eb3b-45d2-b905-408053355bfd.png"; // Example new university image
     case "new-university-2":
