@@ -63,6 +63,11 @@ export const getUniversityImage = (uniId: string): string => {
       return "public/lovable-uploads/9f4a4e27-b330-408c-8835-141c0be40d78.png"; // М. Оспанов атындағы БҚМУ
     case "amanzholov": 
       return "public/lovable-uploads/415696c9-4ede-402b-96f7-ef15567a3640.png"; // С. Аманжолов атындағы ШҚУ
+    // New example images to demonstrate flexibility
+    case "new-university-1":
+      return "public/lovable-uploads/663c563b-eb3b-45d2-b905-408053355bfd.png"; // Example new university image
+    case "new-university-2":
+      return "public/lovable-uploads/55a741f0-9d61-4102-b0f5-e78f91c678d8.png"; // Example new university image
     // Басқа университеттерге қажет болған жағдайда қосылады
     default:
       // Егер университет ID-сі белгілі болмаса, әдепкі суретті қайтарамыз

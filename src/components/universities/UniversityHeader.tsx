@@ -20,14 +20,13 @@ const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
   const displayName = university.fullName || university.id;
 
   return (
-    <div 
-      className="w-full h-64 md:h-96 bg-cover bg-center relative" 
-      style={{ 
-        backgroundImage: `url(${universityImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
-    >
+    <div className="w-full h-64 md:h-96 relative">
+      <img
+        src={universityImage}
+        alt={displayName}
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="container relative z-10 h-full flex flex-col justify-end p-6">
         <Link to="/universities" className="text-white flex items-center mb-4 hover:underline">
