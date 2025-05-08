@@ -29,10 +29,6 @@ const CareerTestPage: React.FC = () => {
     getCurrentAnswer
   } = useCareerTest();
   
-  const startTest = () => {
-    navigate('/test/question');
-  };
-
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
@@ -76,6 +72,8 @@ const CareerTestPage: React.FC = () => {
                     totalQuestions={totalQuestions}
                   />
                 </div>
+              ) : isCompleted ? (
+                <TestResults result={testResult!} onRestart={restartTest} />
               ) : (
                 <div className="bg-white shadow-md rounded-xl p-12 max-w-xl mx-auto text-center mb-16">
                   <div className="bg-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
@@ -107,7 +105,7 @@ const CareerTestPage: React.FC = () => {
             </TabsContent>
           </Tabs>
 
-          {!currentQuestion && (
+          {!currentQuestion && !isCompleted && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <div className="bg-white p-6 rounded-lg border">
@@ -214,7 +212,7 @@ const CareerTestPage: React.FC = () => {
             </>
           )}
           
-          {!currentQuestion && (
+          {!currentQuestion && !isCompleted && (
             <div className="text-center">
               <Button size="lg" onClick={restartTest} className="px-8">
                 {isCompleted ? 'Нәтижелерді көру' : 'Тестті бастау'}
