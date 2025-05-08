@@ -1,4 +1,3 @@
-
 // Бұл файлда университеттердің суреттері үшін функция құрылады
 // Бұл функция ID бойынша сәйкес суретті қайтарады
 
@@ -10,19 +9,19 @@
 export const getUniversityImage = (uniId: string): string => {
   switch(uniId) {
     case "kazmu": 
-      return "/lovable-uploads/20342840-9238-4468-b29c-756d1bb279d0.png"; // 1. ҚазҰМУ (New image)
+      return "/lovable-uploads/20342840-9238-4468-b29c-756d1bb279d0.png"; // 1. ҚазҰМУ
     case "oku": 
-      return "/lovable-uploads/c069b666-0de7-452e-a3e9-4f869819a8fd.png"; // 2. М. Әуезов атындағы ОҚУ (New image)
+      return "/lovable-uploads/c069b666-0de7-452e-a3e9-4f869819a8fd.png"; // 2. М. Әуезов атындағы ОҚУ
     case "abay": 
-      return "/lovable-uploads/9bd620c9-4c2c-413d-bde6-ca7a52b7183a.png"; // 3. Абай университеті (New image)
+      return "/lovable-uploads/9bd620c9-4c2c-413d-bde6-ca7a52b7183a.png"; // 3. Абай университеті
     case "ktu": 
-      return "/lovable-uploads/cf14998d-6fc2-4490-8633-279ac93659dc.png"; // 4. Қарағанды техникалық университеті (New image)
+      return "/lovable-uploads/cf14998d-6fc2-4490-8633-279ac93659dc.png"; // 4. Қарағанды техникалық университеті
     case "kaznau": 
-      return "/lovable-uploads/4e6b56d9-1a53-4938-8352-faeed8841bd4.png"; // 5. ҚазҰАЗУ (New image)
+      return "/lovable-uploads/4e6b56d9-1a53-4938-8352-faeed8841bd4.png"; // 5. ҚазҰАЗУ
     case "seifullin": 
-      return "/lovable-uploads/17a822f3-aaa5-436c-aab6-4bd7c47cfd43.png"; // 6. С.Сейфуллин атындағы ҚАЗАТУ (New image)
+      return "/lovable-uploads/17a822f3-aaa5-436c-aab6-4bd7c47cfd43.png"; // 6. С.Сейфуллин атындағы ҚАЗАТУ
     case "taraz": 
-      return "/lovable-uploads/11640364-096c-420d-856c-d2bd69f1763e.png"; // 7. Тараз өңірлік университеті (New image)
+      return "/lovable-uploads/11640364-096c-420d-856c-d2bd69f1763e.png"; // 7. Тараз өңірлік университеті
       
     case "kaznu": 
       return "/lovable-uploads/94601bdf-04ae-4fbc-801e-c6d177441763.png"; // Әл-Фараби атындағы ҚазҰУ
