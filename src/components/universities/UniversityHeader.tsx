@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { getUniversityImage } from '@/utils/universityImages';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface UniversityHeaderProps {
   university: {

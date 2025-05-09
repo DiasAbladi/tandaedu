@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUniversityImage } from '@/utils/universityImages';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface UniversityProps {
   university: {
@@ -25,17 +26,19 @@ const UniversityCard: React.FC<UniversityProps> = ({ university }) => {
   return (
     <div className="bg-white rounded-lg border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={universityImage}
-          alt={university.name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.onerror = null;
-            target.src = "/placeholder.svg";
-          }}
-        />
+        <AspectRatio ratio={16/9} className="h-full">
+          <img
+            src={universityImage}
+            alt={university.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "/placeholder.svg";
+            }}
+          />
+        </AspectRatio>
         {/* Overlay for university name */}
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4">
           <h3 className="text-lg font-bold text-white">{university.name}</h3>

@@ -10,13 +10,14 @@
 export const getUniversityImage = (uniId: string): string => {
   switch(uniId) {
     case "kazmu": 
-      return "/lovable-uploads/f457b370-e8ce-458e-9ab4-f644cd1de91e.png"; // 1. ҚазҰМУ
+      return "https://upload.wikimedia.org/wikipedia/commons/6/63/Main_building%2C_Kazak_National_Medical_University.jpg"; // 1. ҚазҰМУ
     case "oku": 
-      return "/lovable-uploads/50a0e65d-263b-4774-8c04-f8636c2e2569.png"; // 2. М. Әуезов атындағы ОҚУ
+      return "https://auezov.edu.kz/images/2024/01/19/14__1800x1200.jpg"; // 2. М. Әуезов атындағы ОҚУ
     case "abay": 
-      return "/lovable-uploads/5d28d06b-1cfe-4143-94c8-e3d04510b22b.png"; // 3. Абай университеті
+      return "https://abaiuniversity.edu.kz/docs/smi/15.6.2021.1.jpg"; // 3. Абай университеті
     case "ktu": 
-      return "/lovable-uploads/c9067845-180a-4656-b984-4771f5826e6a.png"; // 4. Қарағанды техникалық университеті
+      return "https://smapse.ru/storage/2020/01/a1-18.jpg"; // 4. Қарағанды техникалық университеті
+      
     case "kaznau": 
       return "/lovable-uploads/b3c002a5-4bab-4d69-9f23-b9ae23415ebb.png"; // 5. ҚазҰАЗУ
     case "seifullin": 
