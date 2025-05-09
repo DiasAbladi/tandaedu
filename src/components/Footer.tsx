@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Whatsapp } from "lucide-react";
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, MessageSquare } from "lucide-react";
 
 const Footer: React.FC = () => {
   return <footer className="bg-gray-100 pt-12 pb-8">
@@ -14,7 +13,7 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               <a href="http://wa.me/77769371033" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-gray-500 hover:text-tandablue">
-                <Whatsapp className="w-5 h-5" />
+                <MessageSquare className="w-5 h-5" />
               </a>
               <a href="https://www.instagram.com/tandaedu?igsh=MXZxcHIzdHh1N2pkMg%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-tandablue">
                 <Instagram className="w-5 h-5" />
