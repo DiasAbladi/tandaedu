@@ -18,10 +18,10 @@ const Footer: React.FC = () => {
                 <Instagram className="w-5 h-5 py-0" />
               </a>
               <a href="#" className="text-gray-500 hover:text-tandablue">
-                <Twitter className="w-5 h-5" />
+                
               </a>
               <a href="#" className="text-gray-500 hover:text-tandablue">
-                <Mail className="w-5 h-5" />
+                
               </a>
             </div>
           </div>
