@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Whatsapp } from "lucide-react";
+
 const Footer: React.FC = () => {
   return <footer className="bg-gray-100 pt-12 pb-8">
       <div className="container px-4 md:px-6">
@@ -11,17 +13,14 @@ const Footer: React.FC = () => {
               Қазақстанның білім беру мүмкіндіктері туралы сенімді ақпарат
             </p>
             <div className="flex space-x-4">
+              <a href="http://wa.me/77769371033" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-gray-500 hover:text-tandablue">
+                <Whatsapp className="w-5 h-5" />
+              </a>
+              <a href="https://www.instagram.com/tandaedu?igsh=MXZxcHIzdHh1N2pkMg%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-tandablue">
+                <Instagram className="w-5 h-5" />
+              </a>
               <a href="#" className="text-gray-500 hover:text-tandablue">
                 <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-tandablue">
-                <Instagram className="w-5 h-5 py-0" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-tandablue">
-                
-              </a>
-              <a href="#" className="text-gray-500 hover:text-tandablue">
-                
               </a>
             </div>
           </div>
@@ -92,4 +91,5 @@ const Footer: React.FC = () => {
       </div>
     </footer>;
 };
+
 export default Footer;
