@@ -31,6 +31,7 @@ const UniversityHeader: React.FC<UniversityHeaderProps> = ({ university }) => {
           const target = e.target as HTMLImageElement;
           target.onerror = null;
           target.src = "/placeholder.svg";
+          console.log(`Failed to load image for ${displayName} in header`);
         }}
       />
       {/* Dark overlay for better text visibility */}
