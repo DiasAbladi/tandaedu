@@ -1,11 +1,8 @@
-
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
-
 const Footer: React.FC = () => {
-  return (
-    <footer className="bg-gray-100 pt-12 pb-8">
+  return <footer className="bg-gray-100 pt-12 pb-8">
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
@@ -77,7 +74,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-start">
                 <Phone className="w-5 h-5 text-tandablue mr-2 mt-0.5" />
-                <span className="text-gray-600">+7 (727) 123-45-67</span>
+                <span className="text-gray-600">+7 776 937 10 33</span>
               </div>
               <div className="flex items-start">
                 <Mail className="w-5 h-5 text-tandablue mr-2 mt-0.5" />
@@ -93,8 +90,6 @@ const Footer: React.FC = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
