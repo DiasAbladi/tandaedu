@@ -71,14 +71,14 @@ const TestResults: React.FC<TestResultsProps> = ({ result, onRestart }) => {
 
   return (
     <div className="flex flex-col items-center">
-      {/* Test Completed Card */}
+      {/* Test Completed Card - Updated with the new design */}
       <Card className="w-full max-w-lg mx-auto mb-8">
         <CardContent className="flex flex-col items-center pt-8 pb-6">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
             <Check className="h-8 w-8 text-blue-600" />
           </div>
           <h2 className="text-xl font-bold mb-2">Тест аяқталды!</h2>
-          <p className="text-gray-500 mb-6">Құттықтаймыз! Сіз барлығы {result.totalAnswers} сұраққа жауап бердіңіз</p>
+          <p className="text-gray-500 mb-2">Құттықтаймыз! Сіз барлығы {result.totalAnswers} сұраққа жауап бердіңіз</p>
           
           <p className="text-gray-600 mb-6">Енді сізге ең қолайлы мамандық бағыттарын көре аласыз</p>
           
@@ -210,6 +210,40 @@ const TestResults: React.FC<TestResultsProps> = ({ result, onRestart }) => {
                 Таңдаған мамандықтың болашақтағы перспективаларын, жалақы мөлшерін және жұмысқа орналасу мүмкіндіктерін зерттеңіз.
               </p>
             </div>
+          </div>
+        </div>
+        
+        {/* New Call to Action section for consulting */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-8 shadow-lg mb-12">
+          <div className="text-center mb-6">
+            <h3 className="text-2xl font-bold mb-2">Сізге көмек керек пе?</h3>
+            <p className="text-lg opacity-90">
+              Мамандық таңдау - маңызды шешім. Біздің мамандар сізге көмектесуге дайын.
+            </p>
+          </div>
+          
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg flex-1 text-center">
+              <h4 className="font-bold mb-2">Жеке кеңес</h4>
+              <p className="text-sm opacity-80 mb-4">
+                Біздің тәжірибелі мамандармен жеке кездесуге жазылыңыз
+              </p>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg flex-1 text-center">
+              <h4 className="font-bold mb-2">Онлайн вебинарлар</h4>
+              <p className="text-sm opacity-80 mb-4">
+                Тегін онлайн вебинарларға қатысыңыз
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-6">
+            <Link to="/consulting">
+              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">
+                Кеңес алу <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
         

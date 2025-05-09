@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -32,6 +31,20 @@ const CareerTestPage: React.FC = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
+
+  // Function to show results tab when test is completed
+  const handleTestCompleted = () => {
+    if (isCompleted && testResult) {
+      setActiveTab("results");
+    }
+  };
+
+  // Effect to automatically switch to results tab when test is completed
+  React.useEffect(() => {
+    if (isCompleted && testResult) {
+      setActiveTab("results");
+    }
+  }, [isCompleted, testResult]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -215,7 +228,7 @@ const CareerTestPage: React.FC = () => {
           {!currentQuestion && !isCompleted && (
             <div className="text-center">
               <Button size="lg" onClick={restartTest} className="px-8">
-                {isCompleted ? 'Нәтижелерді көру' : 'Тестті бастау'}
+                Тестті бастау
               </Button>
             </div>
           )}
